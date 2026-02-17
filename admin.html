@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+
+<style>
+body{font-family:Arial;background:#020617;color:white;padding:30px}
+.card{max-width:600px;margin:auto;background:white;color:black;padding:25px;border-radius:15px}
+input{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc}
+button{width:100%;padding:12px;background:#22c55e;border:none;border-radius:10px;font-weight:bold;margin-top:10px}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>Admin Panel Harga</h2>
+
+<h4>Periode Sebelumnya</h4>
+<input id="p1-1" placeholder="Wilayah I">
+<input id="p1-2" placeholder="Wilayah II">
+<input id="p1-3" placeholder="Wilayah III">
+<input id="p1-4" placeholder="Wilayah IV">
+
+<h4>Periode Sekarang</h4>
+<input id="p2-1" placeholder="Wilayah I">
+<input id="p2-2" placeholder="Wilayah II">
+<input id="p2-3" placeholder="Wilayah III">
+<input id="p2-4" placeholder="Wilayah IV">
+
+<button onclick="simpan()">💾 Simpan Harga</button>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("harga")) || {
+  p1:[20650,20650,20650,20650],
+  p2:[20800,20800,20800,20800]
+};
+
+["1","2","3","4"].forEach(i=>{
+  document.getElementById("p1-"+i).value=data.p1[i-1];
+  document.getElementById("p2-"+i).value=data.p2[i-1];
+});
+
+function simpan(){
+  data={
+    p1:[+p1-1.value,+p1-2.value,+p1-3.value,+p1-4.value],
+    p2:[+p2-1.value,+p2-2.value,+p2-3.value,+p2-4.value]
+  };
+  localStorage.setItem("harga",JSON.stringify(data));
+  alert("Harga berhasil diupdate!");
+}
+</script>
+
+</body>
+</html>
