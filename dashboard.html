@@ -76,13 +76,11 @@ const ref = doc(db,"hargaBBM","periode");
 const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
 
 let adminLoggedIn=false;
-
-// Ambil email dari query param
 const params = new URLSearchParams(window.location.search);
 const emailUser = params.get("email");
 if(emailUser==="admin@kse.com") adminLoggedIn=true;
 
-// Load harga dari Firebase
+// Load harga Firebase
 async function loadHarga(){
   const snap = await getDoc(ref);
   if(!snap.exists()) return;
@@ -91,7 +89,7 @@ async function loadHarga(){
     let w=wilayah[i];
     let now=parseInt(data.sekarang[w])||0;
     const card=document.querySelector(`#card${w}`);
-    if(!card) continue; // safety
+    if(!card) continue;
     card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
     if(adminLoggedIn){
       card.onclick=async ()=>{
@@ -110,7 +108,7 @@ async function loadHarga(){
     }
   }
 }
-loadHarga();
+window.onload = loadHarga;
 
 // ===== Dokumen Supabase =====
 const uploadBtn=document.getElementById("uploadBtn");
@@ -143,7 +141,7 @@ async function uploadFile(){
   const filePath=`${emailUser}/${file.name}`;
   const { error: uploadError } = await supabaseClient.storage.from("documents").upload(filePath,file,{upsert:true});
   if(uploadError) return alert("Upload gagal: "+uploadError.message);
-  const { data: publicURL } = supabaseClient.storage.from("documents").getPublicUrl(filePath);
+  const { data: publicURL } = await supabaseClient.storage.from("documents").getPublicUrl(filePath);
   await supabaseClient.from("documents").insert([{pt_email:emailUser,type:type,file_name:file.name,file_url:publicURL.publicUrl}]);
   loadFiles();
   alert("Upload berhasil");
@@ -152,7 +150,7 @@ async function uploadFile(){
 uploadBtn.onclick=uploadFile;
 loadFiles();
 
-// Sign Out
+// Logout
 document.getElementById("logoutBtn").onclick = async ()=>{
   await supabaseClient.auth.signOut();
   window.location.href="index.html";
@@ -161,6 +159,7 @@ document.getElementById("logoutBtn").onclick = async ()=>{
 
 </body>
 </html>
+
 
 
 
