@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard KSE</title>
+<title>PT.KHATULISTIWA SINAR ENERGI</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial;}
 body{background:#20C997;color:#333;}
 header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
 header img{height:45px;}
 nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
-.container{max-width:1100px;margin:auto;padding:20px;}
+.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://via.placeholder.com/1200x400') no-repeat center/cover;background-size:cover;color:white;text-align:center;padding:90px 20px;}
+.hero h1{font-size:40px;margin-bottom:10px;}
+.btn{background:#ffc107;padding:12px 25px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;display:inline-block;margin-top:15px;}
+section{padding:50px 15px;}
+.container{max-width:1100px;margin:auto;}
+h2{text-align:center;margin-bottom:25px;}
 .card{background:white;padding:20px;border-radius:12px;margin-bottom:10px;}
-.card h3{margin:0;font-size:18px;}
-.card p{font-weight:bold;margin-top:8px;}
-.btn{background:#ffc107;padding:10px 15px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;margin-top:10px;display:inline-block;}
-#fileList p{margin:5px 0;}
 </style>
 </head>
 <body>
@@ -23,142 +24,95 @@ nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
 <header>
 <div style="display:flex;align-items:center;gap:12px">
 <img src="https://via.placeholder.com/150x45" alt="Logo">
-<b>Dashboard PT Khatulistiwa Sinar Energi</b>
+<b>PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
 </div>
 <nav>
-<a href="index.html">🏠 Home</a>
-<a href="#" id="logoutBtn">Sign Out</a>
+<a href="#home">Home</a>
+<a href="#harga">Harga</a>
+<a href="#tentang">Tentang Kami</a>
+<a href="#legalitas">Legalitas</a>
+<a href="#galeri">Galeri</a>
+<a href="#contact">Kontak</a>
+<a href="#" id="loginBtn">🔐 Login</a>
 </nav>
 </header>
 
-<div class="container">
-<h2>Harga BBM & Dokumen</h2>
+<section class="hero" id="home">
+<h1>KHATULISTIWA SINAR ENERGI</h1> 
+<h2>Mitra Penyalur dan Transportir BBM Industri</h2>
+<p>Melayani Distribusi BBM Industri wilayah KalSel-Teng-Bar</p>
+<a class="btn" href="https://wa.me/628158841410">📞 Contact Me</a>
+</section>
 
+<section id="harga">
+<div class="container">
+<h2>Harga Publish BBM Industri Pertamina</h2>
+<p style="text-align:center;font-weight:bold">Periode Sekarang</p>
 <div id="hargaContainer">
 <div class="card" id="cardwilayah1"><h3>Wilayah I</h3><p></p></div>
 <div class="card" id="cardwilayah2"><h3>Wilayah II</h3><p></p></div>
 <div class="card" id="cardwilayah3"><h3>Wilayah III</h3><p></p></div>
 <div class="card" id="cardwilayah4"><h3>Wilayah IV</h3><p></p></div>
 </div>
-
-<h3>Dokumen</h3>
-<input type="file" id="fileInput">
-<input type="text" id="typeInput" placeholder="Tipe Dokumen">
-<button id="uploadBtn" class="btn">Upload</button>
-<div id="fileList"></div>
 </div>
+</section>
+
+<section id="tentang">
+<div class="container">
+<h2>About</h2>
+<p>PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya.</p>
+</div>
+</section>
+
+<section id="legalitas">
+<div class="container">
+<h2>Legalitas Perusahaan</h2>
+<p>Nama Perusahaan: PT Khatulistiwa Sinar Energi</p>
+<p>NPWP: 1000-0000-0773-4310</p>
+<p>NIB: 1301-2600-7100-5</p>
+<p>Izin Niaga BBM: Terdaftar Resmi</p>
+</div>
+</section>
+
+<section id="galeri">
+<div class="container">
+<h2>Galeri Kegiatan</h2>
+<img src="https://via.placeholder.com/200x170">
+<img src="https://via.placeholder.com/200x170">
+<img src="https://via.placeholder.com/200x170">
+<img src="https://via.placeholder.com/200x170">
+</div>
+</section>
+
+<section id="contact">
+<div class="container">
+<h2>📞 Contact Me</h2>
+<p>📍 JL.H.M Rafi'i Rt.24 Pangkalan Bun, Kalimantan Tengah</p>
+<p>📱 Noto: 08158841410</p>
+<p>📧 Email: pt.khatulistiwa.sinar.energi@gmail.com</p>
+</div>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module">
-// ===== Supabase =====
+<script>
 const supabaseClient = supabase.createClient(
   "https://secasrbeamduxqxwlspv.supabase.co",
   "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
 );
 
-// ===== Firebase =====
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-  authDomain:"kse-harga-bbm-update.firebaseapp.com",
-  projectId:"kse-harga-bbm-update",
-  storageBucket:"kse-harga-bbm-update.firebasestorage.app",
-  messagingSenderId:"764165984284",
-  appId:"1:764165984284:web:a74aed43317539f1cfd9",
-  measurementId:"G-ZGQ5LG6DH9"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const ref = doc(db,"hargaBBM","periode");
-const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
-
-let adminLoggedIn=false;
-const params = new URLSearchParams(window.location.search);
-const emailUser = params.get("email");
-if(emailUser==="admin@kse.com") adminLoggedIn=true;
-
-// Load harga Firebase
-async function loadHarga(){
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return;
-  const data = snap.data();
-  for(let i=0;i<wilayah.length;i++){
-    let w=wilayah[i];
-    let now=parseInt(data.sekarang[w])||0;
-    const card=document.querySelector(`#card${w}`);
-    if(!card) continue;
-    card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
-    if(adminLoggedIn){
-      card.onclick=async ()=>{
-        const val=prompt(`Update harga ${w}:`,now);
-        if(val!==null){
-          const baru=parseInt(val)||0;
-          const dataSnap=await getDoc(ref);
-          const dataCurr=dataSnap.data();
-          let updateData = {...dataCurr.sekarang};
-          updateData[w]=baru;
-          await updateDoc(ref,{sekarang:updateData});
-          loadHarga();
-        }
-      };
-      card.style.cursor="pointer";
-    }
-  }
-}
-window.onload = loadHarga;
-
-// ===== Dokumen Supabase =====
-const uploadBtn=document.getElementById("uploadBtn");
-const fileInput=document.getElementById("fileInput");
-const typeInput=document.getElementById("typeInput");
-const fileList=document.getElementById("fileList");
-
-if(!adminLoggedIn){
-  uploadBtn.style.display="none";
-  fileInput.style.display="none";
-  typeInput.style.display="none";
-}
-
-async function loadFiles(){
-  let query=supabaseClient.from("documents").select("*");
-  if(!adminLoggedIn) query=query.eq("pt_email",emailUser);
-  const { data,error } = await query;
-  if(error) return console.error(error);
-  fileList.innerHTML="";
-  if(!data||data.length===0) fileList.innerHTML="<p>Belum ada dokumen</p>";
-  else data.forEach(f=>{
-    fileList.innerHTML+=`<p>${f.file_name} - ${f.type} - ${f.pt_email} <a href="${f.file_url}" target="_blank">Lihat</a></p>`;
-  });
-}
-
-async function uploadFile(){
-  const file=fileInput.files[0];
-  const type=typeInput.value;
-  if(!file) return alert("Pilih file dulu");
-  const filePath=`${emailUser}/${file.name}`;
-  const { error: uploadError } = await supabaseClient.storage.from("documents").upload(filePath,file,{upsert:true});
-  if(uploadError) return alert("Upload gagal: "+uploadError.message);
-  const { data: publicURL } = await supabaseClient.storage.from("documents").getPublicUrl(filePath);
-  await supabaseClient.from("documents").insert([{pt_email:emailUser,type:type,file_name:file.name,file_url:publicURL.publicUrl}]);
-  loadFiles();
-  alert("Upload berhasil");
-}
-
-uploadBtn.onclick=uploadFile;
-loadFiles();
-
-// Logout
-document.getElementById("logoutBtn").onclick = async ()=>{
-  await supabaseClient.auth.signOut();
-  window.location.href="index.html";
+document.getElementById("loginBtn").onclick = async ()=>{
+  const email = prompt("Masukkan email Supabase:");
+  const password = prompt("Masukkan password:");
+  const { data, error } = await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){ alert("Login gagal! "+error.message); return;}
+  window.location.href=`dashboard.html?email=${email}`;
 };
 </script>
 
 </body>
 </html>
+
+
 
 
 
