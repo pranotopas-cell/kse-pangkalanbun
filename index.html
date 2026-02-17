@@ -12,7 +12,7 @@ header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-con
 header img{height:45px;}
 nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
 nav a:hover{text-decoration:underline;}
-.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('hero.jpg');background-size:cover;background-position:center;color:white;text-align:center;padding:90px 20px;}
+.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://via.placeholder.com/1200x400') no-repeat center/cover;color:white;text-align:center;padding:90px 20px;}
 .hero h1{font-size:40px;margin-bottom:10px;}
 .btn{background:#ffc107;padding:12px 25px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;display:inline-block;margin-top:15px;}
 section{padding:50px 15px;}
@@ -30,12 +30,10 @@ h2{text-align:center;margin-bottom:25px;}
 .galeri{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
 .galeri img{width:100%;border-radius:10px;height:170px;object-fit:cover;}
 footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:14px;}
-/* LOGIN MODAL */
 #loginModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:200;}
 #loginModal .modalContent{background:white;padding:30px;border-radius:10px;width:90%;max-width:400px;text-align:center;}
 #loginModal input{width:100%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #ccc;}
 #loginModal button{width:100%;padding:10px;margin-top:10px;}
-/* DOKUMEN ADMIN */
 #docAdmin{display:none;margin-top:40px;}
 #docAdmin input, #docAdmin button{padding:8px;margin:5px 0;}
 #fileListTable{width:100%;border-collapse:collapse;margin-top:15px;}
@@ -47,7 +45,7 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 
 <header>
 <div style="display:flex;align-items:center;gap:12px">
-<img src="logo.png">
+<img src="https://via.placeholder.com/150x45" alt="Logo">
 <b>PT. KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
 </div>
 <nav>
@@ -75,19 +73,19 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <div class="harga-box">
 <div class="card" id="cardwilayah1">
 <h3>Wilayah I</h3><small>Sumatra, Jawa, Bali</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" onclick="editHarga('wilayah1')">✏️</span>
+<span class="editBtn" id="editWilayah1">✏️</span>
 </div>
 <div class="card" id="cardwilayah2">
 <h3>Wilayah II</h3><small>Kalimantan</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" onclick="editHarga('wilayah2')">✏️</span>
+<span class="editBtn" id="editWilayah2">✏️</span>
 </div>
 <div class="card" id="cardwilayah3">
 <h3>Wilayah III</h3><small>Sulawesi, NTB</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" onclick="editHarga('wilayah3')">✏️</span>
+<span class="editBtn" id="editWilayah3">✏️</span>
 </div>
 <div class="card" id="cardwilayah4">
 <h3>Wilayah IV</h3><small>Maluku, NTT, Papua</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" onclick="editHarga('wilayah4')">✏️</span>
+<span class="editBtn" id="editWilayah4">✏️</span>
 </div>
 </div>
 </div>
@@ -118,10 +116,10 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 <div class="container">
 <h2>Galeri Kegiatan</h2>
 <div class="galeri">
-<img src="galeri1.jpg">
-<img src="galeri2.jpg">
-<img src="galeri3.jpg">
-<img src="galeri4.jpg">
+<img src="https://via.placeholder.com/200x170" alt="">
+<img src="https://via.placeholder.com/200x170" alt="">
+<img src="https://via.placeholder.com/200x170" alt="">
+<img src="https://via.placeholder.com/200x170" alt="">
 </div>
 </div>
 </section>
@@ -137,7 +135,6 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 </section>
 
-<!-- LOGIN MODAL -->
 <div id="loginModal">
 <div class="modalContent">
 <h2>Login Admin</h2>
@@ -148,7 +145,6 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 </div>
 
-<!-- DOKUMEN ADMIN -->
 <section id="docAdmin" class="container">
 <h2>Dokumen Admin (Hanya Admin)</h2>
 <input type="file" id="fileInput">
@@ -169,26 +165,29 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </footer>
 
 <script type="module">
-// --- FIREBASE HARGA ---
+// === FIREBASE HARGA ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-  authDomain: "kse-harga-bbm-update.firebaseapp.com",
-  projectId: "kse-harga-bbm-update",
-  storageBucket: "kse-harga-bbm-update.firebasestorage.app",
-  messagingSenderId: "764165984284",
-  appId: "1:764165984284:web:a74aed43317539f5f1cfd9",
-  measurementId: "G-ZGQ5LG6DH9"
-};
-
+const firebaseConfig = {apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",authDomain:"kse-harga-bbm-update.firebaseapp.com",projectId:"kse-harga-bbm-update",storageBucket:"kse-harga-bbm-update.firebasestorage.app",messagingSenderId:"764165984284",appId:"1:764165984284:web:a74aed43317539f5f1cfd9",measurementId:"G-ZGQ5LG6DH9"};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const ref = doc(db,"hargaBBM","periode");
-const wilayah = ["wilayah1","wilayah2","wilayah3","wilayah4"];
+const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
+let adminLoggedIn=false;
 
-let adminLoggedIn = false;
+window.editHarga = async function(wil){
+  const newVal = prompt(`Update harga ${wil}:`);
+  if(newVal===null) return;
+  const val = parseInt(newVal)||0;
+  const snap = await getDoc(ref);
+  const data = snap.data();
+  const baru = {...data.sekarang};
+  baru[wil]=val;
+  await updateDoc(ref,{sekarang:baru});
+  alert(`Harga ${wil} berhasil diperbarui!`);
+  loadHarga();
+};
 
 async function loadHarga(){
   const snap = await getDoc(ref);
@@ -196,61 +195,43 @@ async function loadHarga(){
   const data = snap.data();
   for(let i=0;i<wilayah.length;i++){
     let w = wilayah[i];
-    let now = parseInt(data.sekarang[w]) || 0;
-    let prev = parseInt(data.kemarin[w]) || 0;
-    let selisih = now - prev;
-    let warna, keterangan;
-    if(selisih>0){ warna="red"; keterangan=`▲ Naik Rp ${selisih.toLocaleString()}`; }
-    else if(selisih<0){ warna="green"; keterangan=`▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`; }
-    else { warna="gray"; keterangan="● Tidak berubah"; }
+    let now = parseInt(data.sekarang[w])||0;
+    let prev = parseInt(data.kemarin[w])||0;
+    let selisih = now-prev;
+    let warna,keterangan;
+    if(selisih>0){warna="red";keterangan=`▲ Naik Rp ${selisih.toLocaleString()}`;}
+    else if(selisih<0){warna="green";keterangan=`▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`;}
+    else{warna="gray";keterangan="● Tidak berubah";}
     const card = document.querySelector(`#card${w}`);
     card.querySelector("p").innerText = `Rp ${now.toLocaleString()}`;
     card.querySelector(".keteranganKmr").innerText = `Rp ${prev.toLocaleString()} ${keterangan}`;
-    card.querySelector(".keteranganKmr").style.color = warna;
-    if(adminLoggedIn){
-      card.querySelector(".editBtn").style.display="block";
-    }
+    card.querySelector(".keteranganKmr").style.color=warna;
+    if(adminLoggedIn){card.querySelector(".editBtn").style.display="block";}
   }
 }
 
-// Edit Harga Inline
-async function editHarga(wil){
-  const newVal = prompt(`Update harga ${wil}:`);
-  if(newVal===null) return;
-  const val = parseInt(newVal)||0;
-  const snap = await getDoc(ref);
-  const data = snap.data();
-  const baru = {...data.sekarang};
-  baru[wil] = val;
-  await updateDoc(ref,{sekarang:baru});
-  alert(`Harga ${wil} berhasil diperbarui!`);
-  loadHarga();
-}
-
-// --- SUPABASE DOKUMEN ---
+// === SUPABASE DOKUMEN ===
 const supabaseClient = window.supabase.createClient(
   "https://secasrbeamduxqxwlspv.supabase.co",
   "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
 );
 
-const loginModal = document.getElementById("loginModal");
-const loginBtn = document.getElementById("loginBtn");
-const loginSubmit = document.getElementById("loginSubmit");
-loginBtn.addEventListener("click", ()=>loginModal.style.display="flex");
+const loginModal=document.getElementById("loginModal");
+const loginBtn=document.getElementById("loginBtn");
+const loginSubmit=document.getElementById("loginSubmit");
+loginBtn.addEventListener("click",()=>loginModal.style.display="flex");
 function closeLogin(){loginModal.style.display="none";}
 
-// Login Supabase
-loginSubmit.addEventListener("click", async ()=>{
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+loginSubmit.addEventListener("click",async ()=>{
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
   if(!email||!password) return alert("Email & password harus diisi");
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){alert("Login gagal: "+error.message); return;}
+  const { data,error }=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){alert("Login gagal: "+error.message);return;}
   alert("Login Admin berhasil!");
   loginModal.style.display="none";
   document.getElementById("docAdmin").style.display="block";
-  adminLoggedIn = true;
+  adminLoggedIn=true;
   loadHarga();
   loadFiles();
 });
@@ -297,8 +278,3 @@ loadHarga();
 
 </body>
 </html>
-
-
-
-
-
