@@ -88,7 +88,7 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <small class="keteranganKmr"></small>
 </div>
 
-<button id="loginBtn" class="btn">🔐 Login Admin</button>
+<a href="#" id="loginNav">🔐 Login</a>
 
 </div>
 </div>
@@ -215,6 +215,32 @@ document.getElementById("loginBtn").addEventListener("click", loginAdmin);
 // Load harga saat pertama kali
 loadHarga();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseClient = supabase.createClient(
+  "https://secasrbeamduxqxwlspv.supabase.co",
+  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+);
+
+const loginNav = document.getElementById("loginNav");
+
+loginNav.onclick = async () => {
+  const email = prompt("Email:");
+  const password = prompt("Password:");
+  if(!email || !password) return alert("Email & Password wajib diisi");
+
+  const { data: loginData, error } = await supabaseClient.auth.signInWithPassword({email, password});
+  if(error) return alert("Login gagal: " + error.message);
+
+  const { data: userData } = await supabaseClient.auth.getUser();
+  const user = userData.user;
+  if(!user) return alert("User tidak ditemukan");
+
+  // Redirect ke dashboard
+  window.location.href = "dashboard.html?email=" + encodeURIComponent(user.email);
+}
+</script>
 
 </body>
 </html>
+
