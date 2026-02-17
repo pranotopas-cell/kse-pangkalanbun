@@ -134,9 +134,9 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 </div>
 
-<!-- Admin Dokumen -->
+<!-- Dokumen Section -->
 <section id="docAdmin" class="container">
-<h2>Dokumen Admin (Hanya Admin)</h2>
+<h2>Dokumen</h2>
 <input type="file" id="fileInput">
 <input type="text" id="typeInput" placeholder="Tipe Dokumen">
 <input type="email" id="ownerEmail" placeholder="Email Pemilik Dokumen" value="investamakalimantanenergi@gmail.com">
@@ -163,22 +163,7 @@ const ref = doc(db,"hargaBBM","periode");
 const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
 let adminLoggedIn=false;
 
-// Global edit function
-window.editHarga = async function(wil){
-  if(!adminLoggedIn) return alert("Hanya admin bisa edit harga");
-  const newVal = prompt(`Update harga ${wil}:`);
-  if(newVal===null) return;
-  const val=parseInt(newVal)||0;
-  const snap = await getDoc(ref);
-  const data = snap.data();
-  const baru = {...data.sekarang};
-  baru[wil]=val;
-  await updateDoc(ref,{sekarang:baru});
-  alert(`Harga ${wil} berhasil diperbarui!`);
-  loadHarga();
-};
-
-// Load harga
+// ===== Load harga =====
 async function loadHarga(){
   const snap = await getDoc(ref);
   if(!snap.exists()) return;
@@ -201,6 +186,21 @@ async function loadHarga(){
 }
 loadHarga();
 
+// Edit harga admin
+window.editHarga=async function(wil){
+  if(!adminLoggedIn) return alert("Hanya admin bisa edit harga");
+  const newVal=prompt(`Update harga ${wil}:`);
+  if(newVal===null) return;
+  const val=parseInt(newVal)||0;
+  const snap = await getDoc(ref);
+  const data = snap.data();
+  const baru = {...data.sekarang};
+  baru[wil]=val;
+  await updateDoc(ref,{sekarang:baru});
+  alert(`Harga ${wil} berhasil diperbarui!`);
+  loadHarga();
+};
+
 // ===== SUPABASE =====
 const supabaseClient = window.supabase.createClient(
   "https://secasrbeamduxqxwlspv.supabase.co",
@@ -213,6 +213,7 @@ const loginSubmit=document.getElementById("loginSubmit");
 const uploadBtn=document.getElementById("uploadBtn");
 const docAdmin=document.getElementById("docAdmin");
 
+// login modal
 loginNav.addEventListener("click",()=>loginModal.style.display="flex");
 function closeLogin(){loginModal.style.display="none";}
 
@@ -221,41 +222,46 @@ loginSubmit.addEventListener("click",async()=>{
   const email=document.getElementById("email").value;
   const password=document.getElementById("password").value;
   if(!email||!password) return alert("Email & password harus diisi");
+
   const { data,error } = await supabaseClient.auth.signInWithPassword({email,password});
   if(error){alert("Login gagal: "+error.message); return;}
+
   const { data:userData } = await supabaseClient.auth.getUser();
   const user=userData.user;
 
+  // Tampilkan section dokumen
+  docAdmin.style.display="block";
+
   if(user.email==="admin@kse.com"){ // admin
     adminLoggedIn=true;
-    docAdmin.style.display="block";
     uploadBtn.style.display="inline-block";
-    uploadBtn.addEventListener("click",uploadFile);
+    uploadBtn.onclick=uploadFile;
     alert("Login Admin berhasil!");
-  } else { // user biasa
+  } else { // user
     adminLoggedIn=false;
-    docAdmin.style.display="block";
-    uploadBtn.style.display="none"; // hide upload
+    uploadBtn.style.display="none";
     alert("Login User berhasil!");
   }
+
   loginModal.style.display="none";
   loginNav.innerText="Sign Out";
   loginNav.onclick=async()=>{
     await supabaseClient.auth.signOut();
     location.reload();
   };
+
   loadHarga();
   loadFiles();
 });
 
-// Upload File admin
+// upload file
 async function uploadFile(){
   const file=document.getElementById("fileInput").files[0];
   const type=document.getElementById("typeInput").value;
   const ownerEmail=document.getElementById("ownerEmail").value.trim();
   if(!file || !type || !ownerEmail) return alert("File, tipe, dan email pemilik harus diisi");
-  const filePath=`${ownerEmail}/${file.name}`;
 
+  const filePath=`${ownerEmail}/${file.name}`;
   const { error: uploadError } = await supabaseClient.storage.from("documents").upload(filePath, file, {upsert:true});
   if(uploadError) return alert("Upload gagal: "+uploadError.message);
 
@@ -272,15 +278,18 @@ async function uploadFile(){
   loadFiles();
 }
 
-// Load files
+// load files
 async function loadFiles(){
   const { data:userData } = await supabaseClient.auth.getUser();
   if(!userData.user) return;
   const user=userData.user;
+
   let query = supabaseClient.from("documents").select("*");
   if(!adminLoggedIn){ query = query.eq("pt_email",user.email); }
+
   const { data,error } = await query;
   if(error) return console.error(error);
+
   const tbody=document.getElementById("fileList");
   tbody.innerHTML="";
   if(!data||data.length===0){tbody.innerHTML="<tr><td colspan='4'>Belum ada dokumen</td></tr>";}
@@ -296,8 +305,8 @@ async function loadFiles(){
   }
 }
 </script>
+
 </body>
 </html>
-
 
 
