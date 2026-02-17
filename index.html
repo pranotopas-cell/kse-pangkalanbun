@@ -1,100 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard PT Khatulistiwa Sinar Energi</title>
+<title>Home - PT Khatulistiwa Sinar Energi</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: sans-serif; display: flex; min-height: 100vh; }
-
-  /* Sidebar */
-  #sidebar {
-    width: 250px; background: #800000; color: white; padding: 20px;
-    flex-shrink: 0;
-  }
-  #sidebar h2 { margin-bottom: 20px; font-size: 20px; color: #fff; text-align: center; }
-  #menu-dashboard { list-style: none; padding: 0; }
-  #menu-dashboard li {
-    padding: 10px; margin-bottom: 5px; cursor: pointer; border-radius: 5px;
-  }
-  #menu-dashboard li:hover { background: #b22222; }
-  .submenu { list-style: none; padding-left: 15px; display: none; }
-  .submenu li { background: #4b0000; margin: 3px 0; padding: 8px; border-radius: 5px; }
-
-  /* Main content */
-  #main { flex-grow:1; padding: 20px; background: #f1f5f9; }
-
-  /* Responsive */
-  @media(max-width:768px){
-    body { flex-direction: column; }
-    #sidebar { width: 100%; }
-  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{display:flex; font-family:sans-serif; min-height:100vh;}
+  #sidebar{width:250px;background:#800000;color:white;padding:20px;}
+  #sidebar h2{text-align:center;margin-bottom:20px;}
+  #menu-dashboard{list-style:none;padding:0;}
+  #menu-dashboard li{padding:10px;margin-bottom:5px;cursor:pointer;border-radius:5px;}
+  #menu-dashboard li:hover{background:#b22222;}
+  .submenu{list-style:none;padding-left:15px;display:none;}
+  .submenu li{background:#4b0000;margin:3px 0;padding:8px;border-radius:5px;}
+  #main{flex-grow:1;padding:20px;background:#f1f5f9;}
+  @media(max-width:768px){body{flex-direction:column;}#sidebar{width:100%;}}
 </style>
 </head>
 <body>
 
 <div id="sidebar">
   <h2>PT Khatulistiwa Sinar Energi</h2>
-  <ul id="menu-dashboard">
-    <li data-link="/home">🏠 Home</li>
-    <li data-link="/profile">👤 Profile</li>
-  </ul>
+  <ul id="menu-dashboard"></ul>
 </div>
 
 <div id="main">
-  <h1>Selamat Datang di Dashboard</h1>
-  <p>Pilih menu di sidebar untuk navigasi.</p>
+  <h1>Home 🏠</h1>
+  <p>Selamat datang di dashboard PT Khatulistiwa Sinar Energi. Pilih menu di sidebar untuk navigasi.</p>
 </div>
 
-<script>
-const menu = document.getElementById('menu-dashboard');
-
-// Menu baru dinamis
-const newMenus = [
-  { name: 'Pengiriman ⛽', link: '/pengiriman' },
-  { name: 'Invoice 💰', link: '/invoice' },
-  { name: 'Laporan 📊', submenu: [
-      { name: 'Harian', link: '/laporan/harian' },
-      { name: 'Bulanan', link: '/laporan/bulanan' }
-    ]
-  },
-  { name: 'Settings ⚙️', link: '/settings' }
-];
-
-newMenus.forEach(item => {
-  const li = document.createElement('li');
-  li.textContent = item.name;
-
-  if(item.link) li.onclick = () => {
-    alert('Navigasi ke: ' + item.link);
-    // window.location.href = item.link; // aktifkan kalau mau langsung navigasi
-  }
-
-  if(item.submenu){
-    const subUl = document.createElement('ul');
-    subUl.classList.add('submenu');
-    item.submenu.forEach(subItem => {
-      const subLi = document.createElement('li');
-      subLi.textContent = subItem.name;
-      subLi.onclick = (e) => {
-        e.stopPropagation();
-        alert('Navigasi ke: ' + subItem.link);
-      }
-      subUl.appendChild(subLi);
-    });
-    li.appendChild(subUl);
-
-    li.onclick = (e) => {
-      e.stopPropagation();
-      subUl.style.display = subUl.style.display === 'block' ? 'none' : 'block';
-    }
-  }
-
-  menu.appendChild(li);
-});
-</script>
-
+<script src="sidebar.js"></script>
 </body>
 </html>
