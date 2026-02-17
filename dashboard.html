@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard KSE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial;}
+body{background:#20C997;color:#333;}
+header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
+header img{height:45px;}
+nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
+.container{max-width:1100px;margin:auto;padding:20px;}
+.card{background:white;padding:20px;border-radius:12px;margin-bottom:10px;}
+.card h3{margin:0;font-size:18px;}
+.card p{font-weight:bold;margin-top:8px;}
+.btn{background:#ffc107;padding:10px 15px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;margin-top:10px;display:inline-block;}
+#fileList p{margin:5px 0;}
+</style>
+</head>
+<body>
+
+<header>
+<div style="display:flex;align-items:center;gap:12px">
+<img src="https://via.placeholder.com/150x45" alt="Logo">
+<b>Dashboard PT Khatulistiwa Sinar Energi</b>
+</div>
+<nav>
+<a href="index.html">🏠 Home</a>
+<a href="#" id="logoutBtn">Sign Out</a>
+</nav>
+</header>
+
+<div class="container">
+<h2>Harga BBM & Dokumen</h2>
+
+<div id="hargaContainer">
+<div class="card" id="cardWilayah1"><h3>Wilayah I</h3><p></p></div>
+<div class="card" id="cardWilayah2"><h3>Wilayah II</h3><p></p></div>
+<div class="card" id="cardWilayah3"><h3>Wilayah III</h3><p></p></div>
+<div class="card" id="cardWilayah4"><h3>Wilayah IV</h3><p></p></div>
+</div>
+
+<h3>Dokumen</h3>
+<input type="file" id="fileInput">
+<input type="text" id="typeInput" placeholder="Tipe Dokumen">
+<button id="uploadBtn" class="btn">Upload</button>
+<div id="fileList"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+// ===== Supabase =====
+const supabaseClient = supabase.createClient(
+  "https://secasrbeamduxqxwlspv.supabase.co",
+  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+);
+
+// ===== Firebase =====
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
+  authDomain:"kse-harga-bbm-update.firebaseapp.com",
+  projectId:"kse-harga-bbm-update",
+  storageBucket:"kse-harga-bbm-update.firebasestorage.app",
+  messagingSenderId:"764165984284",
+  appId:"1:764165984284:web:a74aed43317539f1cfd9",
+  measurementId:"G-ZGQ5LG6DH9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const ref = doc(db,"hargaBBM","periode");
+const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
+
+let adminLoggedIn=false;
+
+// Ambil email dari query param
+const params = new URLSearchParams(window.location.search);
+const emailUser = params.get("email");
+if(emailUser==="admin@kse.com") adminLoggedIn=true;
+
+// Load harga dari Firebase
+async function loadHarga(){
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return;
+  const data = snap.data();
+  for(let i=0;i<wilayah.length;i++){
+    let w=wilayah[i];
+    let now=parseInt(data.sekarang[w])||0;
+    const card=document.querySelector(`#card${w}`);
+    card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
+    if(adminLoggedIn){
+      card.onclick=async ()=>{
+        const val=prompt(`Update harga ${w}:`,now);
+        if(val!==null){
+          const baru=parseInt(val)||0;
+          const dataSnap=await getDoc(ref);
+          const dataCurr=dataSnap.data();
+          let updateData = {...dataCurr.sekarang};
+          updateData[w]=baru;
+          await updateDoc(ref,{sekarang:updateData});
+          loadHarga();
+        }
+      };
+      card.style.cursor="pointer";
+    }
+  }
+}
+loadHarga();
+
+// ===== Dokumen Supabase =====
+const uploadBtn=document.getElementById("uploadBtn");
+const fileInput=document.getElementById("fileInput");
+const typeInput=document.getElementById("typeInput");
+const fileList=document.getElementById("fileList");
+
+if(!adminLoggedIn){
+  uploadBtn.style.display="none";
+  fileInput.style.display="none";
+  typeInput.style.display="none";
+}
+
+async function loadFiles(){
+  let query=supabaseClient.from("documents").select("*");
+  if(!adminLoggedIn) query=query.eq("pt_email",emailUser);
+  const { data,error } = await query;
+  if(error) return console.error(error);
+  fileList.innerHTML="";
+  if(!data||data.length===0) fileList.innerHTML="<p>Belum ada dokumen</p>";
+  else data.forEach(f=>{
+    fileList.innerHTML+=`<p>${f.file_name} - ${f.type} - ${f.pt_email} <a href="${f.file_url}" target="_blank">Lihat</a></p>`;
+  });
+}
+
+async function uploadFile(){
+  const file=fileInput.files[0];
+  const type=typeInput.value;
+  if(!file) return alert("Pilih file dulu");
+  const filePath=`${emailUser}/${file.name}`;
+  const { error: uploadError } = await supabaseClient.storage.from("documents").upload(filePath,file,{upsert:true});
+  if(uploadError) return alert("Upload gagal: "+uploadError.message);
+  const { data: publicURL } = supabaseClient.storage.from("documents").getPublicUrl(filePath);
+  await supabaseClient.from("documents").insert([{pt_email:emailUser,type:type,file_name:file.name,file_url:publicURL.publicUrl}]);
+  loadFiles();
+  alert("Upload berhasil");
+}
+
+uploadBtn.onclick=uploadFile;
+loadFiles();
+
+// Sign Out
+document.getElementById("logoutBtn").onclick = async ()=>{
+  await supabaseClient.auth.signOut();
+  window.location.href="index.html";
+};
+</script>
+
+</body>
+</html>
+
+
+
+
+

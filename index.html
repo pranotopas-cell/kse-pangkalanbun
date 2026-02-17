@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT.KHATULISTIWA SINAR ENERGI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
+body{background:#20C997;color:#333;}
+header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+header img{height:45px;}
+nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
+nav a:hover{text-decoration:underline;}
+.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://via.placeholder.com/1200x400') no-repeat center/cover;color:white;text-align:center;padding:90px 20px;}
+.hero h1{font-size:40px;margin-bottom:10px;}
+.btn{background:#ffc107;padding:12px 25px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;display:inline-block;margin-top:15px;}
+section{padding:50px 15px;}
+.container{max-width:1100px;margin:auto;}
+h2{text-align:center;margin-bottom:25px;}
+.card{background:white;padding:20px;border-radius:12px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.card h3{margin:0;font-size:18px;}
+.card p{font-size:22px;font-weight:bold;margin-top:8px;color:#0d6efd;}
+.card small{display:block;margin-top:5px;}
+.tentang{background:white;border-radius:12px;padding:30px;box-shadow:0 4px 12px rgba(0,0,0,.08);line-height:1.7;}
+footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="https://via.placeholder.com/150x45" alt="Logo">
+    <b>PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
+  </div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#harga">Harga</a>
+    <a href="#tentang">Tentang Kami</a>
+    <a href="#legalitas">Legalitas</a>
+    <a href="#galeri">Galeri</a>
+    <a href="#contact">Kontak</a>
+    <a href="#" id="loginNav">🔐 Login</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <h1>KHATULISTIWA SINAR ENERGI</h1> 
+  <h2>Mitra Penyalur dan Transportir BBM Industri</h2>
+  <p>Melayani Distribusi BBM Industri wilayah KalSel-Teng-Bar</p>
+  <a class="btn" href="https://wa.me/628158841410">📞 Contact Me</a>
+</section>
+
+<section id="harga">
+  <div class="container">
+    <h2>Harga Publish BBM Industri Pertamina</h2>
+    <p style="text-align:center;font-weight:bold">Periode Sekarang</p>
+    <div class="card" id="cardWilayah1"><h3>Wilayah I</h3><p></p><small>Sumatra, Jawa, Bali</small></div>
+    <div class="card" id="cardWilayah2"><h3>Wilayah II</h3><p></p><small>Kalimantan</small></div>
+    <div class="card" id="cardWilayah3"><h3>Wilayah III</h3><p></p><small>Sulawesi, NTB</small></div>
+    <div class="card" id="cardWilayah4"><h3>Wilayah IV</h3><p></p><small>Maluku, NTT, Papua</small></div>
+  </div>
+</section>
+
+<section id="tentang">
+  <div class="container">
+    <h2>About</h2>
+    <div class="tentang">
+      PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi.
+      Pelayanan cepat, aman, handal dan terpercaya.
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 PT Khatulistiwa Sinar Energi – All Rights Reserved
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+const supabaseClient = supabase.createClient(
+  "https://secasrbeamduxqxwlspv.supabase.co",
+  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+);
+
+const loginNav = document.getElementById("loginNav");
+
+loginNav.onclick = async () => {
+  const email = prompt("Email:");
+  const password = prompt("Password:");
+  if(!email || !password) return alert("Email & Password wajib diisi");
+
+  const { data: loginData, error } = await supabaseClient.auth.signInWithPassword({email, password});
+  if(error) return alert("Login gagal: " + error.message);
+
+  const { data: userData } = await supabaseClient.auth.getUser();
+  const user = userData.user;
+  if(!user) return alert("User tidak ditemukan");
+
+  // Redirect ke dashboard
+  window.location.href = "dashboard.html?email=" + encodeURIComponent(user.email);
+};
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
