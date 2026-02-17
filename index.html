@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PT. Khatulistiwa Sinar Energi</title>
+<title>PT.KHATULISTIWA SINAR ENERGI</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
-body{background:linear-gradient(to bottom,#20C997,#0d6efd);color:#333;}
+body{background:#20C997;color:#333;}
 header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 header img{height:45px;}
 nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
@@ -30,15 +30,12 @@ h2{text-align:center;margin-bottom:25px;}
 .galeri{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
 .galeri img{width:100%;border-radius:10px;height:170px;object-fit:cover;}
 footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:14px;}
+#docSection{display:none;margin-top:40px;}
+#fileList p{margin:5px 0;}
 #loginModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:200;}
 #loginModal .modalContent{background:white;padding:30px;border-radius:10px;width:90%;max-width:400px;text-align:center;}
 #loginModal input{width:100%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #ccc;}
 #loginModal button{width:100%;padding:10px;margin-top:10px;}
-#docSection{display:none;margin-top:40px;}
-#docSection input,#docSection button{padding:8px;margin:5px 0;}
-#fileListTable{width:100%;border-collapse:collapse;margin-top:15px;}
-#fileListTable th,#fileListTable td{padding:10px;border:1px solid #ddd;text-align:left;}
-#fileListTable th{background:#007bff;color:white;}
 </style>
 </head>
 <body>
@@ -46,7 +43,7 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <header>
 <div style="display:flex;align-items:center;gap:12px">
 <img src="https://via.placeholder.com/150x45" alt="Logo">
-<b>PT. KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
+<b>PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
 </div>
 <nav>
 <a href="#home">Home</a>
@@ -83,7 +80,7 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <div class="container">
 <h2>About</h2>
 <div class="tentang">
-PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya. Didukung dengan armada dan SDM operasional terlatih.
+PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya.
 </div>
 </div>
 </section>
@@ -104,10 +101,10 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 <div class="container">
 <h2>Galeri Kegiatan</h2>
 <div class="galeri">
-<img src="https://via.placeholder.com/200x170" alt="">
-<img src="https://via.placeholder.com/200x170" alt="">
-<img src="https://via.placeholder.com/200x170" alt="">
-<img src="https://via.placeholder.com/200x170" alt="">
+<img src="https://via.placeholder.com/200x170">
+<img src="https://via.placeholder.com/200x170">
+<img src="https://via.placeholder.com/200x170">
+<img src="https://via.placeholder.com/200x170">
 </div>
 </div>
 </section>
@@ -123,6 +120,17 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 </section>
 
+<!-- Dokumen Section Supabase -->
+<section id="docSection" class="container">
+<h2>Dokumen</h2>
+<input type="file" id="fileInput">
+<input type="text" id="typeInput" placeholder="Tipe Dokumen">
+<button id="uploadBtn">Upload</button>
+<div id="fileList"></div>
+</section>
+
+<footer>© 2026 PT Khatulistiwa Sinar Energi – All Rights Reserved</footer>
+
 <!-- Login Modal -->
 <div id="loginModal">
 <div class="modalContent">
@@ -134,36 +142,16 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 </div>
 
-<!-- Dokumen Section -->
-<section id="docSection" class="container">
-<h2>Dokumen</h2>
-<input type="file" id="fileInput">
-<input type="text" id="typeInput" placeholder="Tipe Dokumen">
-<input type="email" id="ownerEmail" placeholder="Email Pemilik Dokumen" value="investamakalimantanenergi@gmail.com">
-<button id="uploadBtn">Upload</button>
-
-<h3>Daftar Dokumen</h3>
-<table id="fileListTable">
-<thead><tr><th>Nama File</th><th>Tipe</th><th>Owner</th><th>Aksi</th></tr></thead>
-<tbody id="fileList"></tbody>
-</table>
-</section>
-
-<footer>© 2026 PT Khatulistiwa Sinar Energi – All Rights Reserved</footer>
-
 <script type="module">
-// ===== FIREBASE HARGA =====
+// ===== FIREBASE =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
 const firebaseConfig = {apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",authDomain:"kse-harga-bbm-update.firebaseapp.com",projectId:"kse-harga-bbm-update",storageBucket:"kse-harga-bbm-update.firebasestorage.app",messagingSenderId:"764165984284",appId:"1:764165984284:web:a74aed43317539f1cfd9",measurementId:"G-ZGQ5LG6DH9"};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const ref = doc(db,"hargaBBM","periode");
 const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
 let adminLoggedIn=false;
-
-// ===== Load harga =====
 async function loadHarga(){
   const snap = await getDoc(ref);
   if(!snap.exists()) return;
@@ -180,138 +168,85 @@ async function loadHarga(){
     const card=document.querySelector(`#card${w}`);
     card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
     card.querySelector(".keteranganKmr").innerText=`Rp ${prev.toLocaleString()} ${keterangan}`;
-    card.querySelector(".keteranganKmr").style.color=warna;
-    card.querySelector(".editBtn").style.display = adminLoggedIn ? "block" : "none";
-    card.querySelector(".editBtn").onclick = ()=>editHarga(w);
+    card.querySelector(".editBtn").style.display=adminLoggedIn?"block":"none";
+    card.querySelector(".editBtn").onclick=()=>editHarga(w);
   }
 }
 loadHarga();
-
-// Edit harga admin
 window.editHarga=async function(wil){
   if(!adminLoggedIn) return alert("Hanya admin bisa edit harga");
   const newVal=prompt(`Update harga ${wil}:`);
   if(newVal===null) return;
   const val=parseInt(newVal)||0;
-  const snap = await getDoc(ref);
-  const data = snap.data();
-  const baru = {...data.sekarang};
+  const snap=await getDoc(ref);
+  const data=snap.data();
+  const baru={...data.sekarang};
   baru[wil]=val;
   await updateDoc(ref,{sekarang:baru});
-  alert(`Harga ${wil} berhasil diperbarui!`);
   loadHarga();
 };
+document.getElementById("loginBtn").addEventListener("click",()=>loginModal.style.display="flex");
 
 // ===== SUPABASE =====
 const supabaseClient = window.supabase.createClient(
-  "https://secasrbeamduxqxwlspv.supabase.co",
-  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+ "https://secasrbeamduxqxwlspv.supabase.co",
+ "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
 );
-
 const loginModal=document.getElementById("loginModal");
 const loginNav=document.getElementById("loginNav");
 const loginSubmit=document.getElementById("loginSubmit");
 const uploadBtn=document.getElementById("uploadBtn");
 const docSection=document.getElementById("docSection");
-
-// login modal
-loginNav.addEventListener("click",()=>loginModal.style.display="flex");
-function closeLogin(){loginModal.style.display="none";}
-
-// login
+async function closeLogin(){loginModal.style.display="none";}
 loginSubmit.addEventListener("click",async()=>{
   const email=document.getElementById("email").value;
   const password=document.getElementById("password").value;
-  if(!email||!password) return alert("Email & password harus diisi");
-
-  const { data,error } = await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){alert("Login gagal: "+error.message); return;}
-
-  const { data:userData } = await supabaseClient.auth.getUser();
-  if(!userData.user) return;
-
+  const { data,error }=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){alert("Login gagal: "+error.message);return;}
+  const { data:userData }=await supabaseClient.auth.getUser();
   const user=userData.user;
-
-  // Tampilkan section dokumen
+  if(!user) return;
   docSection.style.display="block";
-
-  if(user.email==="admin@kse.com"){ // admin
-    adminLoggedIn=true;
-    uploadBtn.style.display="inline-block";
-    uploadBtn.onclick=uploadFile;
-    alert("Login Admin berhasil!");
-  } else { // user
-    adminLoggedIn=false;
-    uploadBtn.style.display="none";
-    alert("Login User berhasil!");
-  }
-
+  if(user.email==="admin@kse.com"){adminLoggedIn=true;uploadBtn.style.display="inline-block";uploadBtn.onclick=uploadFile;alert("Login Admin berhasil!");}
+  else{adminLoggedIn=false;uploadBtn.style.display="none";alert("Login User berhasil!");}
   loginModal.style.display="none";
   loginNav.innerText="Sign Out";
-  loginNav.onclick=async()=>{
-    await supabaseClient.auth.signOut();
-    location.reload();
-  };
-
+  loginNav.onclick=async()=>{await supabaseClient.auth.signOut();location.reload();}
   loadHarga();
   loadFiles();
 });
 
-// upload file
 async function uploadFile(){
   const file=document.getElementById("fileInput").files[0];
   const type=document.getElementById("typeInput").value;
-  const ownerEmail=document.getElementById("ownerEmail").value.trim();
-  if(!file || !type || !ownerEmail) return alert("File, tipe, dan email pemilik harus diisi");
-
-  const filePath=`${ownerEmail}/${file.name}`;
-  const { error: uploadError } = await supabaseClient.storage.from("documents").upload(filePath, file, {upsert:true});
+  const { data:userData}=await supabaseClient.auth.getUser();
+  const user=userData.user;
+  if(!file) return alert("Pilih file dulu");
+  const filePath=`${user.email}/${file.name}`;
+  const { error: uploadError }=await supabaseClient.storage.from("documents").upload(filePath,file,{upsert:true});
   if(uploadError) return alert("Upload gagal: "+uploadError.message);
-
-  const { data: publicURL } = supabaseClient.storage.from("documents").getPublicUrl(filePath);
-
-  await supabaseClient.from("documents").insert([{
-    pt_email: ownerEmail,
-    type: type,
-    file_name: file.name,
-    file_url: publicURL.publicUrl
-  }]);
-
-  alert("Upload berhasil untuk " + ownerEmail);
+  const { data: publicURL}=supabaseClient.storage.from("documents").getPublicUrl(filePath);
+  await supabaseClient.from("documents").insert([{pt_email:user.email,type:type,file_name:file.name,file_url:publicURL.publicUrl}]);
+  alert("Upload berhasil");
   loadFiles();
 }
 
-// load files
 async function loadFiles(){
-  const { data:userData } = await supabaseClient.auth.getUser();
-  if(!userData.user) return;
+  const { data:userData }=await supabaseClient.auth.getUser();
   const user=userData.user;
-
-  let query = supabaseClient.from("documents").select("*");
-  if(!adminLoggedIn){ query = query.eq("pt_email",user.email); }
-
-  const { data,error } = await query;
+  let query=supabaseClient.from("documents").select("*");
+  if(!adminLoggedIn){query=query.eq("pt_email",user.email);}
+  const { data,error }=await query;
   if(error) return console.error(error);
-
   const tbody=document.getElementById("fileList");
   tbody.innerHTML="";
-  if(!data||data.length===0){tbody.innerHTML="<tr><td colspan='4'>Belum ada dokumen</td></tr>";}
-  else{
-    data.forEach(f=>{
-      tbody.innerHTML+=`<tr>
-        <td>${f.file_name}</td>
-        <td>${f.type}</td>
-        <td>${f.pt_email}</td>
-        <td><a href="${f.file_url}" target="_blank">Download</a></td>
-      </tr>`;
-    });
-  }
+  if(!data||data.length===0){tbody.innerHTML="<p>Belum ada dokumen</p>";}
+  else{data.forEach(f=>{tbody.innerHTML+=`<p>${f.file_name} - ${f.type} <a href="${f.file_url}" target="_blank">Lihat</a></p>`;});}
 }
 </script>
 
 </body>
 </html>
-
 
 
 
