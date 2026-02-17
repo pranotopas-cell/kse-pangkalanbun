@@ -10,7 +10,7 @@
 body{background: linear-gradient(to bottom, #20C997, #0d6efd); color:#333;}
 header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 header img{height:45px;}
-nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
+nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
 nav a:hover{text-decoration:underline;}
 .hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://via.placeholder.com/1200x400') no-repeat center/cover;color:white;text-align:center;padding:90px 20px;}
 .hero h1{font-size:40px;margin-bottom:10px;}
@@ -55,7 +55,7 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <a href="#legalitas">Legalitas</a>
 <a href="#galeri">Galeri</a>
 <a href="#contact">Kontak</a>
-<a href="#" id="loginBtn">🔐 Login Admin</a>
+<a id="loginNav">🔐 Login</a>
 </nav>
 </header>
 
@@ -71,22 +71,10 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <h2>Harga Publish BBM Industri Pertamina</h2>
 <p style="text-align:center;font-weight:bold">Periode Sekarang</p>
 <div class="harga-box">
-<div class="card" id="cardwilayah1">
-<h3>Wilayah I</h3><small>Sumatra, Jawa, Bali</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" id="editWilayah1">✏️</span>
-</div>
-<div class="card" id="cardwilayah2">
-<h3>Wilayah II</h3><small>Kalimantan</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" id="editWilayah2">✏️</span>
-</div>
-<div class="card" id="cardwilayah3">
-<h3>Wilayah III</h3><small>Sulawesi, NTB</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" id="editWilayah3">✏️</span>
-</div>
-<div class="card" id="cardwilayah4">
-<h3>Wilayah IV</h3><small>Maluku, NTT, Papua</small><p></p><small class="keteranganKmr"></small>
-<span class="editBtn" id="editWilayah4">✏️</span>
-</div>
+<div class="card" id="cardwilayah1"><h3>Wilayah I</h3><small>Sumatra, Jawa, Bali</small><p></p><small class="keteranganKmr"></small><span class="editBtn" id="editWilayah1">✏️</span></div>
+<div class="card" id="cardwilayah2"><h3>Wilayah II</h3><small>Kalimantan</small><p></p><small class="keteranganKmr"></small><span class="editBtn" id="editWilayah2">✏️</span></div>
+<div class="card" id="cardwilayah3"><h3>Wilayah III</h3><small>Sulawesi, NTB</small><p></p><small class="keteranganKmr"></small><span class="editBtn" id="editWilayah3">✏️</span></div>
+<div class="card" id="cardwilayah4"><h3>Wilayah IV</h3><small>Maluku, NTT, Papua</small><p></p><small class="keteranganKmr"></small><span class="editBtn" id="editWilayah4">✏️</span></div>
 </div>
 </div>
 </section>
@@ -135,37 +123,35 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 </section>
 
+<!-- Login Modal -->
 <div id="loginModal">
 <div class="modalContent">
-<h2>Login Admin</h2>
-<input type="email" id="email" placeholder="Email Supabase">
-<input type="password" id="password" placeholder="Password Supabase">
+<h2>Login</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
 <button id="loginSubmit">Login</button>
 <button onclick="closeLogin()" style="background:#ccc;color:black;">Batal</button>
 </div>
 </div>
 
+<!-- Admin Dokumen -->
 <section id="docAdmin" class="container">
 <h2>Dokumen Admin (Hanya Admin)</h2>
 <input type="file" id="fileInput">
 <input type="text" id="typeInput" placeholder="Tipe Dokumen">
-<button onclick="uploadFile()">Upload</button>
+<button id="uploadBtn">Upload</button>
 
 <h3>Daftar Dokumen</h3>
 <table id="fileListTable">
-<thead>
-<tr><th>Nama File</th><th>Tipe</th><th>Aksi</th></tr>
-</thead>
+<thead><tr><th>Nama File</th><th>Tipe</th><th>Aksi</th></tr></thead>
 <tbody id="fileList"></tbody>
 </table>
 </section>
 
-<footer>
-© 2026 PT Khatulistiwa Sinar Energi – All Rights Reserved
-</footer>
+<footer>© 2026 PT Khatulistiwa Sinar Energi – All Rights Reserved</footer>
 
 <script type="module">
-// === FIREBASE HARGA ===
+// ===== FIREBASE HARGA =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
@@ -176,10 +162,11 @@ const ref = doc(db,"hargaBBM","periode");
 const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
 let adminLoggedIn=false;
 
+// Global edit function
 window.editHarga = async function(wil){
   const newVal = prompt(`Update harga ${wil}:`);
   if(newVal===null) return;
-  const val = parseInt(newVal)||0;
+  const val=parseInt(newVal)||0;
   const snap = await getDoc(ref);
   const data = snap.data();
   const baru = {...data.sekarang};
@@ -189,54 +176,76 @@ window.editHarga = async function(wil){
   loadHarga();
 };
 
+// Load harga
 async function loadHarga(){
   const snap = await getDoc(ref);
   if(!snap.exists()) return;
   const data = snap.data();
   for(let i=0;i<wilayah.length;i++){
-    let w = wilayah[i];
-    let now = parseInt(data.sekarang[w])||0;
-    let prev = parseInt(data.kemarin[w])||0;
-    let selisih = now-prev;
+    let w=wilayah[i];
+    let now=parseInt(data.sekarang[w])||0;
+    let prev=parseInt(data.kemarin[w])||0;
+    let selisih=now-prev;
     let warna,keterangan;
     if(selisih>0){warna="red";keterangan=`▲ Naik Rp ${selisih.toLocaleString()}`;}
     else if(selisih<0){warna="green";keterangan=`▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`;}
     else{warna="gray";keterangan="● Tidak berubah";}
-    const card = document.querySelector(`#card${w}`);
-    card.querySelector("p").innerText = `Rp ${now.toLocaleString()}`;
-    card.querySelector(".keteranganKmr").innerText = `Rp ${prev.toLocaleString()} ${keterangan}`;
+    const card=document.querySelector(`#card${w}`);
+    card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
+    card.querySelector(".keteranganKmr").innerText=`Rp ${prev.toLocaleString()} ${keterangan}`;
     card.querySelector(".keteranganKmr").style.color=warna;
-    if(adminLoggedIn){card.querySelector(".editBtn").style.display="block";}
+    card.querySelector(".editBtn").style.display = adminLoggedIn ? "block" : "none";
   }
 }
+loadHarga();
 
-// === SUPABASE DOKUMEN ===
+// ===== SUPABASE =====
 const supabaseClient = window.supabase.createClient(
   "https://secasrbeamduxqxwlspv.supabase.co",
   "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
 );
 
 const loginModal=document.getElementById("loginModal");
-const loginBtn=document.getElementById("loginBtn");
+const loginNav=document.getElementById("loginNav");
 const loginSubmit=document.getElementById("loginSubmit");
-loginBtn.addEventListener("click",()=>loginModal.style.display="flex");
+const uploadBtn=document.getElementById("uploadBtn");
+const docAdmin=document.getElementById("docAdmin");
+
+loginNav.addEventListener("click",()=>loginModal.style.display="flex");
 function closeLogin(){loginModal.style.display="none";}
 
-loginSubmit.addEventListener("click",async ()=>{
+// login
+loginSubmit.addEventListener("click",async()=>{
   const email=document.getElementById("email").value;
   const password=document.getElementById("password").value;
   if(!email||!password) return alert("Email & password harus diisi");
-  const { data,error }=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){alert("Login gagal: "+error.message);return;}
-  alert("Login Admin berhasil!");
+  const { data,error } = await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){alert("Login gagal: "+error.message); return;}
+  const { data:userData } = await supabaseClient.auth.getUser();
+  const user=userData.user;
+
+  if(user.email==="admin@kse.com"){ // admin
+    adminLoggedIn=true;
+    docAdmin.style.display="block";
+    uploadBtn.addEventListener("click",uploadFile);
+    alert("Login Admin berhasil!");
+  } else { // user biasa
+    adminLoggedIn=false;
+    docAdmin.style.display="block";
+    uploadBtn.style.display="none"; // hide upload
+    alert("Login User berhasil!");
+  }
   loginModal.style.display="none";
-  document.getElementById("docAdmin").style.display="block";
-  adminLoggedIn=true;
+  loginNav.innerText="Sign Out";
+  loginNav.onclick=async()=>{
+    await supabaseClient.auth.signOut();
+    location.reload();
+  };
   loadHarga();
   loadFiles();
 });
 
-// Upload File
+// Upload File admin
 async function uploadFile(){
   const file=document.getElementById("fileInput").files[0];
   const type=document.getElementById("typeInput").value;
@@ -255,8 +264,11 @@ async function uploadFile(){
 // Load files
 async function loadFiles(){
   const { data:userData } = await supabaseClient.auth.getUser();
+  if(!userData.user) return;
   const user=userData.user;
-  const { data,error } = await supabaseClient.from("documents").select("*").eq("pt_email",user.email);
+  let query = supabaseClient.from("documents").select("*");
+  if(!adminLoggedIn){ query = query.eq("pt_email",user.email); }
+  const { data,error } = await query;
   if(error) return console.error(error);
   const tbody=document.getElementById("fileList");
   tbody.innerHTML="";
@@ -271,10 +283,7 @@ async function loadFiles(){
     });
   }
 }
-
-// Load harga awal
-loadHarga();
 </script>
-
 </body>
 </html>
+
