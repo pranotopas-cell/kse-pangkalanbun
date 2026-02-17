@@ -35,10 +35,10 @@ nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
 <h2>Harga BBM & Dokumen</h2>
 
 <div id="hargaContainer">
-<div class="card" id="cardWilayah1"><h3>Wilayah I</h3><p></p></div>
-<div class="card" id="cardWilayah2"><h3>Wilayah II</h3><p></p></div>
-<div class="card" id="cardWilayah3"><h3>Wilayah III</h3><p></p></div>
-<div class="card" id="cardWilayah4"><h3>Wilayah IV</h3><p></p></div>
+<div class="card" id="cardwilayah1"><h3>Wilayah I</h3><p></p></div>
+<div class="card" id="cardwilayah2"><h3>Wilayah II</h3><p></p></div>
+<div class="card" id="cardwilayah3"><h3>Wilayah III</h3><p></p></div>
+<div class="card" id="cardwilayah4"><h3>Wilayah IV</h3><p></p></div>
 </div>
 
 <h3>Dokumen</h3>
@@ -91,6 +91,7 @@ async function loadHarga(){
     let w=wilayah[i];
     let now=parseInt(data.sekarang[w])||0;
     const card=document.querySelector(`#card${w}`);
+    if(!card) continue; // safety
     card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
     if(adminLoggedIn){
       card.onclick=async ()=>{
@@ -160,6 +161,8 @@ document.getElementById("logoutBtn").onclick = async ()=>{
 
 </body>
 </html>
+
+
 
 
 
