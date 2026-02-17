@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
-body{background: linear-gradient(to bottom, #20C997, #0d6efd); color:#333;}
+body{background:linear-gradient(to bottom,#20C997,#0d6efd);color:#333;}
 header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 header img{height:45px;}
 nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
@@ -34,10 +34,10 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 #loginModal .modalContent{background:white;padding:30px;border-radius:10px;width:90%;max-width:400px;text-align:center;}
 #loginModal input{width:100%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #ccc;}
 #loginModal button{width:100%;padding:10px;margin-top:10px;}
-#docAdmin{display:none;margin-top:40px;}
-#docAdmin input, #docAdmin button{padding:8px;margin:5px 0;}
+#docSection{display:none;margin-top:40px;}
+#docSection input,#docSection button{padding:8px;margin:5px 0;}
 #fileListTable{width:100%;border-collapse:collapse;margin-top:15px;}
-#fileListTable th, #fileListTable td{padding:10px;border:1px solid #ddd;text-align:left;}
+#fileListTable th,#fileListTable td{padding:10px;border:1px solid #ddd;text-align:left;}
 #fileListTable th{background:#007bff;color:white;}
 </style>
 </head>
@@ -83,7 +83,7 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <div class="container">
 <h2>About</h2>
 <div class="tentang">
-PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya. Didukung dengan armada yang banyak dan SDM operasional terlatih dan terampil.
+PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya. Didukung dengan armada dan SDM operasional terlatih.
 </div>
 </div>
 </section>
@@ -135,7 +135,7 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 </div>
 
 <!-- Dokumen Section -->
-<section id="docAdmin" class="container">
+<section id="docSection" class="container">
 <h2>Dokumen</h2>
 <input type="file" id="fileInput">
 <input type="text" id="typeInput" placeholder="Tipe Dokumen">
@@ -156,7 +156,7 @@ PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. P
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const firebaseConfig = {apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",authDomain:"kse-harga-bbm-update.firebaseapp.com",projectId:"kse-harga-bbm-update",storageBucket:"kse-harga-bbm-update.firebasestorage.app",messagingSenderId:"764165984284",appId:"1:764165984284:web:a74aed43317539f5f1cfd9",measurementId:"G-ZGQ5LG6DH9"};
+const firebaseConfig = {apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",authDomain:"kse-harga-bbm-update.firebaseapp.com",projectId:"kse-harga-bbm-update",storageBucket:"kse-harga-bbm-update.firebasestorage.app",messagingSenderId:"764165984284",appId:"1:764165984284:web:a74aed43317539f1cfd9",measurementId:"G-ZGQ5LG6DH9"};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const ref = doc(db,"hargaBBM","periode");
@@ -182,6 +182,7 @@ async function loadHarga(){
     card.querySelector(".keteranganKmr").innerText=`Rp ${prev.toLocaleString()} ${keterangan}`;
     card.querySelector(".keteranganKmr").style.color=warna;
     card.querySelector(".editBtn").style.display = adminLoggedIn ? "block" : "none";
+    card.querySelector(".editBtn").onclick = ()=>editHarga(w);
   }
 }
 loadHarga();
@@ -211,7 +212,7 @@ const loginModal=document.getElementById("loginModal");
 const loginNav=document.getElementById("loginNav");
 const loginSubmit=document.getElementById("loginSubmit");
 const uploadBtn=document.getElementById("uploadBtn");
-const docAdmin=document.getElementById("docAdmin");
+const docSection=document.getElementById("docSection");
 
 // login modal
 loginNav.addEventListener("click",()=>loginModal.style.display="flex");
@@ -227,10 +228,12 @@ loginSubmit.addEventListener("click",async()=>{
   if(error){alert("Login gagal: "+error.message); return;}
 
   const { data:userData } = await supabaseClient.auth.getUser();
+  if(!userData.user) return;
+
   const user=userData.user;
 
   // Tampilkan section dokumen
-  docAdmin.style.display="block";
+  docSection.style.display="block";
 
   if(user.email==="admin@kse.com"){ // admin
     adminLoggedIn=true;
@@ -299,7 +302,7 @@ async function loadFiles(){
         <td>${f.file_name}</td>
         <td>${f.type}</td>
         <td>${f.pt_email}</td>
-        <td><a href="${f.file_url}" target="_blank">Lihat</a></td>
+        <td><a href="${f.file_url}" target="_blank">Download</a></td>
       </tr>`;
     });
   }
@@ -308,5 +311,7 @@ async function loadFiles(){
 
 </body>
 </html>
+
+
 
 
