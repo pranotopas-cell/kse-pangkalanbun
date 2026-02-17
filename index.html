@@ -19,10 +19,11 @@ section{padding:50px 15px;}
 .container{max-width:1100px;margin:auto;}
 h2{text-align:center;margin-bottom:25px;}
 .harga-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
-.card{background:white;padding:20px;border-radius:12px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.card{background:white;padding:20px;border-radius:12px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);position:relative;}
 .card h3{margin:0;font-size:18px;}
 .card p{font-size:22px;font-weight:bold;margin-top:8px;color:#0d6efd;}
 .card small{display:block;margin-top:5px;}
+.editBtn{position:absolute;top:10px;right:10px;cursor:pointer;font-size:18px;display:none;color:#ff6600;}
 .tentang{background:white;border-radius:12px;padding:30px;box-shadow:0 4px 12px rgba(0,0,0,.08);line-height:1.7;}
 .legal{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;}
 .legal div{background:white;padding:18px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.08);}
@@ -74,15 +75,19 @@ footer{background:#0d6efd;color:white;text-align:center;padding:20px;font-size:1
 <div class="harga-box">
 <div class="card" id="cardwilayah1">
 <h3>Wilayah I</h3><small>Sumatra, Jawa, Bali</small><p></p><small class="keteranganKmr"></small>
+<span class="editBtn" onclick="editHarga('wilayah1')">✏️</span>
 </div>
 <div class="card" id="cardwilayah2">
 <h3>Wilayah II</h3><small>Kalimantan</small><p></p><small class="keteranganKmr"></small>
+<span class="editBtn" onclick="editHarga('wilayah2')">✏️</span>
 </div>
 <div class="card" id="cardwilayah3">
 <h3>Wilayah III</h3><small>Sulawesi, NTB</small><p></p><small class="keteranganKmr"></small>
+<span class="editBtn" onclick="editHarga('wilayah3')">✏️</span>
 </div>
 <div class="card" id="cardwilayah4">
 <h3>Wilayah IV</h3><small>Maluku, NTT, Papua</small><p></p><small class="keteranganKmr"></small>
+<span class="editBtn" onclick="editHarga('wilayah4')">✏️</span>
 </div>
 </div>
 </div>
@@ -183,6 +188,8 @@ const db = getFirestore(app);
 const ref = doc(db,"hargaBBM","periode");
 const wilayah = ["wilayah1","wilayah2","wilayah3","wilayah4"];
 
+let adminLoggedIn = false;
+
 async function loadHarga(){
   const snap = await getDoc(ref);
   if(!snap.exists()) return;
@@ -196,10 +203,28 @@ async function loadHarga(){
     if(selisih>0){ warna="red"; keterangan=`▲ Naik Rp ${selisih.toLocaleString()}`; }
     else if(selisih<0){ warna="green"; keterangan=`▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`; }
     else { warna="gray"; keterangan="● Tidak berubah"; }
-    document.querySelector(`#card${w} p`).innerText = `Rp ${now.toLocaleString()}`;
-    document.querySelector(`#card${w} .keteranganKmr`).innerText = `Rp ${prev.toLocaleString()} ${keterangan}`;
-    document.querySelector(`#card${w} .keteranganKmr`).style.color = warna;
+    const card = document.querySelector(`#card${w}`);
+    card.querySelector("p").innerText = `Rp ${now.toLocaleString()}`;
+    card.querySelector(".keteranganKmr").innerText = `Rp ${prev.toLocaleString()} ${keterangan}`;
+    card.querySelector(".keteranganKmr").style.color = warna;
+    if(adminLoggedIn){
+      card.querySelector(".editBtn").style.display="block";
+    }
   }
+}
+
+// Edit Harga Inline
+async function editHarga(wil){
+  const newVal = prompt(`Update harga ${wil}:`);
+  if(newVal===null) return;
+  const val = parseInt(newVal)||0;
+  const snap = await getDoc(ref);
+  const data = snap.data();
+  const baru = {...data.sekarang};
+  baru[wil] = val;
+  await updateDoc(ref,{sekarang:baru});
+  alert(`Harga ${wil} berhasil diperbarui!`);
+  loadHarga();
 }
 
 // --- SUPABASE DOKUMEN ---
@@ -208,7 +233,6 @@ const supabaseClient = window.supabase.createClient(
   "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
 );
 
-// LOGIN MODAL
 const loginModal = document.getElementById("loginModal");
 const loginBtn = document.getElementById("loginBtn");
 const loginSubmit = document.getElementById("loginSubmit");
@@ -226,6 +250,8 @@ loginSubmit.addEventListener("click", async ()=>{
   alert("Login Admin berhasil!");
   loginModal.style.display="none";
   document.getElementById("docAdmin").style.display="block";
+  adminLoggedIn = true;
+  loadHarga();
   loadFiles();
 });
 
@@ -271,6 +297,8 @@ loadHarga();
 
 </body>
 </html>
+
+
 
 
 
