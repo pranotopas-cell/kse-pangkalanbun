@@ -1,106 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KSE Document System</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+    .box { background:white; padding:20px; border-radius:10px; margin-bottom:20px; }
+    input, button { padding:8px; margin:5px 0; width:100%; }
+    button { background:#007bff; color:white; border:none; cursor:pointer; }
+    button:hover { background:#0056b3; }
+    a { color: #007bff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="box" id="loginBox">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<div class="box" id="appBox" style="display:none;">
+  <h2>Upload PDF / Dokumen</h2>
+  <input type="file" id="fileInput">
+  <input type="text" id="typeInput" placeholder="Tipe Dokumen">
+  <button onclick="uploadFile()">Upload</button>
+  <button onclick="logout()">Logout</button>
+
+  <h3>Daftar Dokumen</h3>
+  <div id="fileList"></div>
+</div>
+
 <script>
-const supabaseClient = window.supabase.createClient(
- "https://secasrbeamduxqxwlspv.supabase.co",
- "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
-);
+  // ------------------------
+  // Supabase Client
+  // ------------------------
+  const supabaseClient = window.supabase.createClient(
+    "https://secasrbeamduxqxwlspv.supabase.co",
+    "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+  );
 
-// Cek session saat halaman dibuka
-checkSession();
-
-async function checkSession() {
-  const { data } = await supabaseClient.auth.getSession();
-  if (data.session) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("appBox").style.display = "block";
-    loadFiles();
-  }
-}
-
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    alert("Login gagal: " + error.message);
-  } else {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("appBox").style.display = "block";
-    loadFiles();
-  }
-}
-
-async function uploadFile() {
-  const file = document.getElementById("fileInput").files[0];
-  const type = document.getElementById("typeInput").value;
-
-  const { data: userData } = await supabaseClient.auth.getUser();
-  const user = userData.user;
-
-  if (!file) return alert("Pilih file dulu");
-
-  const filePath = `${user.email}/${file.name}`;
-
-  const { error: uploadError } = await supabaseClient
-    .storage
-    .from("documents")
-    .upload(filePath, file, { upsert: true });
-
-  if (uploadError) return alert("Upload gagal: " + uploadError.message);
-
-  const { data: publicURL } = supabaseClient
-    .storage
-    .from("documents")
-    .getPublicUrl(filePath);
-
-  await supabaseClient.from("documents").insert([
-    {
-      pt_email: user.email,
-      type: type,
-      file_name: file.name,
-      file_url: publicURL.publicUrl
+  // ------------------------
+  // Cek session saat reload
+  // ------------------------
+  checkSession();
+  async function checkSession() {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session) {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("appBox").style.display = "block";
+      loadFiles();
     }
-  ]);
-
-  alert("Upload berhasil");
-  loadFiles();
-}
-
-async function loadFiles() {
-  const { data: userData } = await supabaseClient.auth.getUser();
-  const user = userData.user;
-
-  const { data, error } = await supabaseClient
-    .from("documents")
-    .select("*")
-    .eq("pt_email", user.email);
-
-  if (error) return;
-
-  let html = "";
-
-  if (!data || data.length === 0) {
-    html = "<p>Belum ada dokumen</p>";
-  } else {
-    data.forEach(file => {
-      html += `
-        <p>
-          ${file.file_name} - ${file.type}
-          <a href="${file.file_url}" target="_blank">Lihat</a>
-        </p>
-      `;
-    });
   }
 
-  document.getElementById("fileList").innerHTML = html;
-}
+  // ------------------------
+  // Login
+  // ------------------------
+  async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-async function logout() {
-  await supabaseClient.auth.signOut();
-  location.reload();
-}
+    if(!email || !password) return alert("Email dan password harus diisi");
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      alert("Login gagal: " + error.message);
+    } else {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("appBox").style.display = "block";
+      loadFiles();
+    }
+  }
+
+  // ------------------------
+  // Upload File
+  // ------------------------
+  async function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    const type = document.getElementById("typeInput").value;
+
+    if(!file) return alert("Pilih file dulu");
+    if(!type) return alert("Tulis tipe dokumen");
+
+    const { data: userData } = await supabaseClient.auth.getUser();
+    const user = userData.user;
+    const filePath = `${user.email}/${file.name}`;
+
+    // Upload ke Supabase Storage
+    const { error: uploadError } = await supabaseClient
+      .storage
+      .from("documents") // pastikan bucket sudah ada dan public
+      .upload(filePath, file, { upsert: true });
+
+    if(uploadError) return alert("Upload gagal: " + uploadError.message);
+
+    // Ambil URL publik
+    const { data: publicURL } = supabaseClient
+      .storage
+      .from("documents")
+      .getPublicUrl(filePath);
+
+    // Simpan info di table documents
+    await supabaseClient.from("documents").insert([
+      {
+        pt_email: user.email,
+        type: type,
+        file_name: file.name,
+        file_url: publicURL.publicUrl
+      }
+    ]);
+
+    alert("Upload berhasil");
+    loadFiles();
+  }
+
+  // ------------------------
+  // Load daftar file
+  // ------------------------
+  async function loadFiles() {
+    const { data: userData } = await supabaseClient.auth.getUser();
+    const user = userData.user;
+
+    const { data, error } = await supabaseClient
+      .from("documents")
+      .select("*")
+      .eq("pt_email", user.email);
+
+    if(error) return console.error(error);
+
+    let html = "";
+    if(!data || data.length === 0){
+      html = "<p>Belum ada dokumen</p>";
+    } else {
+      data.forEach(file => {
+        html += `<p>
+          ${file.file_name} - ${file.type} 
+          <a href="${file.file_url}" target="_blank">Lihat</a>
+        </p>`;
+      });
+    }
+
+    document.getElementById("fileList").innerHTML = html;
+  }
+
+  // ------------------------
+  // Logout
+  // ------------------------
+  async function logout() {
+    await supabaseClient.auth.signOut();
+    location.reload();
+  }
 </script>
+
+</body>
+</html>
