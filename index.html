@@ -3,28 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Khatulistiwa Sinar Energi - Admin System</title>
+    <title>PT Khatulistiwa Sinar Energi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* Warna Kustom */
+        .bg-hijau-tua { background-color: #064e3b; } /* Green 900 */
+        .bg-hijau-tosca { background-color: #0d9488; } /* Teal 600 */
+        .text-hijau-tosca { color: #0d9488; }
         .section { display: none; }
         .section.active { display: block; }
+        
+        /* Dropdown Hover */
+        .group:hover .group-hover\:block { display: block; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen">
+<body class="bg-gray-50 text-gray-900 min-h-screen">
 
-    <nav class="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+    <nav class="bg-hijau-tua text-white shadow-xl sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-yellow-400 rounded-full"></div>
-                <span class="text-xl font-bold tracking-wider">PT KSE</span>
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-hijau-tosca rounded-lg flex items-center justify-center font-bold text-white shadow-inner">KSE</div>
+                <span class="text-xl font-bold tracking-tighter">PT KHATULISTIWA SINAR ENERGI</span>
             </div>
-            <div class="hidden md:flex space-x-8 font-medium">
-                <button onclick="showSection('home')" class="hover:text-yellow-400 transition">Home</button>
-                <button onclick="showSection('about')" class="hover:text-yellow-400 transition">Tentang Kami</button>
-                <button onclick="showSection('contact')" class="hover:text-yellow-400 transition">Kontak</button>
-                <div id="nav-auth">
-                    <button onclick="showSection('login')" class="bg-yellow-500 text-blue-900 px-5 py-1 rounded-full font-bold hover:bg-yellow-400 transition">Login</button>
+            
+            <div class="hidden md:flex items-center space-x-6 font-medium">
+                <button onclick="showSection('home')" class="hover:text-teal-300 transition">Home</button>
+                
+                <div class="relative group">
+                    <button class="flex items-center hover:text-teal-300 transition outline-none">
+                        Administrasi <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="absolute hidden group-hover:block bg-white text-gray-800 mt-0 w-48 rounded-md shadow-lg py-2 border-t-4 border-hijau-tosca">
+                        <button onclick="filterFiles('PO')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Purchase Order (PO)</button>
+                        <button onclick="filterFiles('Surat Jalan')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Surat Jalan</button>
+                        <button onclick="filterFiles('Invoice')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Invoice</button>
+                        <button onclick="filterFiles('Faktur Pajak')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Faktur Pajak</button>
+                    </div>
+                </div>
+
+                <button onclick="showSection('about')" class="hover:text-teal-300 transition">Tentang Kami</button>
+                
+                <div id="nav-auth-container" class="flex items-center space-x-4 border-l pl-6 border-teal-800">
+                    <button id="btn-login-view" onclick="showSection('login')" class="bg-hijau-tosca px-6 py-1.5 rounded-full font-bold hover:bg-teal-500 transition shadow-md">Sign In</button>
+                    
+                    <div id="user-logged-in" class="hidden flex items-center space-x-3">
+                        <div class="text-right">
+                            <p class="text-xs text-teal-300 italic leading-none">Logged in as:</p>
+                            <p id="display-email" class="text-sm font-bold"></p>
+                        </div>
+                        <button onclick="handleLogout()" class="bg-red-600 p-1.5 rounded-full hover:bg-red-700 shadow" title="Sign Out">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,103 +63,94 @@
 
     <main class="container mx-auto px-6 py-10">
 
-        <section id="home" class="section active space-y-8 text-center py-10">
-            <h1 class="text-5xl font-extrabold text-blue-900">PT Khatulistiwa Sinar Energi</h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto italic">"Energi Terbarukan, Solusi Masa Depan Indonesia"</p>
-            <div class="grid md:grid-cols-3 gap-6 pt-10">
-                <div class="p-6 bg-white rounded-xl shadow-sm border-t-4 border-yellow-500">
-                    <h3 class="font-bold text-lg mb-2">Administrasi</h3>
-                    <p class="text-sm text-gray-500">Manajemen PO, Invoice, dan Faktur Pajak yang terintegrasi.</p>
+        <section id="home" class="section active text-center py-16">
+            <h1 class="text-5xl font-black text-hijau-tua mb-4">SOLUSI ENERGI TERBARUKAN</h1>
+            <p class="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">Membangun masa depan Indonesia dengan energi bersih dan sistem administrasi yang transparan.</p>
+            <div class="bg-hijau-tosca h-1 w-32 mx-auto mb-10"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-8 bg-white rounded-2xl shadow-md border-b-8 border-hijau-tua">
+                    <h2 class="font-bold text-3xl text-hijau-tua mb-1" id="count-po">0</h2>
+                    <p class="text-gray-500 font-medium">PO Terbit</p>
                 </div>
-                <div class="p-6 bg-white rounded-xl shadow-sm border-t-4 border-blue-500">
-                    <h3 class="font-bold text-lg mb-2">Legalitas</h3>
-                    <p class="text-sm text-gray-500">Dokumen resmi dan izin operasional perusahaan yang valid.</p>
+                <div class="p-8 bg-white rounded-2xl shadow-md border-b-8 border-hijau-tosca">
+                    <h2 class="font-bold text-3xl text-hijau-tosca mb-1" id="count-sj">0</h2>
+                    <p class="text-gray-500 font-medium">Surat Jalan</p>
                 </div>
-                <div class="p-6 bg-white rounded-xl shadow-sm border-t-4 border-blue-900">
-                    <h3 class="font-bold text-lg mb-2">Keamanan</h3>
-                    <p class="text-sm text-gray-500">Penyimpanan data aman menggunakan teknologi Cloud Supabase.</p>
+                <div class="p-8 bg-white rounded-2xl shadow-md border-b-8 border-hijau-tua">
+                    <h2 class="font-bold text-3xl text-hijau-tua mb-1" id="count-inv">0</h2>
+                    <p class="text-gray-500 font-medium">Invoices</p>
                 </div>
-            </div>
-        </section>
-
-        <section id="about" class="section space-y-6">
-            <h2 class="text-3xl font-bold border-b-2 border-yellow-500 inline-block">Tentang Kami & Legalitas</h2>
-            <div class="bg-white p-8 rounded-xl shadow-md space-y-4">
-                <p>PT Khatulistiwa Sinar Energi adalah perusahaan yang bergerak di bidang solusi energi terintegrasi.</p>
-                <h4 class="font-bold text-blue-900 mt-4">Legalitas Perusahaan:</h4>
-                <ul class="list-disc ml-6 space-y-1 text-gray-700">
-                    <li>NIB: 1234567890 (Contoh)</li>
-                    <li>NPWP: 01.234.567.8-910.000</li>
-                    <li>Alamat: Jakarta, Indonesia</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <h2 class="text-3xl font-bold mb-6">Hubungi Kami</h2>
-            <div class="bg-white p-8 rounded-xl shadow-md">
-                <p class="mb-2"><strong>Email:</strong> info@khatulistiwasinar.co.id</p>
-                <p class="mb-2"><strong>WhatsApp:</strong> +62 812-3456-7890</p>
-                <p><strong>Kantor:</strong> Jl. Khatulistiwa No. 88, Jakarta Pusat.</p>
+                <div class="p-8 bg-white rounded-2xl shadow-md border-b-8 border-hijau-tosca">
+                    <h2 class="font-bold text-3xl text-hijau-tosca mb-1" id="count-tax">0</h2>
+                    <p class="text-gray-500 font-medium">Faktur Pajak</p>
+                </div>
             </div>
         </section>
 
         <section id="login" class="section">
-            <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-                <h2 class="text-2xl font-bold text-center mb-6">Login Sistem</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Email</label>
-                        <input type="email" id="email" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="email@kse.com">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Password</label>
-                        <input type="password" id="password" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="••••••••">
-                    </div>
-                    <button onclick="handleLogin()" class="w-full bg-blue-900 text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition">Masuk</button>
+            <div class="max-w-md mx-auto bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-hijau-tua">Sign In</h2>
+                    <p class="text-gray-400">Akses portal administrasi PT KSE</p>
+                </div>
+                <div class="space-y-5">
+                    <input type="email" id="email" class="w-full border-2 border-gray-100 p-4 rounded-xl focus:border-hijau-tosca outline-none transition" placeholder="Email Perusahaan">
+                    <input type="password" id="password" class="w-full border-2 border-gray-100 p-4 rounded-xl focus:border-hijau-tosca outline-none transition" placeholder="Password">
+                    <button onclick="handleLogin()" class="w-full bg-hijau-tua text-white py-4 rounded-xl font-bold hover:bg-hijau-tosca shadow-lg transition duration-300">Masuk ke Sistem</button>
                 </div>
             </div>
         </section>
 
-        <section id="dashboard" class="section space-y-8">
-            <div class="flex justify-between items-center">
-                <h2 class="text-3xl font-bold text-blue-900 italic">Selamat Datang</h2>
-                <button onclick="handleLogout()" class="text-red-600 font-bold border border-red-600 px-4 py-1 rounded-lg hover:bg-red-50">Logout</button>
-            </div>
+        <section id="dashboard" class="section">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+                <div>
+                    <h2 id="table-title" class="text-3xl font-bold text-hijau-tua">Semua Dokumen</h2>
+                    <p class="text-gray-500 italic">Menampilkan file administrasi yang tersedia untuk diunduh.</p>
+                </div>
 
-            <div id="admin-area" class="hidden bg-blue-50 border-2 border-dashed border-blue-300 p-6 rounded-2xl">
-                <h3 class="font-bold text-lg mb-4 flex items-center">
-                    <span class="bg-blue-900 text-white text-xs px-2 py-1 rounded mr-2">ADMIN</span> 
-                    Upload Dokumen Baru
-                </h3>
-                <div class="grid md:grid-cols-3 gap-4">
-                    <select id="docType" class="p-3 border rounded-lg">
-                        <option value="PO">Purchase Order (PO)</option>
+                <div id="admin-panel" class="hidden bg-white p-4 rounded-2xl shadow-md border border-teal-100 flex items-center gap-3">
+                    <select id="docType" class="bg-gray-50 p-2 rounded border border-gray-200 text-sm">
+                        <option value="PO">Purchase Order</option>
                         <option value="Surat Jalan">Surat Jalan</option>
                         <option value="Invoice">Invoice</option>
                         <option value="Faktur Pajak">Faktur Pajak</option>
                     </select>
-                    <input type="file" id="fileInput" class="p-2 bg-white border rounded-lg">
-                    <button onclick="uploadFile()" class="bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">Unggah Sekarang</button>
+                    <input type="file" id="fileInput" class="text-xs">
+                    <button onclick="uploadFile()" class="bg-hijau-tosca text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-hijau-tua">Upload</button>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-                <div class="bg-gray-50 px-6 py-4 border-b">
-                    <h3 class="font-bold">Daftar Dokumen Administrasi</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-50 text-xs uppercase text-gray-500">
-                            <tr>
-                                <th class="px-6 py-3">Jenis Dokumen</th>
-                                <th class="px-6 py-3">Nama File</th>
-                                <th class="px-6 py-3 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="file-table-body" class="divide-y">
-                            </tbody>
-                    </table>
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-hijau-tua text-white uppercase text-xs">
+                        <tr>
+                            <th class="px-6 py-4">Kategori</th>
+                            <th class="px-6 py-4">Nama Dokumen</th>
+                            <th class="px-6 py-4">Tanggal Unggah</th>
+                            <th class="px-6 py-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="file-table-body" class="divide-y divide-gray-100 italic">
+                        <tr><td colspan="4" class="p-10 text-center text-gray-400">Silakan login untuk melihat data.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="bg-white p-10 rounded-3xl shadow-lg border-l-8 border-hijau-tosca">
+                <h2 class="text-3xl font-bold text-hijau-tua mb-4">Tentang Kami</h2>
+                <p class="text-gray-600 mb-6 leading-relaxed">PT Khatulistiwa Sinar Energi berkomitmen memberikan kontribusi nyata dalam transisi energi hijau di Indonesia melalui penyediaan komponen dan jasa engineering berkualitas tinggi.</p>
+                <h3 class="font-bold text-hijau-tosca uppercase tracking-widest text-sm mb-3">Legalitas & Alamat</h3>
+                <div class="grid md:grid-cols-2 gap-8 text-sm">
+                    <div class="space-y-2">
+                        <p><strong>NIB:</strong> 128910111xxx</p>
+                        <p><strong>SK Kemenkumham:</strong> AHU-0012345.AH.01.01</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p><strong>Alamat:</strong> Gedung Sinar, Lt. 5, Jl. Khatulistiwa No. 10, Jakarta.</p>
+                        <p><strong>Kontak:</strong> (021) 555-0192 | info@kse.co.id</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -136,29 +158,43 @@
     </main>
 
     <script>
-        // -- KONFIGURASI SUPABASE --
+        // -- SETUP SUPABASE --
         const SUPABASE_URL = "https://secasrbeamduxqxwlspv.supabase.co";
         const SUPABASE_KEY = "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // -- NAVIGASI LOGIC --
-        function showSection(sectionId) {
+        let currentFiles = [];
+
+        function showSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        // -- AUTH LOGIC --
+        // -- AUTH --
         async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
 
-            if (error) {
-                alert("Login Gagal: " + error.message);
-            } else {
-                renderUserView(data.user);
+            if (error) return alert("Error: " + error.message);
+            updateAuthUI(data.user);
+        }
+
+        function updateAuthUI(user) {
+            if (!user) return;
+
+            // Update Navbar: Tampilkan email dan tombol logout
+            document.getElementById('btn-login-view').classList.add('hidden');
+            document.getElementById('user-logged-in').classList.remove('hidden');
+            document.getElementById('display-email').innerText = user.email;
+
+            // Cek role admin sederhana
+            if (user.email.includes('admin')) {
+                document.getElementById('admin-panel').classList.remove('hidden');
             }
+
+            showSection('dashboard');
+            loadFiles();
         }
 
         async function handleLogout() {
@@ -166,84 +202,73 @@
             location.reload();
         }
 
-        function renderUserView(user) {
-            if (!user) return;
-            
-            showSection('dashboard');
-            document.getElementById('nav-auth').innerHTML = `<span class="text-yellow-400 font-bold">${user.email}</span>`;
-
-            // Jika email admin, tampilkan panel upload (sesuaikan filter emailnya)
-            if (user.email.includes('admin')) {
-                document.getElementById('admin-area').classList.remove('hidden');
-            }
-            loadFiles();
-        }
-
-        // -- STORAGE & DATABASE LOGIC --
-        async function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const type = document.getElementById('docType').value;
-            const file = fileInput.files[0];
-
-            if (!file) return alert("Pilih file dulu!");
-
-            // 1. Upload ke Storage (Bucket: kse-files)
-            const filePath = `docs/${Date.now()}_${file.name}`;
-            const { data: storageData, error: storageError } = await _supabase.storage
-                .from('kse-files')
-                .upload(filePath, file);
-
-            if (storageError) return alert("Gagal Upload Storage: " + storageError.message);
-
-            // 2. Ambil URL
-            const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(filePath);
-
-            // 3. Simpan ke Tabel documents
-            const { error: dbError } = await _supabase.from('documents').insert([
-                { name: file.name, type: type, url: urlData.publicUrl }
-            ]);
-
-            if (dbError) {
-                alert("Gagal Simpan Database: " + dbError.message);
-            } else {
-                alert("Berhasil!");
-                fileInput.value = "";
-                loadFiles();
-            }
-        }
-
+        // -- FILE MANAGEMENT --
         async function loadFiles() {
             const { data, error } = await _supabase.from('documents').select('*').order('created_at', { ascending: false });
-            const tbody = document.getElementById('file-table-body');
-            
             if (error) return console.error(error);
+            
+            currentFiles = data;
+            renderTable(data);
+            updateCounters(data);
+        }
 
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500 italic">Belum ada dokumen.</td></tr>`;
+        function renderTable(files) {
+            const tbody = document.getElementById('file-table-body');
+            if (files.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-gray-400 italic">Tidak ada dokumen ditemukan.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = data.map(doc => `
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 font-bold text-blue-700">${doc.type}</td>
-                    <td class="px-6 py-4 text-sm">${doc.name}</td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="${doc.url}" target="_blank" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-200 transition">Download</a>
+            tbody.innerHTML = files.map(f => `
+                <tr class="hover:bg-teal-50 transition">
+                    <td class="px-6 py-4 font-bold text-hijau-tosca">${f.type}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">${f.name}</td>
+                    <td class="px-6 py-4 text-xs text-gray-400">${new Date(f.created_at).toLocaleDateString('id-ID')}</td>
+                    <td class="px-6 py-4 text-center">
+                        <a href="${f.url}" target="_blank" class="inline-block bg-hijau-tua text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-hijau-tosca shadow">Download</a>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // Cek Sesi saat refresh
+        function filterFiles(type) {
+            showSection('dashboard');
+            document.getElementById('table-title').innerText = "Arsip: " + type;
+            const filtered = currentFiles.filter(f => f.type === type);
+            renderTable(filtered);
+        }
+
+        function updateCounters(files) {
+            document.getElementById('count-po').innerText = files.filter(f => f.type === 'PO').length;
+            document.getElementById('count-sj').innerText = files.filter(f => f.type === 'Surat Jalan').length;
+            document.getElementById('count-inv').innerText = files.filter(f => f.type === 'Invoice').length;
+            document.getElementById('count-tax').innerText = files.filter(f => f.type === 'Faktur Pajak').length;
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const type = document.getElementById('docType').value;
+            const file = fileInput.files[0];
+
+            if (!file) return alert("Pilih file!");
+
+            const path = `docs/${Date.now()}_${file.name}`;
+            const { error: upErr } = await _supabase.storage.from('kse-files').upload(path, file);
+            if (upErr) return alert("Upload gagal: " + upErr.message);
+
+            const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(path);
+            await _supabase.from('documents').insert([{ name: file.name, type, url: urlData.publicUrl }]);
+
+            alert("Berhasil diunggah!");
+            loadFiles();
+        }
+
+        // Check Session
         _supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) renderUserView(session.user);
+            if (session) updateAuthUI(session.user);
         });
     </script>
 </body>
 </html>
-
-
-
-
 
 
