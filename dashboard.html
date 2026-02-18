@@ -147,23 +147,24 @@ body{
 <script>
 const supabase = window.supabase.createClient(
   "https://secasrbeamduxqxwlspv.supabase.com",
-  "PASTE_ANON_PUBLIC_KEY_KAMU"
+  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
 );
 
-let currentUser;
-let currentRole;
+let currentUser = null;
+let currentRole = null;
+let currentMenu = null;
 
-/* INIT */
+/* INIT USER */
 async function init(){
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const { data } = await supabase.auth.getUser();
-
-  if(!data.user){
+  if(!user){
+    alert("Silakan login dulu!");
     window.location.href = "index.html";
     return;
   }
 
-  currentUser = data.user;
+  currentUser = user;
 
   const { data: profile, error } = await supabase
     .from("profiles")
@@ -172,42 +173,48 @@ async function init(){
     .single();
 
   if(error || !profile){
-    alert("Role tidak ditemukan di table profiles!");
+    alert("Role tidak ditemukan!");
     return;
   }
 
   currentRole = profile.role;
 
-  // TAMPILKAN EMAIL
+  // === SET PROFILE UI ===
   document.getElementById("userEmail").innerText = currentUser.email;
-
-  // TAMPILKAN ROLE
-  const roleElement = document.getElementById("userRole");
-  roleElement.innerText = currentRole.toUpperCase();
-
-  if(currentRole === "admin"){
-    roleElement.classList.add("role-admin");
-  }else{
-    roleElement.classList.add("role-user");
-  }
-
-  // AVATAR HURUF PERTAMA
+  document.getElementById("userRole").innerText = currentRole.toUpperCase();
   document.getElementById("avatarCircle").innerText =
     currentUser.email.charAt(0).toUpperCase();
+
+  if(currentRole === "admin"){
+    document.getElementById("userRole").classList.add("role-admin");
+  } else {
+    document.getElementById("userRole").classList.add("role-user");
+  }
+
+  console.log("Login sebagai:", currentUser.email, "Role:", currentRole);
 }
 
 init();
 
 /* LOAD DATA */
-async function loadData(table){
+async function loadData(type){
+  if(!currentUser) return alert("User belum siap!");
 
-  let query = supabase.from(table).select("*");
+  currentMenu = type;
+
+  let query = supabase.from(type).select("*");
 
   if(currentRole === "user"){
     query = query.eq("user_id", currentUser.id);
   }
 
-  const { data } = await query;
+  const { data, error } = await query;
+
+  if(error){
+    alert("Gagal load data!");
+    console.log(error);
+    return;
+  }
 
   const content = document.getElementById("content");
   content.innerHTML = "";
@@ -221,9 +228,11 @@ async function loadData(table){
     content.innerHTML += `
       <div class="file-item">
         <span>${item.nama_file}</span>
-        ${currentRole === "user"
-          ? `<button onclick="downloadFile('${item.file_url}')">Download</button>`
-          : ""}
+        ${
+          currentRole === "admin"
+          ? ""
+          : `<button onclick="downloadFile('${item.file_url}')">Download</button>`
+        }
       </div>
     `;
   });
@@ -246,20 +255,22 @@ function toggleDropdown(){
 }
 
 /* LOGOUT */
+async function logout(){
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
+
 function confirmLogout(){
   if(confirm("Yakin mau logout?")){
     logout();
   }
 }
-
-async function logout(){
-  await supabase.auth.signOut();
-  window.location.href = "index.html";
-}
 </script>
+
 
 </body>
 </html>
+
 
 
 
