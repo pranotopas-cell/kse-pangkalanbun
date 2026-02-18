@@ -3,71 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard KSE</title>
+<title>Dashboard - Khatulistiwa Sinar Energi</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
 body{background:#20C997;color:#333;}
-header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
+header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 header img{height:45px;}
-nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
+nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
+nav a:hover{text-decoration:underline;}
 .container{max-width:1100px;margin:auto;padding:20px;}
-.card{background:white;padding:20px;border-radius:12px;margin-bottom:10px;}
-.card h3{margin:0;font-size:18px;}
-.card p{font-weight:bold;margin-top:8px;}
-.btn{background:#ffc107;padding:10px 15px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;margin-top:10px;display:inline-block;}
-#fileList p{margin:5px 0;}
+h2{text-align:center;margin-bottom:20px;}
+.btn{background:#ffc107;padding:10px 18px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;display:inline-block;cursor:pointer;margin:5px;}
+.card{background:white;padding:15px;border-radius:10px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.card a{margin-left:10px;text-decoration:none;color:#0d6efd;}
+#uploadSection{margin-bottom:30px;}
 </style>
 </head>
 <body>
 
 <header>
 <div style="display:flex;align-items:center;gap:12px">
-<img src="https://via.placeholder.com/150x45" alt="Logo">
-<b>Dashboard PT Khatulistiwa Sinar Energi</b>
+<img src="assets/logo.png" alt="Logo">
+<b>Dashboard - Khatulistiwa Sinar Energi</b>
 </div>
 <nav>
-<a href="index.html">🏠 Home</a>
-<a href="#" id="logoutBtn">Sign Out</a>
+<a href="index.html">Home</a>
+<a id="logoutBtn">Sign Out</a>
 </nav>
 </header>
 
 <div class="container">
-<h2>Harga BBM & Dokumen</h2>
+<h2>Harga BBM Industri (Dari Firebase)</h2>
+<div id="hargaContainer"></div>
 
-<div id="hargaContainer">
-<div class="card" id="cardwilayah1"><h3>Wilayah I</h3><p></p></div>
-<div class="card" id="cardwilayah2"><h3>Wilayah II</h3><p></p></div>
-<div class="card" id="cardwilayah3"><h3>Wilayah III</h3><p></p></div>
-<div class="card" id="cardwilayah4"><h3>Wilayah IV</h3><p></p></div>
-</div>
+<hr>
 
-<h3>Dokumen</h3>
+<h2>Dokumen</h2>
+<div id="uploadSection">
 <input type="file" id="fileInput">
 <input type="text" id="typeInput" placeholder="Tipe Dokumen">
 <button id="uploadBtn" class="btn">Upload</button>
+</div>
 <div id="fileList"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-// ===== Supabase =====
-const supabaseClient = supabase.createClient(
-  "https://secasrbeamduxqxwlspv.supabase.co",
-  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
-);
-
-// ===== Firebase =====
+// ===== FIREBASE =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey:"AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-  authDomain:"kse-harga-bbm-update.firebaseapp.com",
-  projectId:"kse-harga-bbm-update",
-  storageBucket:"kse-harga-bbm-update.firebasestorage.app",
-  messagingSenderId:"764165984284",
-  appId:"1:764165984284:web:a74aed43317539f1cfd9",
-  measurementId:"G-ZGQ5LG6DH9"
+  apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
+  authDomain: "kse-harga-bbm-update.firebaseapp.com",
+  projectId: "kse-harga-bbm-update",
+  storageBucket: "kse-harga-bbm-update.firebasestorage.app",
+  messagingSenderId: "764165984284",
+  appId: "1:764165984284:web:a74aed43317539f5f1cfd9",
+  measurementId: "G-ZGQ5LG6DH9"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -75,95 +68,76 @@ const db = getFirestore(app);
 const ref = doc(db,"hargaBBM","periode");
 const wilayah=["wilayah1","wilayah2","wilayah3","wilayah4"];
 
-let adminLoggedIn=false;
-const params = new URLSearchParams(window.location.search);
-const emailUser = params.get("email");
-if(emailUser==="admin@kse.com") adminLoggedIn=true;
-
-// Load harga Firebase
+// Fungsi load harga dari Firebase
 async function loadHarga(){
   const snap = await getDoc(ref);
   if(!snap.exists()) return;
   const data = snap.data();
+  const container = document.getElementById("hargaContainer");
+  container.innerHTML="";
   for(let i=0;i<wilayah.length;i++){
     let w=wilayah[i];
-    let now=parseInt(data.sekarang[w])||0;
-    const card=document.querySelector(`#card${w}`);
-    if(!card) continue;
-    card.querySelector("p").innerText=`Rp ${now.toLocaleString()}`;
-    if(adminLoggedIn){
-      card.onclick=async ()=>{
-        const val=prompt(`Update harga ${w}:`,now);
-        if(val!==null){
-          const baru=parseInt(val)||0;
-          const dataSnap=await getDoc(ref);
-          const dataCurr=dataSnap.data();
-          let updateData = {...dataCurr.sekarang};
-          updateData[w]=baru;
-          await updateDoc(ref,{sekarang:updateData});
-          loadHarga();
-        }
-      };
-      card.style.cursor="pointer";
-    }
+    let now = parseInt(data.sekarang[w]) || 0;
+    let prev = parseInt(data.kemarin[w]) || 0;
+    let selisih = now - prev;
+    let keterangan = selisih>0 ? `▲ Naik Rp ${selisih.toLocaleString()}` :
+                     selisih<0 ? `▼ Turun Rp ${Math.abs(selisih).toLocaleString()}` : "● Tidak berubah";
+    container.innerHTML += `<div class="card"><b>${w}</b> : Rp ${now.toLocaleString()} (${keterangan})</div>`;
   }
 }
-window.onload = loadHarga;
+loadHarga();
 
-// ===== Dokumen Supabase =====
-const uploadBtn=document.getElementById("uploadBtn");
-const fileInput=document.getElementById("fileInput");
-const typeInput=document.getElementById("typeInput");
-const fileList=document.getElementById("fileList");
+// ===== SUPABASE =====
+const supabase = supabase.createClient(
+  "https://YOUR_PROJECT.supabase.co",
+  "PUBLIC_ANON_KEY"
+);
 
-if(!adminLoggedIn){
-  uploadBtn.style.display="none";
-  fileInput.style.display="none";
-  typeInput.style.display="none";
-}
+const urlParams = new URLSearchParams(window.location.search);
+const userEmail = urlParams.get("email");
+let adminLoggedIn = (userEmail==="admin@kse.com");
 
+// Upload dokumen (Admin)
+const uploadBtn = document.getElementById("uploadBtn");
+const fileInput = document.getElementById("fileInput");
+const typeInput = document.getElementById("typeInput");
+const uploadSection = document.getElementById("uploadSection");
+
+if(!adminLoggedIn) uploadSection.style.display="none";
+
+uploadBtn.onclick = async()=>{
+  const file = fileInput.files[0];
+  const type = typeInput.value || "";
+  if(!file){ alert("Pilih file dulu!"); return; }
+  const path = `${userEmail}/${file.name}`;
+  const { error: uploadError } = await supabase.storage.from("documents").upload(path, file, {upsert:true});
+  if(uploadError) return alert("Upload gagal: "+uploadError.message);
+  const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
+  await supabase.from("documents").insert([{pt_email:userEmail,type:type,file_name:file.name,file_url:urlData.publicUrl}]);
+  alert("Upload berhasil!");
+  loadFiles();
+};
+
+// Load file list
 async function loadFiles(){
-  let query=supabaseClient.from("documents").select("*");
-  if(!adminLoggedIn) query=query.eq("pt_email",emailUser);
-  const { data,error } = await query;
+  let query = supabase.from("documents").select("*");
+  if(!adminLoggedIn) query = query.eq("pt_email", userEmail);
+  const { data, error } = await query;
   if(error) return console.error(error);
-  fileList.innerHTML="";
-  if(!data||data.length===0) fileList.innerHTML="<p>Belum ada dokumen</p>";
-  else data.forEach(f=>{
-    fileList.innerHTML+=`<p>${f.file_name} - ${f.type} - ${f.pt_email} <a href="${f.file_url}" target="_blank">Lihat</a></p>`;
+  const list = document.getElementById("fileList");
+  list.innerHTML="";
+  if(!data || data.length===0){ list.innerHTML="<p>Belum ada dokumen</p>"; return; }
+  data.forEach(f=>{
+    list.innerHTML += `<div class="card">${f.file_name} - ${f.type} <a href="${f.file_url}" target="_blank">Download</a> <br><small>Milik: ${f.pt_email}</small></div>`;
   });
 }
-
-async function uploadFile(){
-  const file=fileInput.files[0];
-  const type=typeInput.value;
-  if(!file) return alert("Pilih file dulu");
-  const filePath=`${emailUser}/${file.name}`;
-  const { error: uploadError } = await supabaseClient.storage.from("documents").upload(filePath,file,{upsert:true});
-  if(uploadError) return alert("Upload gagal: "+uploadError.message);
-  const { data: publicURL } = await supabaseClient.storage.from("documents").getPublicUrl(filePath);
-  await supabaseClient.from("documents").insert([{pt_email:emailUser,type:type,file_name:file.name,file_url:publicURL.publicUrl}]);
-  loadFiles();
-  alert("Upload berhasil");
-}
-
-uploadBtn.onclick=uploadFile;
 loadFiles();
 
-// Logout
-document.getElementById("logoutBtn").onclick = async ()=>{
-  await supabaseClient.auth.signOut();
+// Sign out
+document.getElementById("logoutBtn").onclick = ()=>{
   window.location.href="index.html";
 };
 </script>
-
 </body>
 </html>
-
-
-
-
-
-
-
 
