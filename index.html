@@ -63,7 +63,7 @@
                             <p id="display-email" class="text-sm font-bold text-teal-300"></p>
                         </div>
                         <button onclick="handleLogout()" class="bg-red-600 p-1.5 rounded-full hover:bg-red-700 shadow">
-                            <svg class="w-4 h-4 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7"></path></svg>
+                            <svg class="w-4 h-4 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                     </div>
                 </div>
@@ -74,113 +74,77 @@
     <main class="container mx-auto px-6 py-10">
 
         <section id="home" class="section active text-center py-12">
-            <h1 class="text-5xl font-black text-hijau-tua mb-4">MENGALIRKAN ENERGI TERBAIK</h1>
+            <h1 class="text-5xl font-black text-hijau-tua mb-4 uppercase">Mengalirkan Energi Terbaik</h1>
             <p class="text-gray-600 mb-10 max-w-2xl mx-auto italic">Penyedia solusi energi berkelanjutan untuk industri Indonesia.</p>
-            <div class="relative group max-w-4xl mx-auto">
-                <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ecc?auto=format&fit=crop&w=1200&q=80" class="w-full rounded-3xl shadow-2xl border-b-8 border-hijau-tosca transition transform group-hover:scale-[1.01]" alt="Solar Plant">
-            </div>
+            <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ecc?auto=format&fit=crop&w=1200&q=80" class="w-full max-w-4xl mx-auto rounded-3xl shadow-2xl border-b-8 border-hijau-tosca">
         </section>
 
-        <section id="harga">
-<div class="container">
-<h2>Harga Publish BBM Industri Pertamina</h2>
-<p style="text-align:center;font-weight:bold">Periode Sekarang</p>
-
-<div class="harga-box">
-
-    <div class="card" id="cardwilayah1">
-        <h3>Wilayah I</h3>
-        <small>Sumatra, Jawa, Bali</small>
-        <p></p>
-        <small class="keteranganKmr"></small>
-    </div>
-
-    <div class="card" id="cardwilayah2">
-        <h3>Wilayah II</h3>
-        <small>Kalimantan</small>
-        <p></p>
-        <small class="keteranganKmr"></small>
-    </div>
-
-    <div class="card" id="cardwilayah3">
-        <h3>Wilayah III</h3>
-        <small>Sulawesi, NTB</small>
-        <p></p>
-        <small class="keteranganKmr"></small>
-    </div>
-
-    <div class="card" id="cardwilayah4">
-        <h3>Wilayah IV</h3>
-        <small>Maluku, NTT, Papua</small>
-        <p></p>
-        <small class="keteranganKmr"></small>
-    </div>
-
+        <section id="harga-pertamina" class="section">
+            <h2 class="text-3xl font-bold text-hijau-tua mb-8 text-center uppercase tracking-widest">Update Harga Publish Pertamina</h2>
+            
+            <div class="mb-12">
+                <h3 class="text-hijau-tua font-bold mb-4 border-l-4 border-hijau-tosca pl-3">Periode 15 - 28 Februari 2026</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua">
+                        <h4 class="font-bold text-gray-500 text-xs">WILAYAH 1 & 2</h4>
+                        <p id="h-now-w12" class="text-3xl font-black text-hijau-tua mt-2 italic">Rp 0</p>
+                        <small id="desc-w12" class="font-medium"></small>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua">
+                        <h4 class="font-bold text-gray-500 text-xs">WILAYAH 3</h4>
+                        <p id="h-now-w3" class="text-3xl font-black text-hijau-tua mt-2 italic">Rp 0</p>
+                        <small id="desc-w3" class="font-medium"></small>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua">
+                        <h4 class="font-bold text-gray-500 text-xs">WILAYAH 4</h4>
+                        <p id="h-now-w4" class="text-3xl font-black text-hijau-tua mt-2 italic">Rp 0</p>
+                        <small id="desc-w4" class="font-medium"></small>
                     </div>
                 </div>
             </div>
 
             <div>
-                <div class="bg-gray-400 text-white px-6 py-2 rounded-t-xl inline-block font-bold">Periode 01 - 14 Februari 2026</div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-white p-8 rounded-b-xl rounded-r-xl shadow-md border-l-8 border-gray-300">
-                        <h4 class="font-bold text-gray-400 uppercase text-xs tracking-widest">Wilayah 1 & 2</h4>
-                        <p id="h-p2-w1" class="text-3xl font-black text-gray-400 mt-2 italic">---</p>
+                <h3 class="text-gray-400 font-bold mb-4 border-l-4 border-gray-300 pl-3">Periode 01 - 14 Februari 2026</h3>
+                <div class="grid md:grid-cols-3 gap-6 opacity-80">
+                    <div class="bg-white p-6 rounded-2xl shadow border-t-4 border-gray-300">
+                        <h4 class="font-bold text-gray-400 text-xs text-hijau-tosca">WILAYAH 1 & 2</h4>
+                        <p id="h-prev-w12" class="text-2xl font-bold text-gray-600 mt-2">Rp 0</p>
                     </div>
-                    <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-gray-300">
-                        <h4 class="font-bold text-gray-400 uppercase text-xs tracking-widest">Wilayah 3</h4>
-                        <p id="h-p2-w2" class="text-3xl font-black text-gray-400 mt-2 italic">---</p>
+                    <div class="bg-white p-6 rounded-2xl shadow border-t-4 border-gray-300">
+                        <h4 class="font-bold text-gray-400 text-xs text-hijau-tosca">WILAYAH 3</h4>
+                        <p id="h-prev-w3" class="text-2xl font-bold text-gray-600 mt-2">Rp 0</p>
                     </div>
-                    <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-gray-300">
-                        <h4 class="font-bold text-gray-400 uppercase text-xs tracking-widest">Wilayah 4</h4>
-                        <p id="h-p2-w3" class="text-3xl font-black text-gray-400 mt-2 italic">---</p>
+                    <div class="bg-white p-6 rounded-2xl shadow border-t-4 border-gray-300">
+                        <h4 class="font-bold text-gray-400 text-xs text-hijau-tosca">WILAYAH 4</h4>
+                        <p id="h-prev-w4" class="text-2xl font-bold text-gray-600 mt-2">Rp 0</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="profile" class="section">
-            <div class="bg-white p-12 rounded-3xl shadow-xl">
-                <h2 class="text-3xl font-bold text-hijau-tua mb-4">Profil Perusahaan</h2>
-                <p class="text-gray-600 leading-relaxed text-lg">PT Khatulistiwa Sinar Energi (KSE) adalah mitra strategis dalam penyediaan energi industri yang berfokus pada kualitas layanan dan ketepatan waktu distribusi. Kami percaya bahwa energi yang dikelola secara profesional adalah kunci pertumbuhan industri nasional.</p>
-            </div>
+            <div class="bg-white p-10 rounded-3xl shadow-xl"><h2 class="text-3xl font-bold text-hijau-tua mb-4">Profil Perusahaan</h2><p class="text-gray-600">PT Khatulistiwa Sinar Energi adalah penyedia layanan energi terintegrasi...</p></div>
         </section>
 
         <section id="visi-misi" class="section">
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-hijau-tua text-white p-10 rounded-3xl">
-                    <h2 class="text-2xl font-bold mb-4 italic text-teal-300">Visi</h2>
-                    <p>Menjadi perusahaan energi terdepan di Indonesia yang mengutamakan keberlanjutan dan inovasi teknologi.</p>
-                </div>
-                <div class="bg-hijau-tosca text-white p-10 rounded-3xl">
-                    <h2 class="text-2xl font-bold mb-4 italic">Misi</h2>
-                    <ul class="list-disc ml-5 space-y-2">
-                        <li>Memberikan layanan distribusi energi yang efisien.</li>
-                        <li>Membangun ekosistem administrasi yang transparan.</li>
-                        <li>Mendukung transisi energi hijau di Indonesia.</li>
-                    </ul>
-                </div>
+                <div class="bg-hijau-tua text-white p-10 rounded-3xl shadow-lg"><h2 class="text-2xl font-bold mb-4">Visi</h2><p>Menjadi pemimpin distribusi energi bersih nasional.</p></div>
+                <div class="bg-hijau-tosca text-white p-10 rounded-3xl shadow-lg"><h2 class="text-2xl font-bold mb-4">Misi</h2><p>Inovasi berkelanjutan dan transparansi administrasi.</p></div>
             </div>
         </section>
 
         <section id="legalitas" class="section">
             <div class="bg-white p-10 rounded-3xl shadow-lg border-l-8 border-hijau-tua">
-                <h2 class="text-3xl font-bold text-hijau-tua mb-8">Informasi Legalitas & Kontak</h2>
-                <div class="grid md:grid-cols-2 gap-10">
-                    <div class="bg-gray-50 p-6 rounded-2xl">
-                        <h3 class="font-bold text-hijau-tosca mb-3 uppercase">Legalitas</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li><strong>NIB:</strong> 128910111xxx</li>
-                            <li><strong>NPWP:</strong> 01.234.567.8-xxx.000</li>
-                            <li><strong>Izin:</strong> Niaga Umum BBM/Migas</li>
-                        </ul>
+                <h2 class="text-2xl font-bold mb-6">Legalitas & Alamat</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-2 text-sm">
+                        <p><strong>NIB:</strong> 128910111xxx</p>
+                        <p><strong>NPWP:</strong> 01.234.567.8-xxx.000</p>
+                        <p><strong>Izin:</strong> Niaga Umum BBM</p>
                     </div>
-                    <div class="space-y-5">
-                        <h3 class="font-bold text-hijau-tosca uppercase">Kantor Kami</h3>
-                        <p class="text-gray-600 italic">Jl. Khatulistiwa No. 10, Lantai 2, Jakarta Pusat, Indonesia.</p>
-                        <a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center bg-green-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-green-700 transition shadow-lg transform hover:-translate-y-1">
-                            Hubungi Admin via WhatsApp
-                        </a>
+                    <div>
+                        <p class="mb-4 italic text-gray-500 font-medium">Jl. Khatulistiwa No. 10, Lantai 2, Jakarta Pusat.</p>
+                        <a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 shadow-lg transition">Chat WhatsApp Admin</a>
                     </div>
                 </div>
             </div>
@@ -188,18 +152,18 @@
 
         <section id="login" class="section">
             <div class="max-w-md mx-auto bg-white p-10 rounded-3xl shadow-2xl border-t-8 border-hijau-tua">
-                <h2 class="text-2xl font-bold text-center mb-6">Internal Access</h2>
-                <input type="email" id="email" class="w-full border-2 border-gray-100 p-4 rounded-xl mb-4 focus:border-hijau-tosca outline-none" placeholder="Email">
-                <input type="password" id="password" class="w-full border-2 border-gray-100 p-4 rounded-xl mb-6 focus:border-hijau-tosca outline-none" placeholder="Password">
-                <button onclick="handleLogin()" class="w-full bg-hijau-tua text-white py-4 rounded-xl font-bold">Sign In</button>
+                <h2 class="text-2xl font-bold text-center mb-6">Sign In</h2>
+                <input type="email" id="email" class="w-full border p-4 rounded-xl mb-4" placeholder="Email">
+                <input type="password" id="password" class="w-full border p-4 rounded-xl mb-6" placeholder="Password">
+                <button onclick="handleLogin()" class="w-full bg-hijau-tua text-white py-4 rounded-xl font-bold shadow-lg">Masuk</button>
             </div>
         </section>
 
         <section id="dashboard" class="section">
             <div class="flex flex-col md:flex-row justify-between mb-8 gap-4">
-                <h2 id="dash-title" class="text-3xl font-bold text-hijau-tua italic">Pusat Dokumen</h2>
+                <h2 id="dash-title" class="text-3xl font-bold text-hijau-tua">Administrasi Dokumen</h2>
                 <div id="admin-panel" class="hidden flex gap-2">
-                    <select id="docType" class="border p-2 rounded-lg text-sm"><option value="PO">PO</option><option value="Surat Jalan">Surat Jalan</option><option value="Invoice">Invoice</option><option value="Faktur Pajak">Faktur Pajak</option></select>
+                    <select id="docType" class="border p-2 rounded-lg text-sm"><option value="PO">PO</option><option value="Surat Jalan">SJ</option><option value="Invoice">INV</option></select>
                     <input type="file" id="fileInput" class="text-xs">
                     <button onclick="uploadFile()" class="bg-hijau-tosca text-white px-4 py-1 rounded-lg font-bold">Upload</button>
                 </div>
@@ -214,7 +178,7 @@
     </main>
 
     <script>
-        // -- DATA FIREBASE --
+        // -- FIREBASE SETUP --
         const firebaseConfig = {
             apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
             authDomain: "kse-harga-bbm-update.firebaseapp.com",
@@ -222,12 +186,12 @@
             storageBucket: "kse-harga-bbm-update.firebasestorage.app",
             messagingSenderId: "764165984284",
             appId: "1:764165984284:web:a74aed43317539f5f1cfd9",
-            databaseURL: "https://kse-harga-bbm-update-default-rtdb.firebaseio.com" // Menambahkan databaseURL agar fungsi database bekerja
+            databaseURL: "https://kse-harga-bbm-update-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // -- CONFIG SUPABASE --
+        // -- SUPABASE SETUP --
         const _supabase = supabase.createClient("https://secasrbeamduxqxwlspv.supabase.co", "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br");
 
         function showSection(id) {
@@ -236,28 +200,43 @@
             window.scrollTo(0,0);
         }
 
-        // -- LOAD HARGA DARI FIREBASE --
-        function loadHarga() {
+        // -- REALTIME HARGA (FIREBASE) --
+        function listenHarga() {
             db.ref('harga_pertamina').on('value', (snap) => {
-                const val = snap.val();
-                if (val) {
-                    // Mapping data ke elemen (Sesuaikan path 'p1' dan 'p2' di Firebase Anda)
-                    if(val.p1) {
-                        document.getElementById('h-p1-w1').innerText = val.p1.w1 || "Rp 0";
-                        document.getElementById('h-p1-w2').innerText = val.p1.w2 || "Rp 0";
-                        document.getElementById('h-p1-w3').innerText = val.p1.w3 || "Rp 0";
+                const data = snap.val();
+                if (!data) return;
+
+                const mapping = {
+                    'now': { 'w12': 'h-now-w12', 'w3': 'h-now-w3', 'w4': 'h-now-w4', 'desc': ['desc-w12', 'desc-w3', 'desc-w4'] },
+                    'prev': { 'w12': 'h-prev-w12', 'w3': 'h-prev-w3', 'w4': 'h-prev-w4' }
+                };
+
+                // Update harga sekarang & perbandingan
+                ['w12', 'w3', 'w4'].forEach((key, idx) => {
+                    const nowVal = data.periode_sekarang[key] || 0;
+                    const prevVal = data.periode_lalu[key] || 0;
+                    const diff = nowVal - prevVal;
+
+                    document.getElementById(mapping.now[key]).innerText = `Rp ${nowVal.toLocaleString()}`;
+                    document.getElementById(mapping.prev[key]).innerText = `Rp ${prevVal.toLocaleString()}`;
+
+                    let descEl = document.getElementById(mapping.now.desc[idx]);
+                    if (diff > 0) {
+                        descEl.innerText = `▲ Naik Rp ${diff.toLocaleString()}`;
+                        descEl.style.color = "red";
+                    } else if (diff < 0) {
+                        descEl.innerText = `▼ Turun Rp ${Math.abs(diff).toLocaleString()}`;
+                        descEl.style.color = "green";
+                    } else {
+                        descEl.innerText = "● Tetap";
+                        descEl.style.color = "gray";
                     }
-                    if(val.p2) {
-                        document.getElementById('h-p2-w1').innerText = val.p2.w1 || "Rp 0";
-                        document.getElementById('h-p2-w2').innerText = val.p2.w2 || "Rp 0";
-                        document.getElementById('h-p2-w3').innerText = val.p2.w3 || "Rp 0";
-                    }
-                }
+                });
             });
         }
-        loadHarga();
+        listenHarga();
 
-        // -- LOGIN & DASHBOARD LOGIC --
+        // -- AUTH & DOCS (SUPABASE) --
         async function handleLogin() {
             const { data, error } = await _supabase.auth.signInWithPassword({
                 email: document.getElementById('email').value,
@@ -288,75 +267,24 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 font-bold text-hijau-tosca">${f.type}</td>
                     <td class="px-6 py-4 text-sm">${f.name}</td>
-                    <td class="px-6 py-4 text-center"><a href="${f.url}" target="_blank" class="bg-hijau-tua text-white px-4 py-1.5 rounded-lg text-xs font-bold">Download</a></td>
+                    <td class="px-6 py-4 text-center"><a href="${f.url}" target="_blank" class="bg-hijau-tua text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">Download</a></td>
                 </tr>
             `).join('');
         }
 
         function filterFiles(type) {
             showSection('dashboard');
-            document.getElementById('dash-title').innerText = "Filter: " + type;
+            document.getElementById('dash-title').innerText = "Arsip: " + type;
             _supabase.from('documents').select('*').eq('type', type).then(({data}) => renderTable(data));
-        }
-
-        async function uploadFile() {
-            const file = document.getElementById('fileInput').files[0];
-            const type = document.getElementById('docType').value;
-            if (!file) return;
-            const path = `docs/${Date.now()}_${file.name}`;
-            await _supabase.storage.from('kse-files').upload(path, file);
-            const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(path);
-            await _supabase.from('documents').insert([{ name: file.name, type, url: urlData.publicUrl }]);
-            alert("Berhasil!"); loadFiles();
         }
 
         async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
 
         _supabase.auth.getSession().then(({data}) => { if (data.session) updateAuthUI(data.session.user); });
     </script>
-    !-- SCRIPT FIREBASE + HARGA -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-  authDomain: "kse-harga-bbm-update.firebaseapp.com",
-  projectId: "kse-harga-bbm-update",
-  storageBucket: "kse-harga-bbm-update.firebasestorage.app",
-  messagingSenderId: "764165984284",
-  appId: "1:764165984284:web:a74aed43317539f5f1cfd9",
-  measurementId: "G-ZGQ5LG6DH9"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const ref = doc(db,"hargaBBM","periode");
-const wilayah = ["wilayah1","wilayah2","wilayah3","wilayah4"];
-
-// Fungsi load harga dari Firestore
-async function loadHarga(){
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return;
-  const data = snap.data();
-  for(let i=0;i<wilayah.length;i++){
-    let w = wilayah[i];
-    let now = parseInt(data.sekarang[w]) || 0;
-    let prev = parseInt(data.kemarin[w]) || 0;
-    let selisih = now - prev;
-
-    let warna, keterangan;
-    if(selisih>0){ warna="red"; keterangan=`▲ Naik Rp ${selisih.toLocaleString()}`; }
-    else if(selisih<0){ warna="green"; keterangan=`▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`; }
-    else { warna="gray"; keterangan="● Tidak berubah"; }
-
-    document.querySelector(`#card${w} p`).innerText = `Rp ${now.toLocaleString()}`;
-    document.querySelector(`#card${w} .keteranganKmr`).innerText = `Rp ${prev.toLocaleString()} ${keterangan}`;
-    document.querySelector(`#card${w} .keteranganKmr`).style.color = warna;
-  }
 </body>
 </html>
+
 
 
 
