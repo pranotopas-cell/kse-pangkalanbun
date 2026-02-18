@@ -47,6 +47,15 @@
                         <button onclick="filterFiles('Faktur Pajak')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Faktur Pajak</button>
                     </div>
                 </div>
+
+                <div class="relative group">
+                    <button class="flex items-center hover:text-teal-300 py-2 outline-none">Tentang Kami</button>
+                    <div class="absolute hidden group-hover:block bg-white text-gray-800 mt-0 w-48 rounded-md shadow-xl py-2 border-t-4 border-hijau-tosca">
+                        <button onclick="showSection('profile')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Profile</button>
+                        <button onclick="showSection('visi-misi')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Visi & Misi</button>
+                        <button onclick="showSection('legalitas')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Legalitas & Alamat</button>
+                    </div>
+                </div>
                 
                 <div id="nav-auth-container" class="border-l pl-6 border-teal-800">
                     <button id="btn-login-view" onclick="showSection('login')" class="bg-hijau-tosca px-6 py-1.5 rounded-full font-bold hover:bg-teal-500 shadow">Sign In</button>
@@ -69,9 +78,9 @@
         <section id="harga-pertamina" class="section">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-hijau-tua uppercase">Harga Publish BBM Industri</h2>
-                <p class="text-hijau-tosca font-bold" id="periode-teks">Periode: Memuat...</p>
+                <p class="text-hijau-tosca font-bold">Periode Terupdate Realtime</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="container-harga">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua" id="cardwilayah1">
                     <h3 class="font-bold">Wilayah I</h3>
                     <p class="text-2xl font-black text-hijau-tua italic my-2">Rp 0</p>
@@ -95,36 +104,81 @@
             </div>
         </section>
 
+        <section id="profile" class="section">
+            <div class="bg-white p-10 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-bold text-hijau-tua mb-4 uppercase">Company Profile</h2>
+                <p class="text-gray-700 leading-relaxed text-lg">PT Khatulistiwa Sinar Energi (KSE) adalah mitra distribusi resmi produk BBM Industri Pertamina yang berfokus pada ketepatan pengiriman dan transparansi harga untuk mendukung operasional industri di seluruh Indonesia.</p>
+            </div>
+        </section>
+
+        <section id="visi-misi" class="section">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-hijau-tua text-white p-10 rounded-2xl shadow-xl">
+                    <h2 class="text-2xl font-bold mb-4 italic">Visi</h2>
+                    <p>Menjadi pemimpin pasar dalam penyediaan energi terpadu di Indonesia dengan standar kualitas global.</p>
+                </div>
+                <div class="bg-hijau-tosca text-white p-10 rounded-2xl shadow-xl">
+                    <h2 class="text-2xl font-bold mb-4 italic">Misi</h2>
+                    <ul class="list-disc ml-5 space-y-2">
+                        <li>Memberikan layanan prima tepat volume dan tepat waktu.</li>
+                        <li>Membangun infrastruktur distribusi yang inovatif.</li>
+                        <li>Menjaga integritas dalam setiap transaksi bisnis.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="legalitas" class="section">
+            <div class="bg-white p-10 rounded-2xl shadow-xl border-l-8 border-hijau-tua">
+                <h2 class="text-xl font-bold mb-6 uppercase">Legalitas & Kontak</h2>
+                <div class="grid md:grid-cols-2 gap-8 text-gray-700">
+                    <div class="space-y-3">
+                        <p><strong>NIB:</strong> 1289101110XXX</p>
+                        <p><strong>NPWP:</strong> 01.234.567.8-XXX.000</p>
+                        <p><strong>Izin Niaga:</strong> Terdaftar di ESDM & Migas</p>
+                        <p><strong>Kantor:</strong> Gedung KSE, Jakarta Pusat, Indonesia</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-xl border">
+                        <h3 class="font-bold mb-2">Layanan Cepat:</h3>
+                        <a href="https://wa.me/6281234567890" target="_blank" class="block text-center bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">Chat via WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="admin-harga" class="section">
             <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border-t-8 border-orange-500">
-                <h2 class="text-xl font-bold mb-6">Update Harga Firestore</h2>
+                <h2 class="text-xl font-bold mb-6 text-orange-600 uppercase">Update Harga Firestore</h2>
                 <div class="space-y-4">
-                    <div><label class="block text-xs font-bold mb-1">WILAYAH 1</label><input type="number" id="input-w1" class="w-full border p-2 rounded"></div>
-                    <div><label class="block text-xs font-bold mb-1">WILAYAH 2</label><input type="number" id="input-w2" class="w-full border p-2 rounded"></div>
-                    <div><label class="block text-xs font-bold mb-1">WILAYAH 3</label><input type="number" id="input-w3" class="w-full border p-2 rounded"></div>
-                    <div><label class="block text-xs font-bold mb-1">WILAYAH 4</label><input type="number" id="input-w4" class="w-full border p-2 rounded"></div>
-                    <button onclick="saveHargaBaru()" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-orange-700">SIMPAN HARGA BARU</button>
+                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 1</label><input type="number" id="input-w1" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
+                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 2</label><input type="number" id="input-w2" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
+                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 3</label><input type="number" id="input-w3" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
+                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 4</label><input type="number" id="input-w4" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
+                    <button onclick="saveHargaBaru()" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-orange-700 transition">SIMPAN & PUBLIKASIKAN</button>
                 </div>
             </div>
         </section>
 
         <section id="login" class="section">
             <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-2xl border-t-8 border-hijau-tua text-center">
-                <h2 class="text-xl font-bold mb-6">Admin Sign In</h2>
+                <h2 class="text-xl font-bold mb-6 uppercase">Admin Sign In</h2>
                 <input type="email" id="email" class="w-full border p-3 rounded-lg mb-4" placeholder="Email">
                 <input type="password" id="password" class="w-full border p-3 rounded-lg mb-6" placeholder="Password">
-                <button onclick="handleLogin()" class="w-full bg-hijau-tua text-white py-3 rounded-lg font-bold shadow-lg">Login</button>
+                <button onclick="handleLogin()" class="w-full bg-hijau-tua text-white py-3 rounded-lg font-bold shadow-lg">Masuk Dashboard</button>
             </div>
         </section>
 
         <section id="dashboard" class="section">
-            <h2 id="dash-title" class="text-2xl font-bold text-hijau-tua mb-6 italic">Arsip Dokumen</h2>
-            <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="dash-title" class="text-2xl font-bold text-hijau-tua italic uppercase tracking-widest">Arsip Dokumen</h2>
+            </div>
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden">
                 <table class="w-full text-left">
-                    <thead class="bg-hijau-tua text-white">
-                        <tr><th class="px-6 py-3">Tipe</th><th class="px-6 py-3">Nama File</th><th class="px-6 py-3 text-center">Aksi</th></tr>
+                    <thead class="bg-hijau-tua text-white font-bold">
+                        <tr><th class="px-6 py-4">Kategori</th><th class="px-6 py-4">Keterangan Dokumen</th><th class="px-6 py-4 text-center">Aksi</th></tr>
                     </thead>
-                    <tbody id="file-table-body" class="divide-y text-sm italic"></tbody>
+                    <tbody id="file-table-body" class="divide-y text-sm italic">
+                        </tbody>
                 </table>
             </div>
         </section>
@@ -157,12 +211,11 @@
         let hargaSekarangGlobal = {};
         function loadHarga() {
             db.collection("hargaBBM").doc("periode").onSnapshot((doc) => {
-                if (!doc.exists) return console.log("Data Firestore tidak ada!");
+                if (!doc.exists) return;
                 const data = doc.data();
                 hargaSekarangGlobal = data.sekarang || {};
 
-                const wilayahs = ["wilayah1", "wilayah2", "wilayah3", "wilayah4"];
-                wilayahs.forEach(w => {
+                ["wilayah1", "wilayah2", "wilayah3", "wilayah4"].forEach(w => {
                     const now = parseInt(data.sekarang?.[w] || 0);
                     const prev = parseInt(data.kemarin?.[w] || 0);
                     const diff = now - prev;
@@ -171,34 +224,34 @@
                     card.querySelector('p.italic').innerText = `Rp ${now.toLocaleString()}`;
                     
                     const ket = card.querySelector('.keteranganKmr');
-                    if(diff > 0) { ket.innerText = `▲ Naik Rp ${diff.toLocaleString()}`; ket.className = "keteranganKmr text-xs font-bold text-red-600"; }
-                    else if(diff < 0) { ket.innerText = `▼ Turun Rp ${Math.abs(diff).toLocaleString()}`; ket.className = "keteranganKmr text-xs font-bold text-green-600"; }
-                    else { ket.innerText = "● Tetap"; ket.className = "keteranganKmr text-xs font-bold text-gray-500"; }
+                    if(diff > 0) { ket.innerText = `▲ Naik Rp ${diff.toLocaleString()}`; ket.style.color = "red"; }
+                    else if(diff < 0) { ket.innerText = `▼ Turun Rp ${Math.abs(diff).toLocaleString()}`; ket.style.color = "green"; }
+                    else { ket.innerText = "● Stabil"; ket.style.color = "gray"; }
                 });
             });
         }
 
-        // -- SIMPAN HARGA BARU (ADMIN) --
+        // -- UPDATE HARGA (ADMIN ONLY) --
         async function saveHargaBaru() {
-            const w1 = document.getElementById('input-w1').value;
-            const w2 = document.getElementById('input-w2').value;
-            const w3 = document.getElementById('input-w3').value;
-            const w4 = document.getElementById('input-w4').value;
-
-            if(!w1 || !w2 || !w3 || !w4) return alert("Isi semua wilayah!");
+            const val = [
+                document.getElementById('input-w1').value,
+                document.getElementById('input-w2').value,
+                document.getElementById('input-w3').value,
+                document.getElementById('input-w4').value
+            ];
+            if(val.includes("")) return alert("Lengkapi semua input!");
 
             try {
-                // Pindahkan harga sekarang ke harga kemarin, lalu update harga baru ke sekarang
                 await db.collection("hargaBBM").doc("periode").update({
                     kemarin: hargaSekarangGlobal,
-                    sekarang: { wilayah1: w1, wilayah2: w2, wilayah3: w3, wilayah4: w4 }
+                    sekarang: { wilayah1: val[0], wilayah2: val[1], wilayah3: val[2], wilayah4: val[3] }
                 });
                 alert("Harga Berhasil di Update!");
                 showSection('harga-pertamina');
-            } catch (e) { alert("Gagal update. Pastikan Anda sudah login admin."); }
+            } catch (e) { alert("Gagal Simpan. Periksa Login Admin Anda."); }
         }
 
-        // -- AUTH SUPABASE --
+        // -- AUTH & DASHBOARD --
         async function handleLogin() {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
@@ -220,14 +273,13 @@
         async function loadFiles(filter = null) {
             let query = _supabase.from('documents').select('*').order('created_at', { ascending: false });
             if (filter) query = query.eq('type', filter);
-            
             const { data } = await query;
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data.map(f => `
                 <tr>
-                    <td class="px-6 py-4 font-bold text-hijau-tosca">${f.type}</td>
+                    <td class="px-6 py-4 font-bold text-hijau-tosca uppercase">${f.type}</td>
                     <td class="px-6 py-4">${f.name}</td>
-                    <td class="px-6 py-4 text-center"><a href="${f.url}" target="_blank" class="bg-hijau-tua text-white px-4 py-1 rounded-full text-xs">Lihat</a></td>
+                    <td class="px-6 py-4 text-center"><a href="${f.url}" target="_blank" class="bg-hijau-tua text-white px-4 py-1 rounded shadow text-xs">VIEW</a></td>
                 </tr>
             `).join('');
         }
@@ -240,13 +292,14 @@
 
         async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
 
-        // Start Up
+        // START
         loadHarga();
         _supabase.auth.getSession().then(({data}) => { if (data.session) updateAuthUI(data.session.user); });
 
     </script>
 </body>
 </html>
+
 
 
 
