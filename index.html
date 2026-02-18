@@ -172,79 +172,96 @@
     </main>
 
     <script>
-        // -- KONFIGURASI FIREBASE --
-        const firebaseConfig = {
-            apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-            authDomain: "kse-harga-bbm-update.firebaseapp.com",
-            projectId: "kse-harga-bbm-update",
-            storageBucket: "kse-harga-bbm-update.firebasestorage.app",
-            messagingSenderId: "764165984284",
-            appId: "1:764165984284:web:a74aed43317539f5f1cfd9",
-            databaseURL: "https://kse-harga-bbm-update-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+       <script>
+    // -- CONFIG FIREBASE --
+    const firebaseConfig = {
+        apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
+        authDomain: "kse-harga-bbm-update.firebaseapp.com",
+        projectId: "kse-harga-bbm-update",
+        storageBucket: "kse-harga-bbm-update.firebasestorage.app",
+        messagingSenderId: "764165984284",
+        appId: "1:764165984284:web:a74aed43317539f5f1cfd9"
+    };
 
-        // -- SUPABASE --
-        const _supabase = supabase.createClient("https://secasrbeamduxqxwlspv.supabase.co", "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br");
+    firebase.initializeApp(firebaseConfig);
+    const dbFirestore = firebase.firestore(); // Inisialisasi Firestore
 
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
-        }
+    // -- CONFIG SUPABASE --
+    const _supabase = supabase.createClient("https://secasrbeamduxqxwlspv.supabase.co", "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br");
 
-        // -- LOAD HARGA FIREBASE (4 KOTAK) --
-        function loadHargaFirebase() {
-            // Path di Firebase: hargaBBM/periode
-            db.ref('hargaBBM/periode').on('value', (snap) => {
-                const data = snap.val();
-                if (!data) return;
+    // Fungsi Navigasi
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
 
+    // -- LOGIKA AMBIL DATA DARI FIRESTORE --
+    function loadHargaFirestore() {
+        dbFirestore.collection("hargaBBM").doc("periode")
+            .onSnapshot((doc) => {
+                if (!doc.exists) {
+                    console.error("Dokumen 'periode' tidak ditemukan di Firestore!");
+                    return;
+                }
+                
+                const data = doc.data();
                 const wilayahKeys = ["wilayah1", "wilayah2", "wilayah3", "wilayah4"];
+
                 wilayahKeys.forEach((w) => {
-                    const now = parseInt(data.sekarang[w]) || 0;
-                    const prev = parseInt(data.kemarin[w]) || 0;
+                    const now = (data.sekarang && data.sekarang[w]) ? parseInt(data.sekarang[w]) : 0;
+                    const prev = (data.kemarin && data.kemarin[w]) ? parseInt(data.kemarin[w]) : 0;
                     const selisih = now - prev;
 
                     let info = "";
                     let color = "gray";
-                    if (selisih > 0) { info = `▲ Naik Rp ${selisih.toLocaleString()}`; color = "red"; }
-                    else if (selisih < 0) { info = `▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`; color = "green"; }
-                    else { info = "● Tetap"; color = "gray"; }
+                    if (selisih > 0) { 
+                        info = `▲ Naik Rp ${selisih.toLocaleString()}`; 
+                        color = "#ef4444"; 
+                    } else if (selisih < 0) { 
+                        info = `▼ Turun Rp ${Math.abs(selisih).toLocaleString()}`; 
+                        color = "#22c55e"; 
+                    } else { 
+                        info = "● Tetap"; 
+                        color = "#6b7280"; 
+                    }
 
                     const card = document.getElementById(`card${w}`);
-                    card.querySelector('p.italic').innerText = `Rp ${now.toLocaleString()}`;
-                    const ket = card.querySelector('.keteranganKmr');
-                    ket.innerText = info;
-                    ket.style.color = color;
+                    if (card) {
+                        card.querySelector('p.italic').innerText = now > 0 ? `Rp ${now.toLocaleString()}` : "Rp 0";
+                        const ket = card.querySelector('.keteranganKmr');
+                        ket.innerText = info;
+                        ket.style.color = color;
+                    }
                 });
+            }, (error) => {
+                console.error("Error Firestore:", error);
             });
-        }
-        loadHargaFirebase();
+    }
 
-        // -- SUPABASE LOGIC (AUTH & DOCS) --
-        async function handleLogin() {
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
-            });
-            if (error) return alert("Login Gagal");
-            updateAuthUI(data.user);
-        }
+    // -- LOGIKA SUPABASE (AUTH & DOCS) --
+    async function handleLogin() {
+        const { data, error } = await _supabase.auth.signInWithPassword({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        });
+        if (error) return alert("Login Gagal");
+        updateAuthUI(data.user);
+    }
 
-        function updateAuthUI(user) {
-            if (!user) return;
-            document.getElementById('btn-login-view').classList.add('hidden');
-            document.getElementById('user-logged-in').classList.remove('hidden');
-            document.getElementById('display-email').innerText = user.email;
-            showSection('dashboard');
-            loadFiles();
-        }
+    function updateAuthUI(user) {
+        if (!user) return;
+        document.getElementById('btn-login-view').classList.add('hidden');
+        document.getElementById('user-logged-in').classList.remove('hidden');
+        document.getElementById('display-email').innerText = user.email;
+        showSection('dashboard');
+        loadFiles();
+    }
 
-        async function loadFiles() {
-            const { data } = await _supabase.from('documents').select('*').order('created_at', { ascending: false });
-            const tbody = document.getElementById('file-table-body');
+    async function loadFiles() {
+        const { data } = await _supabase.from('documents').select('*').order('created_at', { ascending: false });
+        const tbody = document.getElementById('file-table-body');
+        if(tbody) {
             tbody.innerHTML = data.map(f => `
                 <tr>
                     <td class="px-6 py-4 font-bold text-hijau-tosca">${f.type}</td>
@@ -253,21 +270,19 @@
                 </tr>
             `).join('');
         }
+    }
 
-        function filterFiles(type) {
-            showSection('dashboard');
-            document.getElementById('dash-title').innerText = "Arsip: " + type;
-            _supabase.from('documents').select('*').eq('type', type).then(({data}) => {
-                // Render table again with filtered data
-            });
-        }
+    async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
 
-        async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
-        _supabase.auth.getSession().then(({data}) => { if (data.session) updateAuthUI(data.session.user); });
+    // Jalankan saat startup
+    loadHargaFirestore();
+    _supabase.auth.getSession().then(({data}) => { if (data.session) updateAuthUI(data.session.user); });
 
+</script>
     </script>
 </body>
 </html>
+
 
 
 
