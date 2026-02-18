@@ -13,40 +13,8 @@ body{
   background:#f4f6f9;
 }
 
-/* TOP MENU */
+/* NAVBAR */
 .top-menu{
-  background:#0b1f3a;
-  padding:15px;
-  text-align:center;
-}
-.top-menu button{
-  margin:5px;
-  padding:10px 20px;
-  border:none;
-  background:#ffd700;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-/* CONTENT */
-#content{
-  padding:20px;
-}
-.file-item{
-  background:white;
-  padding:12px;
-  margin:8px 0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-radius:6px;
-}
-
-#uploadSection{
-  display:none;
-  padding:20px;
-}
- .top-menu{
   background:linear-gradient(90deg,#0b1f3a,#102c57);
   padding:12px 30px;
   color:white;
@@ -72,6 +40,7 @@ body{
   background:#ffcc00;
 }
 
+/* PROFILE */
 .profile-box{
   display:flex;
   align-items:center;
@@ -105,15 +74,8 @@ body{
   margin-top:2px;
 }
 
-.role-admin{
-  background:red;
-  color:white;
-}
-
-.role-user{
-  background:green;
-  color:white;
-}
+.role-admin{ background:red; color:white; }
+.role-user{ background:green; color:white; }
 
 .dropdown{
   display:none;
@@ -124,17 +86,33 @@ body{
   padding:10px;
   border-radius:6px;
   box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  z-index:999;
 }
 
 .dropdown button{
-  background:red;
+  background:#d90429;
   color:white;
   border:none;
   padding:8px 15px;
   cursor:pointer;
   border-radius:4px;
+  width:100%;
 }
- 
+
+/* CONTENT */
+#content{
+  padding:20px;
+}
+
+.file-item{
+  background:white;
+  padding:12px;
+  margin:8px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-radius:6px;
+}
 </style>
 </head>
 <body>
@@ -142,7 +120,6 @@ body{
 <nav class="top-menu">
   <div class="nav-container">
 
-    <!-- MENU -->
     <div class="menu-left">
       <button onclick="loadData('po')">PO</button>
       <button onclick="loadData('surat_jalan')">Surat Jalan</button>
@@ -150,7 +127,6 @@ body{
       <button onclick="loadData('faktur')">Faktur Pajak</button>
     </div>
 
-    <!-- PROFILE -->
     <div class="profile-box" onclick="toggleDropdown()">
       <div class="avatar" id="avatarCircle"></div>
       <div class="profile-info">
@@ -166,47 +142,66 @@ body{
   </div>
 </nav>
 
+<div id="content"></div>
+
 <script>
 const supabase = window.supabase.createClient(
   "https://secasrbeamduxqxwlspv.supabase.com",
-  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+  "PASTE_ANON_PUBLIC_KEY_KAMU"
 );
 
 let currentUser;
 let currentRole;
-let currentMenu;
 
-/* CEK USER LOGIN */
+/* INIT */
 async function init(){
+
   const { data } = await supabase.auth.getUser();
+
   if(!data.user){
-    alert("Silakan login dulu!");
     window.location.href = "index.html";
     return;
   }
 
   currentUser = data.user;
 
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", currentUser.id)
     .single();
 
+  if(error || !profile){
+    alert("Role tidak ditemukan di table profiles!");
+    return;
+  }
+
   currentRole = profile.role;
 
+  // TAMPILKAN EMAIL
+  document.getElementById("userEmail").innerText = currentUser.email;
+
+  // TAMPILKAN ROLE
+  const roleElement = document.getElementById("userRole");
+  roleElement.innerText = currentRole.toUpperCase();
+
   if(currentRole === "admin"){
-    document.getElementById("uploadSection").style.display = "block";
+    roleElement.classList.add("role-admin");
+  }else{
+    roleElement.classList.add("role-user");
   }
+
+  // AVATAR HURUF PERTAMA
+  document.getElementById("avatarCircle").innerText =
+    currentUser.email.charAt(0).toUpperCase();
 }
 
 init();
 
 /* LOAD DATA */
-async function loadData(type){
-  currentMenu = type;
+async function loadData(table){
 
-  let query = supabase.from(type).select("*");
+  let query = supabase.from(table).select("*");
 
   if(currentRole === "user"){
     query = query.eq("user_id", currentUser.id);
@@ -226,48 +221,15 @@ async function loadData(type){
     content.innerHTML += `
       <div class="file-item">
         <span>${item.nama_file}</span>
-        ${
-          currentRole === "admin"
-          ? ""
-          : `<button onclick="downloadFile('${item.file_url}')">Download</button>`
-        }
+        ${currentRole === "user"
+          ? `<button onclick="downloadFile('${item.file_url}')">Download</button>`
+          : ""}
       </div>
     `;
   });
 }
 
-/* UPLOAD (ADMIN SAJA) */
-async function uploadFile(){
-  if(currentRole !== "admin"){
-    alert("Hanya admin yang bisa upload!");
-    return;
-  }
-
-  const file = document.getElementById("fileInput").files[0];
-  if(!file) return alert("Pilih file dulu!");
-
-  const fileName = Date.now()+"_"+file.name;
-
-  const { data, error } = await supabase.storage
-    .from("dokumen")
-    .upload(fileName, file);
-
-  if(error){
-    alert("Upload gagal!");
-    return;
-  }
-
-  await supabase.from(currentMenu).insert({
-    nama_file: file.name,
-    file_url: fileName,
-    user_id: currentUser.id
-  });
-
-  alert("Upload berhasil!");
-  loadData(currentMenu);
-}
-
-/* DOWNLOAD (USER) */
+/* DOWNLOAD */
 function downloadFile(path){
   const { data } = supabase.storage
     .from("dokumen")
@@ -275,11 +237,15 @@ function downloadFile(path){
 
   window.open(data.publicUrl, "_blank");
 }
-  function toggleDropdown(){
+
+/* DROPDOWN */
+function toggleDropdown(){
   const menu = document.getElementById("dropdownMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+  menu.style.display =
+    menu.style.display === "block" ? "none" : "block";
 }
 
+/* LOGOUT */
 function confirmLogout(){
   if(confirm("Yakin mau logout?")){
     logout();
@@ -290,23 +256,12 @@ async function logout(){
   await supabase.auth.signOut();
   window.location.href = "index.html";
 }
-
- document.getElementById("userEmail").innerText = currentUser.email;
-document.getElementById("userRole").innerText = currentRole.toUpperCase();
-
-document.getElementById("avatarCircle").innerText =
-  currentUser.email.charAt(0).toUpperCase();
-
-if(currentRole === "admin"){
-  document.getElementById("userRole").classList.add("role-admin");
-}else{
-  document.getElementById("userRole").classList.add("role-user");
-}
- 
 </script>
 
 </body>
 </html>
+
+
 
 
 
