@@ -3,183 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - KSE</title>
-
+<title>Dashboard KSE</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
-body{background:#20C997;color:#333;}
-header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
-header img{height:45px;}
-nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
-nav a:hover{text-decoration:underline;}
-.container{max-width:1100px;margin:auto;padding:20px;}
-h2{margin:25px 0 15px;}
-.btn{background:#ffc107;padding:8px 15px;border-radius:6px;border:none;font-weight:bold;cursor:pointer;}
-.card{background:white;padding:15px;border-radius:10px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.08);}
-input,select{padding:6px;margin:5px 0;width:100%;}
-.menu-tabs button{margin-right:10px;margin-bottom:10px;}
-.hidden{display:none;}
+body{
+  margin:0;
+  font-family:Segoe UI, Arial;
+  background:#f4f6f9;
+}
+
+/* TOP MENU */
+.top-menu{
+  background:#0b1f3a;
+  padding:15px;
+  text-align:center;
+}
+.top-menu button{
+  margin:5px;
+  padding:10px 20px;
+  border:none;
+  background:#ffd700;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* CONTENT */
+#content{
+  padding:20px;
+}
+.file-item{
+  background:white;
+  padding:12px;
+  margin:8px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-radius:6px;
+}
+
+#uploadSection{
+  display:none;
+  padding:20px;
+}
 </style>
 </head>
 <body>
 
-<header>
-<div style="display:flex;align-items:center;gap:10px">
-<img src="assets/logo.png">
-<b>Dashboard KSE</b>
-</div>
-<nav>
-<a href="index.html">Home</a>
-<a id="logoutBtn">Sign Out</a>
+<nav class="top-menu">
+  <button onclick="loadData('po')">PO</button>
+  <button onclick="loadData('surat_jalan')">Surat Jalan</button>
+  <button onclick="loadData('invoice')">Invoice</button>
+  <button onclick="loadData('faktur')">Faktur Pajak</button>
 </nav>
-</header>
-
-<div class="container">
-
-<!-- ================= HARGA ================= -->
-<h2>Harga BBM Industri</h2>
-<div id="hargaContainer"></div>
-
-<div id="editHargaSection" class="hidden">
-<h3>Edit Harga (Admin)</h3>
-<select id="wilayahSelect">
-<option value="wilayah1">Wilayah 1</option>
-<option value="wilayah2">Wilayah 2</option>
-<option value="wilayah3">Wilayah 3</option>
-<option value="wilayah4">Wilayah 4</option>
-</select>
-<input type="number" id="hargaBaru" placeholder="Harga Baru">
-<button class="btn" id="saveHargaBtn">Simpan Harga</button>
-</div>
-
-<hr>
-
-<!-- ================= MENU DOKUMEN ================= -->
-<h2>Dokumen</h2>
-
-<div class="menu-tabs">
-<button class="btn" onclick="showCategory('PO')">PO</button>
-<button class="btn" onclick="showCategory('Surat Jalan')">Surat Jalan</button>
-<button class="btn" onclick="showCategory('Invoice')">Invoice</button>
-<button class="btn" onclick="showCategory('Faktur Pajak')">Faktur Pajak</button>
-</div>
 
 <div id="uploadSection">
-<input type="file" id="fileInput">
-<input type="text" id="typeInput" placeholder="Tipe Dokumen (PO/Invoice dll)">
-<button class="btn" id="uploadBtn">Upload</button>
+  <input type="file" id="fileInput">
+  <button onclick="uploadFile()">Upload</button>
 </div>
 
-<div id="fileList"></div>
+<div id="content"></div>
 
-</div>
-
-<script type="module">
-
-// ================== LOGIN CHECK ==================
-const urlParams = new URLSearchParams(window.location.search);
-const userEmail = urlParams.get("email");
-if(!userEmail) window.location.href="index.html";
-
-const adminLoggedIn = (userEmail==="admin@kse.com");
-
-// ================== FIREBASE ==================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "ISI_API_KEY",
-  authDomain: "ISI_AUTH_DOMAIN",
-  projectId: "kse-harga-bbm-update"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const ref = doc(db,"hargaBBM","periode");
-
-async function loadHarga(){
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return;
-  const data = snap.data();
-  const container = document.getElementById("hargaContainer");
-  container.innerHTML="";
-  for(let w in data.sekarang){
-    container.innerHTML+=`
-      <div class="card">
-      <b>${w}</b> : Rp ${parseInt(data.sekarang[w]).toLocaleString()}
-      </div>`;
-  }
-}
-loadHarga();
-
-if(adminLoggedIn){
-  document.getElementById("editHargaSection").classList.remove("hidden");
-}
-
-document.getElementById("saveHargaBtn").onclick=async()=>{
-  const wilayah = document.getElementById("wilayahSelect").value;
-  const harga = parseInt(document.getElementById("hargaBaru").value);
-  if(!harga) return alert("Isi harga dulu");
-  await updateDoc(ref,{
-    [`kemarin.${wilayah}`]: harga
-  });
-  alert("Harga berhasil diupdate");
-  loadHarga();
-};
-
-// ================== SUPABASE ==================
-const supabaseClient = supabase.createClient(
-  "https://YOUR_PROJECT.supabase.co",
-  "PUBLIC_ANON_KEY"
+<script>
+const supabase = window.supabase.createClient(
+  "ISI_URL_SUPABASE_KAMU",
+  "ISI_ANON_KEY_KAMU"
 );
 
-if(!adminLoggedIn){
-  document.getElementById("uploadSection").innerHTML="<p>Mode User: hanya bisa download dokumen</p>";
+let currentUser;
+let currentRole;
+let currentMenu;
+
+/* CEK USER LOGIN */
+async function init(){
+  const { data } = await supabase.auth.getUser();
+  if(!data.user){
+    alert("Silakan login dulu!");
+    window.location.href = "index.html";
+    return;
+  }
+
+  currentUser = data.user;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", currentUser.id)
+    .single();
+
+  currentRole = profile.role;
+
+  if(currentRole === "admin"){
+    document.getElementById("uploadSection").style.display = "block";
+  }
 }
 
-document.getElementById("uploadBtn").onclick=async()=>{
-  const file=document.getElementById("fileInput").files[0];
-  const type=document.getElementById("typeInput").value;
-  if(!file) return alert("Pilih file dulu");
-  const path=`${userEmail}/${file.name}`;
-  await supabaseClient.storage.from("documents").upload(path,file,{upsert:true});
-  const { data:urlData }=supabaseClient.storage.from("documents").getPublicUrl(path);
-  await supabaseClient.from("documents").insert([
-    {pt_email:userEmail,type:type,file_name:file.name,file_url:urlData.publicUrl}
-  ]);
-  alert("Upload berhasil");
-  loadFiles();
-};
+init();
 
-async function loadFiles(category=null){
-  let query=supabaseClient.from("documents").select("*");
-  if(!adminLoggedIn) query=query.eq("pt_email",userEmail);
-  if(category) query=query.eq("type",category);
-  const { data }=await query;
-  const list=document.getElementById("fileList");
-  list.innerHTML="";
-  if(!data||data.length===0){ list.innerHTML="<p>Tidak ada dokumen</p>"; return;}
-  data.forEach(f=>{
-    list.innerHTML+=`
-      <div class="card">
-      ${f.file_name} - ${f.type}
-      <a href="${f.file_url}" target="_blank">Download</a>
-      </div>`;
+/* LOAD DATA */
+async function loadData(type){
+  currentMenu = type;
+
+  let query = supabase.from(type).select("*");
+
+  if(currentRole === "user"){
+    query = query.eq("user_id", currentUser.id);
+  }
+
+  const { data } = await query;
+
+  const content = document.getElementById("content");
+  content.innerHTML = "";
+
+  if(!data || data.length === 0){
+    content.innerHTML = "<p>Tidak ada data.</p>";
+    return;
+  }
+
+  data.forEach(item=>{
+    content.innerHTML += `
+      <div class="file-item">
+        <span>${item.nama_file}</span>
+        ${
+          currentRole === "admin"
+          ? ""
+          : `<button onclick="downloadFile('${item.file_url}')">Download</button>`
+        }
+      </div>
+    `;
   });
 }
-loadFiles();
 
-window.showCategory=(cat)=>loadFiles(cat);
+/* UPLOAD (ADMIN SAJA) */
+async function uploadFile(){
+  if(currentRole !== "admin"){
+    alert("Hanya admin yang bisa upload!");
+    return;
+  }
 
-document.getElementById("logoutBtn").onclick=()=>{
-  window.location.href="index.html";
-};
+  const file = document.getElementById("fileInput").files[0];
+  if(!file) return alert("Pilih file dulu!");
 
+  const fileName = Date.now()+"_"+file.name;
+
+  const { data, error } = await supabase.storage
+    .from("dokumen")
+    .upload(fileName, file);
+
+  if(error){
+    alert("Upload gagal!");
+    return;
+  }
+
+  await supabase.from(currentMenu).insert({
+    nama_file: file.name,
+    file_url: fileName,
+    user_id: currentUser.id
+  });
+
+  alert("Upload berhasil!");
+  loadData(currentMenu);
+}
+
+/* DOWNLOAD (USER) */
+function downloadFile(path){
+  const { data } = supabase.storage
+    .from("dokumen")
+    .getPublicUrl(path);
+
+  window.open(data.publicUrl, "_blank");
+}
 </script>
+
 </body>
 </html>
-
-
 
