@@ -53,7 +53,6 @@ nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:p
 
 <header>
 <div style="display:flex;align-items:center;gap:12px">
-<!-- Ganti logo sementara dengan placeholder kalau belum ada -->
 <img src="https://via.placeholder.com/150x50?text=Logo" alt="Logo">
 <b>PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
 </div>
@@ -88,10 +87,10 @@ nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:p
 </div>
 
 <script>
-// Supabase client (hindari bentrok nama global)
+// Supabase client aman dari bentrok
 const supabaseClient = window.supabase.createClient(
-  "https://secasrbeamduxqxwlspv.supabase.com",
-  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+  "https://secasrbeamduxqxwlspv.supabase.co", // Project URL
+  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br" // Public anon key
 );
 
 // Tampilkan popup login
@@ -115,19 +114,27 @@ async function login(){
     return;
   }
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-  if(error){
-    document.getElementById("loginError").innerText = error.message;
-    return;
+    if(error){
+      document.getElementById("loginError").innerText = error.message;
+      return;
+    }
+
+    // Login sukses → redirect ke dashboard
+    window.location.href = "dashboard.html";
+
+  } catch (err) {
+    document.getElementById("loginError").innerText = "Gagal menghubungi server Supabase!";
+    console.error(err);
   }
-
-  // Login sukses → redirect ke dashboard
-  window.location.href = "dashboard.html";
 }
 </script>
 </body>
 </html>
+
+
 
 
 
