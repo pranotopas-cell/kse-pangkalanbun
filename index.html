@@ -5,25 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PT.KHATULISTIWA SINAR ENERGI</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
 body{background:#20C997;color:#333;}
-header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
+header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 header img{height:45px;}
-nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;}
-.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://via.placeholder.com/1200x400') no-repeat center/cover;background-size:cover;color:white;text-align:center;padding:90px 20px;}
+nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
+nav a:hover{text-decoration:underline;}
+.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('assets/hero.jpg') no-repeat center/cover;color:white;text-align:center;padding:90px 20px;}
 .hero h1{font-size:40px;margin-bottom:10px;}
 .btn{background:#ffc107;padding:12px 25px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;display:inline-block;margin-top:15px;}
 section{padding:50px 15px;}
 .container{max-width:1100px;margin:auto;}
 h2{text-align:center;margin-bottom:25px;}
-.card{background:white;padding:20px;border-radius:12px;margin-bottom:10px;}
 </style>
 </head>
 <body>
 
 <header>
 <div style="display:flex;align-items:center;gap:12px">
-<img src="https://via.placeholder.com/150x45" alt="Logo">
+<img src="assets/logo.png" alt="Logo">
 <b>PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
 </div>
 <nav>
@@ -33,12 +33,12 @@ h2{text-align:center;margin-bottom:25px;}
 <a href="#legalitas">Legalitas</a>
 <a href="#galeri">Galeri</a>
 <a href="#contact">Kontak</a>
-<a href="#" id="loginBtn">🔐 Login</a>
+<a id="loginNav">🔐 Login</a>
 </nav>
 </header>
 
 <section class="hero" id="home">
-<h1>KHATULISTIWA SINAR ENERGI</h1> 
+<h1>KHATULISTIWA SINAR ENERGI</h1>
 <h2>Mitra Penyalur dan Transportir BBM Industri</h2>
 <p>Melayani Distribusi BBM Industri wilayah KalSel-Teng-Bar</p>
 <a class="btn" href="https://wa.me/628158841410">📞 Contact Me</a>
@@ -48,11 +48,11 @@ h2{text-align:center;margin-bottom:25px;}
 <div class="container">
 <h2>Harga Publish BBM Industri Pertamina</h2>
 <p style="text-align:center;font-weight:bold">Periode Sekarang</p>
-<div id="hargaContainer">
-<div class="card" id="cardwilayah1"><h3>Wilayah I</h3><p></p></div>
-<div class="card" id="cardwilayah2"><h3>Wilayah II</h3><p></p></div>
-<div class="card" id="cardwilayah3"><h3>Wilayah III</h3><p></p></div>
-<div class="card" id="cardwilayah4"><h3>Wilayah IV</h3><p></p></div>
+<div class="harga-box">
+<div class="card" id="cardwilayah1"><h3>Wilayah I</h3><small>Sumatra, Jawa, Bali</small><p></p><small class="keteranganKmr"></small></div>
+<div class="card" id="cardwilayah2"><h3>Wilayah II</h3><small>Kalimantan</small><p></p><small class="keteranganKmr"></small></div>
+<div class="card" id="cardwilayah3"><h3>Wilayah III</h3><small>Sulawesi, NTB</small><p></p><small class="keteranganKmr"></small></div>
+<div class="card" id="cardwilayah4"><h3>Wilayah IV</h3><small>Maluku, NTT, Papua</small><p></p><small class="keteranganKmr"></small></div>
 </div>
 </div>
 </section>
@@ -60,64 +60,66 @@ h2{text-align:center;margin-bottom:25px;}
 <section id="tentang">
 <div class="container">
 <h2>About</h2>
-<p>PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya.</p>
+<div class="tentang">
+PT Khatulistiwa Sinar Energi bergerak di bidang distribusi BBM industri resmi. Pelayanan cepat, aman, handal dan terpercaya.
+</div>
 </div>
 </section>
 
 <section id="legalitas">
 <div class="container">
 <h2>Legalitas Perusahaan</h2>
-<p>Nama Perusahaan: PT Khatulistiwa Sinar Energi</p>
-<p>NPWP: 1000-0000-0773-4310</p>
-<p>NIB: 1301-2600-7100-5</p>
-<p>Izin Niaga BBM: Terdaftar Resmi</p>
+<div class="legal">
+<div><b>Nama Perusahaan</b><br>PT Khatulistiwa Sinar Energi</div>
+<div><b>NPWP</b><br>1000-0000-0773-4310</div>
+<div><b>NIB</b><br>1301-2600-7100-5</div>
+<div><b>Izin Niaga BBM</b><br>Terdaftar Resmi ke Niaga Umum</div>
+</div>
 </div>
 </section>
 
 <section id="galeri">
 <div class="container">
 <h2>Galeri Kegiatan</h2>
-<img src="https://via.placeholder.com/200x170">
-<img src="https://via.placeholder.com/200x170">
-<img src="https://via.placeholder.com/200x170">
-<img src="https://via.placeholder.com/200x170">
+<div class="galeri">
+<img src="assets/galeri1.jpg">
+<img src="assets/galeri2.jpg">
+<img src="assets/galeri3.jpg">
+<img src="assets/galeri4.jpg">
+</div>
 </div>
 </section>
 
 <section id="contact">
 <div class="container">
 <h2>📞 Contact Me</h2>
-<p>📍 JL.H.M Rafi'i Rt.24 Pangkalan Bun, Kalimantan Tengah</p>
-<p>📱 Noto: 08158841410</p>
-<p>📧 Email: pt.khatulistiwa.sinar.energi@gmail.com</p>
+<div class="tentang" style="text-align:center">
+📍 JL.H.M Rafi'i Rt.24 Pangkalan Bun, Kalimantan Tengah<br>
+📱 08158841410<br>
+📧 pt.khatulistiwa.sinar.energi@gmail.com
+</div>
 </div>
 </section>
+
+<footer>© 2026 PT Khatulistiwa Sinar Energi – All Rights Reserved</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const supabaseClient = supabase.createClient(
-  "https://secasrbeamduxqxwlspv.supabase.co",
-  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"
+ "https://YOUR_PROJECT.supabase.co",
+ "PUBLIC_ANON_KEY"
 );
 
-document.getElementById("loginBtn").onclick = async ()=>{
-  const email = prompt("Masukkan email Supabase:");
+document.getElementById("loginNav").addEventListener("click", async ()=>{
+  const email = prompt("Masukkan email:");
   const password = prompt("Masukkan password:");
-  const { data, error } = await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){ alert("Login gagal! "+error.message); return;}
-  window.location.href=`dashboard.html?email=${email}`;
-};
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if(error){ alert("Login gagal: "+error.message); return; }
+  window.location.href = `dashboard.html?email=${encodeURIComponent(email)}`;
+});
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
 
 
