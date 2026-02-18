@@ -1,139 +1,246 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PT.KHATULISTIWA SINAR ENERGI</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;}
-body{background:#20C997;color:#333;}
-header{background:#0b3d2e;color:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-header img{height:50px;}
-nav a{color:white;margin-left:18px;text-decoration:none;font-weight:500;cursor:pointer;}
-.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url('https://via.placeholder.com/1200x600') center/cover no-repeat;color:white;text-align:center;padding:90px 20px;}
-.hero h1{font-size:40px;margin-bottom:10px;}
-.btn{background:#ffc107;padding:12px 25px;border-radius:8px;text-decoration:none;color:black;font-weight:bold;display:inline-block;margin-top:15px;cursor:pointer;}
-/* Popup Login */
-#loginPopup{
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.5);
-  justify-content:center; align-items:center;
-  z-index:1000;
-}
-#loginPopup .login-box{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  width:300px;
-  text-align:center;
-}
-#loginPopup input{
-  width:90%;
-  padding:10px;
-  margin:10px 0;
-  border-radius:5px;
-  border:1px solid #ccc;
-}
-#loginPopup button{
-  background:#0b3d2e;
-  color:white;
-  border:none;
-  padding:10px 20px;
-  border-radius:5px;
-  cursor:pointer;
-}
-#loginPopup button:hover{background:#102c57;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Khatulistiwa Sinar Energi - Admin System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-900 min-h-screen">
 
-<header>
-<div style="display:flex;align-items:center;gap:12px">
-<img src="https://via.placeholder.com/150x50?text=Logo" alt="Logo">
-<b>PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</b>
-</div>
-<nav>
-<a href="#home">Home</a>
-<a href="#harga">Harga</a>
-<a href="#tentang">Tentang Kami</a>
-<a href="#legalitas">Legalitas</a>
-<a href="#galeri">Galeri</a>
-<a href="#contact">Kontak</a>
-<a id="loginBtn" class="btn">🔐 Login</a>
-</nav>
-</header>
+    <nav class="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-yellow-400 rounded-full"></div>
+                <span class="text-xl font-bold tracking-wider">PT KSE</span>
+            </div>
+            <div class="hidden md:flex space-x-8 font-medium">
+                <button onclick="showSection('home')" class="hover:text-yellow-400 transition">Home</button>
+                <button onclick="showSection('about')" class="hover:text-yellow-400 transition">Tentang Kami</button>
+                <button onclick="showSection('contact')" class="hover:text-yellow-400 transition">Kontak</button>
+                <div id="nav-auth">
+                    <button onclick="showSection('login')" class="bg-yellow-500 text-blue-900 px-5 py-1 rounded-full font-bold hover:bg-yellow-400 transition">Login</button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<section class="hero" id="home">
-<h1>KHATULISTIWA SINAR ENERGI</h1>
-<h2>Mitra Penyalur dan Transportir BBM Industri</h2>
-<p>Melayani Distribusi BBM Industri wilayah KalSel-Teng-Bar</p>
-<a class="btn" href="https://wa.me/628158841410">📞 Contact Me</a>
-</section>
+    <main class="container mx-auto px-6 py-10">
 
-<!-- Popup Login -->
-<div id="loginPopup">
-  <div class="login-box">
-    <h3>Login Dashboard</h3>
-    <input type="email" id="loginEmail" placeholder="Email"><br>
-    <input type="password" id="loginPassword" placeholder="Password"><br>
-    <button onclick="login()">Login</button>
-    <p style="font-size:12px;color:red;" id="loginError"></p>
-    <button onclick="closePopup()" style="margin-top:10px;background:#ccc;color:black;">Batal</button>
-  </div>
-</div>
+        <section id="home" class="section active space-y-8 text-center py-10">
+            <h1 class="text-5xl font-extrabold text-blue-900">PT Khatulistiwa Sinar Energi</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto italic">"Energi Terbarukan, Solusi Masa Depan Indonesia"</p>
+            <div class="grid md:grid-cols-3 gap-6 pt-10">
+                <div class="p-6 bg-white rounded-xl shadow-sm border-t-4 border-yellow-500">
+                    <h3 class="font-bold text-lg mb-2">Administrasi</h3>
+                    <p class="text-sm text-gray-500">Manajemen PO, Invoice, dan Faktur Pajak yang terintegrasi.</p>
+                </div>
+                <div class="p-6 bg-white rounded-xl shadow-sm border-t-4 border-blue-500">
+                    <h3 class="font-bold text-lg mb-2">Legalitas</h3>
+                    <p class="text-sm text-gray-500">Dokumen resmi dan izin operasional perusahaan yang valid.</p>
+                </div>
+                <div class="p-6 bg-white rounded-xl shadow-sm border-t-4 border-blue-900">
+                    <h3 class="font-bold text-lg mb-2">Keamanan</h3>
+                    <p class="text-sm text-gray-500">Penyimpanan data aman menggunakan teknologi Cloud Supabase.</p>
+                </div>
+            </div>
+        </section>
 
-<script>
-// Supabase client aman dari bentrok
-const supabaseClient = window.supabase.createClient(
-  "https://secasrbeamduxqxwlspv.supabase.co", // Project URL
-  "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br" // Public anon key
-);
+        <section id="about" class="section space-y-6">
+            <h2 class="text-3xl font-bold border-b-2 border-yellow-500 inline-block">Tentang Kami & Legalitas</h2>
+            <div class="bg-white p-8 rounded-xl shadow-md space-y-4">
+                <p>PT Khatulistiwa Sinar Energi adalah perusahaan yang bergerak di bidang solusi energi terintegrasi.</p>
+                <h4 class="font-bold text-blue-900 mt-4">Legalitas Perusahaan:</h4>
+                <ul class="list-disc ml-6 space-y-1 text-gray-700">
+                    <li>NIB: 1234567890 (Contoh)</li>
+                    <li>NPWP: 01.234.567.8-910.000</li>
+                    <li>Alamat: Jakarta, Indonesia</li>
+                </ul>
+            </div>
+        </section>
 
-// Tampilkan popup login
-document.getElementById("loginBtn").onclick = () => {
-  document.getElementById("loginPopup").style.display = "flex";
-};
+        <section id="contact" class="section">
+            <h2 class="text-3xl font-bold mb-6">Hubungi Kami</h2>
+            <div class="bg-white p-8 rounded-xl shadow-md">
+                <p class="mb-2"><strong>Email:</strong> info@khatulistiwasinar.co.id</p>
+                <p class="mb-2"><strong>WhatsApp:</strong> +62 812-3456-7890</p>
+                <p><strong>Kantor:</strong> Jl. Khatulistiwa No. 88, Jakarta Pusat.</p>
+            </div>
+        </section>
 
-// Tutup popup
-function closePopup(){
-  document.getElementById("loginPopup").style.display = "none";
-  document.getElementById("loginError").innerText = "";
-}
+        <section id="login" class="section">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                <h2 class="text-2xl font-bold text-center mb-6">Login Sistem</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Email</label>
+                        <input type="email" id="email" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="email@kse.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Password</label>
+                        <input type="password" id="password" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="••••••••">
+                    </div>
+                    <button onclick="handleLogin()" class="w-full bg-blue-900 text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition">Masuk</button>
+                </div>
+            </div>
+        </section>
 
-// Login Supabase
-async function login(){
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
+        <section id="dashboard" class="section space-y-8">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-bold text-blue-900 italic">Selamat Datang</h2>
+                <button onclick="handleLogout()" class="text-red-600 font-bold border border-red-600 px-4 py-1 rounded-lg hover:bg-red-50">Logout</button>
+            </div>
 
-  if(!email || !password){
-    document.getElementById("loginError").innerText = "Email dan password wajib diisi!";
-    return;
-  }
+            <div id="admin-area" class="hidden bg-blue-50 border-2 border-dashed border-blue-300 p-6 rounded-2xl">
+                <h3 class="font-bold text-lg mb-4 flex items-center">
+                    <span class="bg-blue-900 text-white text-xs px-2 py-1 rounded mr-2">ADMIN</span> 
+                    Upload Dokumen Baru
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <select id="docType" class="p-3 border rounded-lg">
+                        <option value="PO">Purchase Order (PO)</option>
+                        <option value="Surat Jalan">Surat Jalan</option>
+                        <option value="Invoice">Invoice</option>
+                        <option value="Faktur Pajak">Faktur Pajak</option>
+                    </select>
+                    <input type="file" id="fileInput" class="p-2 bg-white border rounded-lg">
+                    <button onclick="uploadFile()" class="bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">Unggah Sekarang</button>
+                </div>
+            </div>
 
-  try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+                <div class="bg-gray-50 px-6 py-4 border-b">
+                    <h3 class="font-bold">Daftar Dokumen Administrasi</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                            <tr>
+                                <th class="px-6 py-3">Jenis Dokumen</th>
+                                <th class="px-6 py-3">Nama File</th>
+                                <th class="px-6 py-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="file-table-body" class="divide-y">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-    if(error){
-      document.getElementById("loginError").innerText = error.message;
-      return;
-    }
+    </main>
 
-    // Login sukses → redirect ke dashboard
-    window.location.href = "dashboard.html";
+    <script>
+        // -- KONFIGURASI SUPABASE --
+        const SUPABASE_URL = "https://secasrbeamduxqxwlspv.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  } catch (err) {
-    document.getElementById("loginError").innerText = "Gagal menghubungi server Supabase!";
-    console.error(err);
-  }
-}
-</script>
+        // -- NAVIGASI LOGIC --
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // -- AUTH LOGIC --
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                alert("Login Gagal: " + error.message);
+            } else {
+                renderUserView(data.user);
+            }
+        }
+
+        async function handleLogout() {
+            await _supabase.auth.signOut();
+            location.reload();
+        }
+
+        function renderUserView(user) {
+            if (!user) return;
+            
+            showSection('dashboard');
+            document.getElementById('nav-auth').innerHTML = `<span class="text-yellow-400 font-bold">${user.email}</span>`;
+
+            // Jika email admin, tampilkan panel upload (sesuaikan filter emailnya)
+            if (user.email.includes('admin')) {
+                document.getElementById('admin-area').classList.remove('hidden');
+            }
+            loadFiles();
+        }
+
+        // -- STORAGE & DATABASE LOGIC --
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const type = document.getElementById('docType').value;
+            const file = fileInput.files[0];
+
+            if (!file) return alert("Pilih file dulu!");
+
+            // 1. Upload ke Storage (Bucket: kse-files)
+            const filePath = `docs/${Date.now()}_${file.name}`;
+            const { data: storageData, error: storageError } = await _supabase.storage
+                .from('kse-files')
+                .upload(filePath, file);
+
+            if (storageError) return alert("Gagal Upload Storage: " + storageError.message);
+
+            // 2. Ambil URL
+            const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(filePath);
+
+            // 3. Simpan ke Tabel documents
+            const { error: dbError } = await _supabase.from('documents').insert([
+                { name: file.name, type: type, url: urlData.publicUrl }
+            ]);
+
+            if (dbError) {
+                alert("Gagal Simpan Database: " + dbError.message);
+            } else {
+                alert("Berhasil!");
+                fileInput.value = "";
+                loadFiles();
+            }
+        }
+
+        async function loadFiles() {
+            const { data, error } = await _supabase.from('documents').select('*').order('created_at', { ascending: false });
+            const tbody = document.getElementById('file-table-body');
+            
+            if (error) return console.error(error);
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500 italic">Belum ada dokumen.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(doc => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-bold text-blue-700">${doc.type}</td>
+                    <td class="px-6 py-4 text-sm">${doc.name}</td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="${doc.url}" target="_blank" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-200 transition">Download</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Cek Sesi saat refresh
+        _supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) renderUserView(session.user);
+        });
+    </script>
 </body>
 </html>
-
 
 
 
