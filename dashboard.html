@@ -46,23 +46,125 @@ body{
   display:none;
   padding:20px;
 }
+ .top-menu{
+  background:linear-gradient(90deg,#0b1f3a,#102c57);
+  padding:12px 30px;
+  color:white;
+}
+
+.nav-container{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.menu-left button{
+  margin-right:10px;
+  padding:8px 18px;
+  border:none;
+  background:#ffd700;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+.menu-left button:hover{
+  background:#ffcc00;
+}
+
+.profile-box{
+  display:flex;
+  align-items:center;
+  cursor:pointer;
+  position:relative;
+}
+
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#ffd700;
+  color:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  margin-right:10px;
+}
+
+.profile-info{
+  text-align:left;
+  font-size:13px;
+}
+
+.role-badge{
+  font-size:11px;
+  padding:2px 6px;
+  border-radius:4px;
+  display:inline-block;
+  margin-top:2px;
+}
+
+.role-admin{
+  background:red;
+  color:white;
+}
+
+.role-user{
+  background:green;
+  color:white;
+}
+
+.dropdown{
+  display:none;
+  position:absolute;
+  top:50px;
+  right:0;
+  background:white;
+  padding:10px;
+  border-radius:6px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.dropdown button{
+  background:red;
+  color:white;
+  border:none;
+  padding:8px 15px;
+  cursor:pointer;
+  border-radius:4px;
+}
+ 
 </style>
 </head>
 <body>
 
 <nav class="top-menu">
-  <button onclick="loadData('po')">PO</button>
-  <button onclick="loadData('surat_jalan')">Surat Jalan</button>
-  <button onclick="loadData('invoice')">Invoice</button>
-  <button onclick="loadData('faktur')">Faktur Pajak</button>
+  <div class="nav-container">
+
+    <!-- MENU -->
+    <div class="menu-left">
+      <button onclick="loadData('po')">PO</button>
+      <button onclick="loadData('surat_jalan')">Surat Jalan</button>
+      <button onclick="loadData('invoice')">Invoice</button>
+      <button onclick="loadData('faktur')">Faktur Pajak</button>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="profile-box" onclick="toggleDropdown()">
+      <div class="avatar" id="avatarCircle"></div>
+      <div class="profile-info">
+        <div id="userEmail"></div>
+        <div id="userRole" class="role-badge"></div>
+      </div>
+
+      <div class="dropdown" id="dropdownMenu">
+        <button onclick="confirmLogout()">Sign Out</button>
+      </div>
+    </div>
+
+  </div>
 </nav>
-
-<div id="uploadSection">
-  <input type="file" id="fileInput">
-  <button onclick="uploadFile()">Upload</button>
-</div>
-
-<div id="content"></div>
 
 <script>
 const supabase = window.supabase.createClient(
@@ -173,8 +275,37 @@ function downloadFile(path){
 
   window.open(data.publicUrl, "_blank");
 }
+  function toggleDropdown(){
+  const menu = document.getElementById("dropdownMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function confirmLogout(){
+  if(confirm("Yakin mau logout?")){
+    logout();
+  }
+}
+
+async function logout(){
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
+
+ document.getElementById("userEmail").innerText = currentUser.email;
+document.getElementById("userRole").innerText = currentRole.toUpperCase();
+
+document.getElementById("avatarCircle").innerText =
+  currentUser.email.charAt(0).toUpperCase();
+
+if(currentRole === "admin"){
+  document.getElementById("userRole").classList.add("role-admin");
+}else{
+  document.getElementById("userRole").classList.add("role-user");
+}
+ 
 </script>
 
 </body>
 </html>
+
 
