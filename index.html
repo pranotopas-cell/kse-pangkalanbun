@@ -141,8 +141,8 @@
     </main>
 
     <script>
-        const SB_URL = "https://wrkmmeojhqpxchetaltl.supabase.co"; 
-        const SB_KEY = "MASUKKAN_ANON_KEY_EYJ_ABANG_DI_SINI"; 
+        const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
+        const SB_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc"; 
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
         const firebaseConfig = { projectId: "kse-harga-bbm-update", apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM" };
@@ -156,7 +156,7 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                isAdmin = currentUser.email === "admin@kse.com"; // Ganti email admin Abang
+                isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com"; // Ganti email admin Abang
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     loadRecipientHistory();
@@ -266,3 +266,4 @@
     </script>
 </body>
 </html>
+
