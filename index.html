@@ -144,26 +144,123 @@
             </div>
         </section>
 
-        <section id="dashboard" class="section py-10">
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">Repository Dokumen</h2>
-                <div class="bg-emerald-100 text-emerald-800 px-6 py-2 rounded-full font-bold text-xs uppercase">Connected to Storage</div>
+       <section id="dashboard" class="section py-10">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+        <div>
+            <h2 class="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">Repository Dokumen</h2>
+            <p class="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-2">Panel Kontrol Arsip Digital</p>
+        </div>
+        
+        <div id="admin-upload-area" class="bg-white p-6 rounded-3xl shadow-xl border border-emerald-100 flex items-center gap-4">
+            <div class="flex flex-col">
+                <label class="text-[10px] font-black text-slate-400 mb-1 uppercase">Pilih File (PDF/JPG)</label>
+                <input type="file" id="file-input" class="text-xs font-bold text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
             </div>
-            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
-                        <tr><th class="px-10 py-6">Kategori</th><th class="px-10 py-6">Nama File</th><th class="px-10 py-6 text-center">Tindakan</th></tr>
-                    </thead>
-                    <tbody id="file-table-body" class="divide-y divide-slate-50">
-                        </tbody>
-                </table>
+            <div class="flex flex-col">
+                <label class="text-[10px] font-black text-slate-400 mb-1 uppercase">Kategori</label>
+                <select id="file-category" class="text-xs font-bold bg-slate-50 p-2 rounded-lg outline-none">
+                    <option value="HARGA">HARGA</option>
+                    <option value="INVOICE">INVOICE</option>
+                    <option value="LEGAL">LEGAL</option>
+                </select>
             </div>
-        </section>
-    </main>
+            <button onclick="uploadFile()" id="btn-upload" class="bg-emerald-900 text-white px-6 py-3 rounded-2xl font-black text-xs hover:bg-black transition shadow-lg self-end">UPLOAD</button>
+        </div>
+    </div>
 
-    <footer class="mt-20 py-10 border-t border-slate-200 text-center">
-        <p class="text-[10px] font-black text-slate-300 tracking-[0.3em] uppercase">PT Khatulistiwa Sinar Energi &copy; 2026</p>
-    </footer>
+    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                <tr><th class="px-10 py-6">Kategori</th><th class="px-10 py-6">Nama File</th><th class="px-10 py-6">Tanggal</th><th class="px-10 py-6 text-center">Tindakan</th></tr>
+            </thead>
+            <tbody id="file-table-body" class="divide-y divide-slate-50">
+                </tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+// ... (Pastikan Init Supabase & Firebase sudah ada di atas) ...
+
+// --- FUNGSI UPLOAD DOKUMEN ---
+async function uploadFile() {
+    const fileInput = document.getElementById('file-input');
+    const category = document.getElementById('file-category').value;
+    const btn = document.getElementById('btn-upload');
+    
+    if (fileInput.files.length === 0) return alert("Pilih file terlebih dahulu!");
+    
+    const file = fileInput.files[0];
+    const fileName = `${Date.now()}_${file.name}`;
+    const filePath = `uploads/${fileName}`;
+    
+    btn.innerText = "UPLOADING...";
+    btn.disabled = true;
+
+    try {
+        // 1. Upload ke Supabase Storage (Bucket: 'documents')
+        // Pastikan Anda sudah membuat Bucket bernama 'documents' di Supabase Storage
+        const { data: storageData, error: storageError } = await _supabase.storage
+            .from('documents')
+            .upload(filePath, file);
+
+        if (storageError) throw storageError;
+
+        // 2. Ambil Public URL
+        const { data: urlData } = _supabase.storage
+            .from('documents')
+            .getPublicUrl(filePath);
+
+        const publicUrl = urlData.publicUrl;
+
+        // 3. Simpan Metadata ke Tabel Database 'documents'
+        const { error: dbError } = await _supabase
+            .from('documents')
+            .insert([
+                { name: file.name, type: category, url: publicUrl }
+            ]);
+
+        if (dbError) throw dbError;
+
+        alert("Berhasil mengunggah dokumen!");
+        fileInput.value = ""; // Reset input
+        loadDocuments(); // Refresh tabel
+
+    } catch (err) {
+        console.error(err);
+        alert("Gagal Upload: " + err.message + "\nPastikan Bucket 'documents' sudah dibuat di Supabase Storage.");
+    } finally {
+        btn.innerText = "UPLOAD";
+        btn.disabled = false;
+    }
+}
+
+// --- FUNGSI LOAD DOKUMEN (DIPERBARUI) ---
+async function loadDocuments() {
+    const { data, error } = await _supabase
+        .from('documents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    const tbody = document.getElementById('file-table-body');
+    
+    if (error || !data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="px-10 py-20 text-center text-slate-300 font-bold uppercase tracking-widest italic">Belum ada dokumen.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = data.map(doc => `
+        <tr class="hover:bg-slate-50 transition border-b border-slate-50">
+            <td class="px-10 py-8"><span class="bg-emerald-50 text-emerald-800 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter">${doc.type}</span></td>
+            <td class="px-10 py-8 text-sm font-black text-slate-700">${doc.name}</td>
+            <td class="px-10 py-8 text-xs text-slate-400 font-bold">${new Date(doc.created_at).toLocaleDateString('id-ID')}</td>
+            <td class="px-10 py-8 text-center">
+                <a href="${doc.url}" target="_blank" class="bg-[#064e3b] text-white px-8 py-3 rounded-xl text-[10px] font-black hover:bg-black transition shadow-lg shadow-emerald-900/10">LIHAT / DOWNLOAD</a>
+            </td>
+        </tr>
+    `).join('');
+}
+</script> 
 
     <script>
         // -- KONFIGURASI SUPABASE (Kredensial Baru Anda) --
@@ -312,6 +409,7 @@
     </script>
 </body>
 </html>
+
 
 
 
