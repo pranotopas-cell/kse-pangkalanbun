@@ -180,11 +180,17 @@
     </main>
 
     <script>
-        // -- CONFIG --
-        const SUPABASE_URL = "https:/yqdtgcjpfhiskywhowhu/.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_jTiO9iFFy7wu-ntlT0GJJQ_mUcSUt3Q";
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // 1. Definisikan Variabel (Paling Atas)
+    const SUPABASE_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // Ganti ini!
+    
+    // 2. Buat Client (Harus sebelum fungsi dipakai)
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // 3. Fungsi-fungsi (handleLogin, uploadFile, dll)
+    async function handleLogin() {
+        // ... kode login
+    }
         const firebaseConfig = {
             apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
             authDomain: "kse-harga-bbm-update.firebaseapp.com",
@@ -333,5 +339,6 @@
     </script>
 </body>
 </html>
+
 
 
