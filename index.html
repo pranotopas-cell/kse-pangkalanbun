@@ -3,190 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Khatulistiwa Sinar Energi - Portal</title>
+    <title>PT Khatulistiwa Sinar Energi - Enterprise Portal</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <style>
-        .bg-hijau-tua { background-color: #064e3b; }
-        .bg-hijau-tosca { background-color: #0d9488; }
-        .text-hijau-tosca { color: #0d9488; }
-        .section { display: none; }
-        .section.active { display: block; }
-        .group:hover .group-hover\:block { display: block; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-morphism { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .section { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
+        .section.active { display: block; opacity: 1; transform: translateY(0); }
+        .gradient-brand { background: linear-gradient(135deg, #064e3b 0%, #0d9488 100%); }
+        .nav-link { position: relative; padding: 0.5rem 0; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #2dd4bf; transition: width 0.3s; }
+        .nav-link:hover::after { width: 100%; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
+<body class="bg-[#f8fafc] text-slate-900 min-h-screen">
 
-    <nav class="bg-hijau-tua text-white shadow-xl sticky top-0 z-50">
+    <nav class="sticky top-0 z-50 glass-morphism border-b border-slate-200">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('home')">
-                <div class="w-10 h-10 bg-hijau-tosca rounded-lg flex items-center justify-center font-bold shadow-lg text-white">KSE</div>
-                <span class="text-xl font-bold tracking-tighter uppercase italic">PT KSE</span>
+            <div class="flex items-center space-x-3 cursor-pointer group" onclick="showSection('home')">
+                <div class="w-11 h-11 gradient-brand rounded-xl flex items-center justify-center font-bold shadow-lg text-white group-hover:scale-105 transition-transform">KSE</div>
+                <div>
+                    <span class="block text-xl font-extrabold tracking-tight text-emerald-900 leading-none">PT KSE</span>
+                    <span class="text-[10px] uppercase tracking-[0.2em] font-semibold text-emerald-600">Sinar Energi</span>
+                </div>
             </div>
             
-            <div class="hidden md:flex items-center space-x-6 font-medium">
-                <button onclick="showSection('home')" class="hover:text-teal-300">Home</button>
+            <div class="hidden md:flex items-center space-x-8 font-semibold text-slate-600">
+                <button onclick="showSection('home')" class="nav-link hover:text-emerald-700">Beranda</button>
                 
                 <div class="relative group">
-                    <button class="flex items-center hover:text-teal-300 py-2 outline-none">Berita</button>
-                    <div class="absolute hidden group-hover:block bg-white text-gray-800 mt-0 w-56 rounded-md shadow-xl py-2 border-t-4 border-hijau-tosca">
-                        <button onclick="showSection('harga-pertamina')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Update Harga Pertamina</button>
-                        <button id="nav-edit-harga" onclick="showSection('admin-harga')" class="hidden block px-4 py-2 w-full text-left hover:bg-teal-50 text-orange-600 font-bold border-t">Ganti Harga Publish</button>
+                    <button class="nav-link flex items-center hover:text-emerald-700 gap-1">Energi <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div class="absolute hidden group-hover:block bg-white mt-2 w-64 rounded-2xl shadow-2xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2">
+                        <button onclick="showSection('harga-pertamina')" class="block px-4 py-3 w-full text-left hover:bg-emerald-50 rounded-xl transition">Harga Publish BBM</button>
+                        <button id="nav-edit-harga" onclick="showSection('admin-harga')" class="hidden px-4 py-3 w-full text-left bg-orange-50 text-orange-700 rounded-xl mt-1 font-bold">Update Harga (Admin)</button>
                     </div>
                 </div>
 
                 <div class="relative group">
-                    <button class="flex items-center hover:text-teal-300 py-2 outline-none">Administrasi</button>
-                    <div class="absolute hidden group-hover:block bg-white text-gray-800 mt-0 w-48 rounded-md shadow-xl py-2 border-t-4 border-hijau-tosca">
-                        <button onclick="filterFiles('PO')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Purchase Order (PO)</button>
-                        <button onclick="filterFiles('Surat Jalan')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Surat Jalan</button>
-                        <button onclick="filterFiles('Invoice')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Invoice</button>
-                        <button onclick="filterFiles('Faktur Pajak')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Faktur Pajak</button>
+                    <button class="nav-link flex items-center hover:text-emerald-700 gap-1">Dokumen <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div class="absolute hidden group-hover:block bg-white mt-2 w-56 rounded-2xl shadow-2xl border border-slate-100 p-2">
+                        <button onclick="filterFiles('PO')" class="block px-4 py-2 w-full text-left hover:bg-emerald-50 rounded-lg">Purchase Order</button>
+                        <button onclick="filterFiles('Invoice')" class="block px-4 py-2 w-full text-left hover:bg-emerald-50 rounded-lg">Invoice</button>
+                        <button onclick="filterFiles('Faktur')" class="block px-4 py-2 w-full text-left hover:bg-emerald-50 rounded-lg">Faktur Pajak</button>
                     </div>
                 </div>
 
-                <div class="relative group">
-                    <button class="flex items-center hover:text-teal-300 py-2 outline-none">Tentang Kami</button>
-                    <div class="absolute hidden group-hover:block bg-white text-gray-800 mt-0 w-48 rounded-md shadow-xl py-2 border-t-4 border-hijau-tosca">
-                        <button onclick="showSection('profile')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Profile</button>
-                        <button onclick="showSection('visi-misi')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Visi & Misi</button>
-                        <button onclick="showSection('legalitas')" class="block px-4 py-2 w-full text-left hover:bg-teal-50">Legalitas & Alamat</button>
-                    </div>
-                </div>
-                
-                <div id="nav-auth-container" class="border-l pl-6 border-teal-800">
-                    <button id="btn-login-view" onclick="showSection('login')" class="bg-hijau-tosca px-6 py-1.5 rounded-full font-bold hover:bg-teal-500 shadow">Sign In</button>
-                    <div id="user-logged-in" class="hidden flex items-center space-x-3">
-                        <p id="display-email" class="text-sm font-bold text-teal-300"></p>
-                        <button onclick="handleLogout()" class="bg-red-600 p-1.5 rounded-full hover:bg-red-700 shadow text-xs uppercase font-bold text-white">Logout</button>
+                <div id="nav-auth-container" class="ml-4 border-l pl-8 border-slate-200">
+                    <button id="btn-login-view" onclick="showSection('login')" class="gradient-brand text-white px-7 py-2.5 rounded-full font-bold shadow-emerald-200 shadow-lg hover:opacity-90 transition">Admin Portal</button>
+                    <div id="user-logged-in" class="hidden flex items-center space-x-4">
+                        <div class="text-right"><p id="display-email" class="text-xs font-bold text-emerald-800"></p><p class="text-[10px] text-slate-400">Administrator</p></div>
+                        <button onclick="handleLogout()" class="bg-slate-100 p-2.5 rounded-full hover:bg-red-50 hover:text-red-600 transition group" title="Logout">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-6 py-10">
-
-        <section id="home" class="section active text-center py-12">
-            <h1 class="text-5xl font-black text-hijau-tua mb-4 uppercase tracking-tighter">Mengalirkan Energi</h1>
-            <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ecc?auto=format&fit=crop&w=800&q=80" class="w-full max-w-2xl mx-auto rounded-3xl shadow-2xl mb-6">
+    <main class="container mx-auto px-6 py-12">
+        <section id="home" class="section active">
+            <div class="flex flex-col md:flex-row items-center gap-12 py-10">
+                <div class="md:w-1/2 space-y-6">
+                    <span class="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold uppercase tracking-wider">Official Pertamina Partner</span>
+                    <h1 class="text-6xl font-extrabold text-slate-900 leading-tight">Energi Berkualitas untuk <span class="text-emerald-600">Industri Negeri.</span></h1>
+                    <p class="text-lg text-slate-600 leading-relaxed">PT Khatulistiwa Sinar Energi berkomitmen menyediakan distribusi BBM Industri dengan transparansi penuh dan ketepatan waktu tinggi.</p>
+                    <div class="flex gap-4">
+                        <button onclick="showSection('harga-pertamina')" class="px-8 py-4 gradient-brand text-white rounded-2xl font-bold shadow-xl">Cek Harga Hari Ini</button>
+                        <button onclick="showSection('legalitas')" class="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition">Tentang Kami</button>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="relative">
+                        <div class="absolute -top-4 -left-4 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+                        <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ecc?auto=format&fit=crop&w=800&q=80" class="relative rounded-[2rem] shadow-2xl border-8 border-white">
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="harga-pertamina" class="section">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-hijau-tua uppercase">Harga Publish BBM Industri</h2>
-                <p class="text-hijau-tosca font-bold">Periode Terupdate Realtime</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua" id="cardwilayah1">
-                    <h3 class="font-bold">Wilayah I</h3>
-                    <p class="text-2xl font-black text-hijau-tua italic my-2">Rp 0</p>
-                    <p class="keteranganKmr text-xs font-bold"></p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua" id="cardwilayah2">
-                    <h3 class="font-bold">Wilayah II</h3>
-                    <p class="text-2xl font-black text-hijau-tua italic my-2">Rp 0</p>
-                    <p class="keteranganKmr text-xs font-bold"></p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua" id="cardwilayah3">
-                    <h3 class="font-bold">Wilayah III</h3>
-                    <p class="text-2xl font-black text-hijau-tua italic my-2">Rp 0</p>
-                    <p class="keteranganKmr text-xs font-bold"></p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-hijau-tua" id="cardwilayah4">
-                    <h3 class="font-bold">Wilayah IV</h3>
-                    <p class="text-2xl font-black text-hijau-tua italic my-2">Rp 0</p>
-                    <p class="keteranganKmr text-xs font-bold"></p>
+            <div class="max-w-4xl mx-auto text-center mb-16">
+                <h2 class="text-4xl font-extrabold mb-4">Harga Publish BBM Industri</h2>
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-xl border border-emerald-100">
+                    <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span>
+                    <p class="text-emerald-700 font-bold text-sm">Update Real-time dari Cloud Firestore</p>
                 </div>
             </div>
-        </section>
-
-        <section id="profile" class="section">
-            <div class="bg-white p-10 rounded-2xl shadow-lg">
-                <h2 class="text-2xl font-bold text-hijau-tua mb-4 uppercase">Company Profile</h2>
-                <p class="text-gray-700 leading-relaxed text-lg">PT Khatulistiwa Sinar Energi (KSE) adalah mitra distribusi resmi produk BBM Industri Pertamina yang berfokus pada ketepatan pengiriman dan transparansi harga untuk mendukung operasional industri di seluruh Indonesia.</p>
-            </div>
-        </section>
-
-        <section id="visi-misi" class="section">
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-hijau-tua text-white p-10 rounded-2xl shadow-xl">
-                    <h2 class="text-2xl font-bold mb-4 italic">Visi</h2>
-                    <p>Menjadi pemimpin pasar dalam penyediaan energi terpadu di Indonesia dengan standar kualitas global.</p>
-                </div>
-                <div class="bg-hijau-tosca text-white p-10 rounded-2xl shadow-xl">
-                    <h2 class="text-2xl font-bold mb-4 italic">Misi</h2>
-                    <ul class="list-disc ml-5 space-y-2">
-                        <li>Memberikan layanan prima tepat volume dan tepat waktu.</li>
-                        <li>Membangun infrastruktur distribusi yang inovatif.</li>
-                        <li>Menjaga integritas dalam setiap transaksi bisnis.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="legalitas" class="section">
-            <div class="bg-white p-10 rounded-2xl shadow-xl border-l-8 border-hijau-tua">
-                <h2 class="text-xl font-bold mb-6 uppercase">Legalitas & Kontak</h2>
-                <div class="grid md:grid-cols-2 gap-8 text-gray-700">
-                    <div class="space-y-3">
-                        <p><strong>NIB:</strong> 1289101110XXX</p>
-                        <p><strong>NPWP:</strong> 01.234.567.8-XXX.000</p>
-                        <p><strong>Izin Niaga:</strong> Terdaftar di ESDM & Migas</p>
-                        <p><strong>Kantor:</strong> Gedung KSE, Jakarta Pusat, Indonesia</p>
-                    </div>
-                    <div class="bg-gray-50 p-6 rounded-xl border">
-                        <h3 class="font-bold mb-2">Layanan Cepat:</h3>
-                        <a href="https://wa.me/6281234567890" target="_blank" class="block text-center bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">Chat via WhatsApp</a>
-                    </div>
-                </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="harga-container">
+                <script>
+                    const wilayahs = ['Wilayah I', 'Wilayah II', 'Wilayah III', 'Wilayah IV'];
+                    wilayahs.forEach((w, i) => {
+                        document.write(`
+                            <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl transition-all group" id="cardwilayah${i+1}">
+                                <p class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">${w}</p>
+                                <h3 class="text-3xl font-black text-slate-800 italic mb-2">Rp 0</h3>
+                                <div class="keteranganKmr text-sm font-bold py-1 px-3 rounded-lg inline-block">Memuat...</div>
+                                <div class="mt-6 pt-6 border-t border-slate-50 text-[10px] text-slate-400 font-medium">PPN 11% & PBBKB Include</div>
+                            </div>
+                        `);
+                    });
+                </script>
             </div>
         </section>
 
         <section id="admin-harga" class="section">
-            <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border-t-8 border-orange-500">
-                <h2 class="text-xl font-bold mb-6 text-orange-600 uppercase">Update Harga Firestore</h2>
-                <div class="space-y-4">
-                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 1</label><input type="number" id="input-w1" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
-                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 2</label><input type="number" id="input-w2" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
-                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 3</label><input type="number" id="input-w3" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
-                    <div><label class="block text-xs font-bold mb-1">HARGA WILAYAH 4</label><input type="number" id="input-w4" class="w-full border p-2 rounded focus:ring-2 focus:ring-orange-300 outline-none"></div>
-                    <button onclick="saveHargaBaru()" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-orange-700 transition">SIMPAN & PUBLIKASIKAN</button>
+            <div class="max-w-2xl mx-auto bg-white p-10 rounded-[2.5rem] shadow-2xl border border-slate-100">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="p-3 bg-orange-100 text-orange-600 rounded-2xl"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                    <h2 class="text-2xl font-extrabold">Update Database Firestore</h2>
                 </div>
-            </div>
-        </section>
-
-        <section id="login" class="section">
-            <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-2xl border-t-8 border-hijau-tua text-center">
-                <h2 class="text-xl font-bold mb-6 uppercase">Admin Sign In</h2>
-                <input type="email" id="email" class="w-full border p-3 rounded-lg mb-4" placeholder="Email">
-                <input type="password" id="password" class="w-full border p-3 rounded-lg mb-6" placeholder="Password">
-                <button onclick="handleLogin()" class="w-full bg-hijau-tua text-white py-3 rounded-lg font-bold shadow-lg">Masuk Dashboard</button>
+                <div class="grid grid-cols-2 gap-6 mb-8">
+                    <div class="space-y-2"><label class="text-xs font-bold text-slate-500 ml-2">HARGA WIL. I</label><input type="number" id="input-w1" class="w-full bg-slate-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold"></div>
+                    <div class="space-y-2"><label class="text-xs font-bold text-slate-500 ml-2">HARGA WIL. II</label><input type="number" id="input-w2" class="w-full bg-slate-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold"></div>
+                    <div class="space-y-2"><label class="text-xs font-bold text-slate-500 ml-2">HARGA WIL. III</label><input type="number" id="input-w3" class="w-full bg-slate-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold"></div>
+                    <div class="space-y-2"><label class="text-xs font-bold text-slate-500 ml-2">HARGA WIL. IV</label><input type="number" id="input-w4" class="w-full bg-slate-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold"></div>
+                </div>
+                <button onclick="saveHargaBaru()" class="w-full bg-orange-600 text-white font-bold py-5 rounded-2xl shadow-lg shadow-orange-200 hover:bg-orange-700 transition transform hover:-translate-y-1">SIMPAN & PUBLIKASIKAN HARGA</button>
             </div>
         </section>
 
         <section id="dashboard" class="section">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="dash-title" class="text-2xl font-bold text-hijau-tua italic uppercase tracking-widest">Arsip Dokumen</h2>
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+                <div>
+                    <h2 id="dash-title" class="text-4xl font-extrabold text-slate-900">Arsip Digital</h2>
+                    <p class="text-slate-500 font-medium">Kelola dokumen administrasi melalui Supabase Storage</p>
+                </div>
+                <div id="admin-upload-controls" class="hidden">
+                    <button onclick="document.getElementById('file-upload-input').click()" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-700 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Upload Dokumen Baru
+                    </button>
+                    <input type="file" id="file-upload-input" class="hidden" onchange="handleFileUpload(this)">
+                </div>
             </div>
-            <div class="bg-white rounded-xl shadow-xl overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-hijau-tua text-white font-bold">
-                        <tr><th class="px-6 py-4">Kategori</th><th class="px-6 py-4">Keterangan Dokumen</th><th class="px-6 py-4 text-center">Aksi</th></tr>
+
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-widest font-bold">
+                            <th class="px-8 py-5">Kategori</th>
+                            <th class="px-8 py-5">Nama Dokumen</th>
+                            <th class="px-8 py-5">Tanggal Update</th>
+                            <th class="px-8 py-5 text-center">Aksi</th>
+                        </tr>
                     </thead>
-                    <tbody id="file-table-body" class="divide-y text-sm italic">
+                    <tbody id="file-table-body" class="divide-y divide-slate-50">
                         </tbody>
                 </table>
             </div>
         </section>
 
+        <section id="login" class="section">
+            <div class="max-w-md mx-auto bg-white p-10 rounded-[2.5rem] shadow-2xl text-center border border-slate-100">
+                <div class="w-20 h-20 gradient-brand rounded-3xl mx-auto mb-8 flex items-center justify-center text-white shadow-xl">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h2 class="text-3xl font-extrabold mb-2">Portal Admin</h2>
+                <p class="text-slate-400 mb-8 font-medium">Masukkan kredensial Supabase Anda</p>
+                <div class="space-y-4">
+                    <input type="email" id="email" class="w-full bg-slate-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Email Address">
+                    <input type="password" id="password" class="w-full bg-slate-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Password">
+                    <button onclick="handleLogin()" class="w-full gradient-brand text-white py-4 rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:scale-[1.02] transition">Sign In</button>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <footer class="container mx-auto px-6 py-12 border-t border-slate-200 mt-20 text-center">
+        <p class="text-slate-400 font-medium text-sm">© 2026 PT Khatulistiwa Sinar Energi. All rights reserved.</p>
+    </footer>
+
     <script>
-        // -- INITIALIZE FIREBASE (FIRESTORE) --
+        // -- KONFIGURASI -- (Sesuai dengan data Anda)
         const firebaseConfig = {
             apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
             authDomain: "kse-harga-bbm-update.firebaseapp.com",
@@ -198,16 +194,17 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // -- INITIALIZE SUPABASE --
         const _supabase = supabase.createClient("https://secasrbeamduxqxwlspv.supabase.co", "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br");
 
         function showSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
+            const activeSec = document.getElementById(id);
+            activeSec.style.display = 'block';
+            setTimeout(() => activeSec.classList.add('active'), 50);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // -- AMBIL DATA HARGA --
+        // -- LOGIC HARGA (FIRESTORE) --
         let hargaSekarangGlobal = {};
         function loadHarga() {
             db.collection("hargaBBM").doc("periode").onSnapshot((doc) => {
@@ -215,23 +212,30 @@
                 const data = doc.data();
                 hargaSekarangGlobal = data.sekarang || {};
 
-                ["wilayah1", "wilayah2", "wilayah3", "wilayah4"].forEach(w => {
+                for(let i=1; i<=4; i++) {
+                    const w = `wilayah${i}`;
                     const now = parseInt(data.sekarang?.[w] || 0);
                     const prev = parseInt(data.kemarin?.[w] || 0);
                     const diff = now - prev;
                     
                     const card = document.getElementById(`card${w}`);
-                    card.querySelector('p.italic').innerText = `Rp ${now.toLocaleString()}`;
+                    card.querySelector('h3').innerText = `Rp ${now.toLocaleString('id-ID')}`;
                     
                     const ket = card.querySelector('.keteranganKmr');
-                    if(diff > 0) { ket.innerText = `▲ Naik Rp ${diff.toLocaleString()}`; ket.style.color = "red"; }
-                    else if(diff < 0) { ket.innerText = `▼ Turun Rp ${Math.abs(diff).toLocaleString()}`; ket.style.color = "green"; }
-                    else { ket.innerText = "● Stabil"; ket.style.color = "gray"; }
-                });
+                    if(diff > 0) { 
+                        ket.innerText = `▲ +Rp ${diff.toLocaleString()}`; 
+                        ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-red-50 text-red-600";
+                    } else if(diff < 0) { 
+                        ket.innerText = `▼ -Rp ${Math.abs(diff).toLocaleString()}`; 
+                        ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-emerald-50 text-emerald-600";
+                    } else { 
+                        ket.innerText = "● Stabil"; 
+                        ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-slate-100 text-slate-500";
+                    }
+                }
             });
         }
 
-        // -- UPDATE HARGA (ADMIN ONLY) --
         async function saveHargaBaru() {
             const val = [
                 document.getElementById('input-w1').value,
@@ -239,24 +243,24 @@
                 document.getElementById('input-w3').value,
                 document.getElementById('input-w4').value
             ];
-            if(val.includes("")) return alert("Lengkapi semua input!");
+            if(val.includes("")) return alert("Mohon lengkapi semua data.");
 
             try {
-                await db.collection("hargaBBM").doc("periode").update({
+                await db.collection("hargaBBM").doc("periode").set({
                     kemarin: hargaSekarangGlobal,
                     sekarang: { wilayah1: val[0], wilayah2: val[1], wilayah3: val[2], wilayah4: val[3] }
                 });
-                alert("Harga Berhasil di Update!");
+                alert("Database Berhasil Diperbarui!");
                 showSection('harga-pertamina');
-            } catch (e) { alert("Gagal Simpan. Periksa Login Admin Anda."); }
+            } catch (e) { alert("Error: Pastikan Anda memiliki akses."); }
         }
 
-        // -- AUTH & DASHBOARD --
+        // -- LOGIC DOKUMEN (SUPABASE) --
         async function handleLogin() {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
             const { data, error } = await _supabase.auth.signInWithPassword({ email: e, password: p });
-            if (error) return alert("Login Gagal!");
+            if (error) return alert("Akses Ditolak: " + error.message);
             updateAuthUI(data.user);
         }
 
@@ -266,6 +270,7 @@
             document.getElementById('user-logged-in').classList.remove('hidden');
             document.getElementById('display-email').innerText = user.email;
             document.getElementById('nav-edit-harga').classList.remove('hidden');
+            document.getElementById('admin-upload-controls').classList.remove('hidden');
             showSection('dashboard');
             loadFiles();
         }
@@ -274,12 +279,23 @@
             let query = _supabase.from('documents').select('*').order('created_at', { ascending: false });
             if (filter) query = query.eq('type', filter);
             const { data } = await query;
+            
             const tbody = document.getElementById('file-table-body');
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-10 text-center text-slate-400 font-medium">Belum ada dokumen yang tersedia.</td></tr>`;
+                return;
+            }
+
             tbody.innerHTML = data.map(f => `
-                <tr>
-                    <td class="px-6 py-4 font-bold text-hijau-tosca uppercase">${f.type}</td>
-                    <td class="px-6 py-4">${f.name}</td>
-                    <td class="px-6 py-4 text-center"><a href="${f.url}" target="_blank" class="bg-hijau-tua text-white px-4 py-1 rounded shadow text-xs">VIEW</a></td>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-8 py-5"><span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-tighter">${f.type}</span></td>
+                    <td class="px-8 py-5 text-sm font-bold text-slate-700">${f.name}</td>
+                    <td class="px-8 py-5 text-xs text-slate-400 font-medium">${new Date(f.created_at).toLocaleDateString('id-ID')}</td>
+                    <td class="px-8 py-5 text-center">
+                        <a href="${f.url}" target="_blank" class="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-emerald-600 transition shadow-lg shadow-slate-100">
+                            DOWNLOAD
+                        </a>
+                    </td>
                 </tr>
             `).join('');
         }
@@ -292,7 +308,7 @@
 
         async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
 
-        // START
+        // Init
         loadHarga();
         _supabase.auth.getSession().then(({data}) => { if (data.session) updateAuthUI(data.session.user); });
 
