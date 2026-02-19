@@ -114,12 +114,13 @@
     </main>
 
     <script>
-        // --- PERBAIKAN KONFIGURASI ---
-        const SB_URL = "https://secasrbeamduxqxwlspv.supabase.co";
-        // PASTIKAN KEY DI BAWAH INI DIAWALI DENGAN "eyJ..." (AMBIL DARI 'anon' 'public' KEY)
-        const SB_KEY = "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br"; 
-        
-        const _supabase = supabase.createClient(SB_URL, SB_KEY);
+        // -- CONFIG --
+// Pastikan URL diawali dengan https:// dan tidak ada spasi
+const SUPABASE_URL = "https://wrkmmeojhqpxchetaltl.supabase.co"; 
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // Isi dengan Anon Key Anda
+
+// Inisialisasi harus tepat seperti ini
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // Firebase Setup
         const firebaseConfig = { projectId: "kse-harga-bbm-update", apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM" };
@@ -190,4 +191,5 @@
     </script>
 </body>
 </html>
+
 
