@@ -126,8 +126,8 @@
 
     <script>
         // --- KONFIGURASI SUPABASE ---
-        const SB_URL = "https://wrkmmeojhqpxchetaltl.supabase.co"; 
-        const SB_KEY = "MASUKKAN_ANON_KEY_EYJ_ABANG_DI_SINI"; 
+        const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
+        const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc"; 
         
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
@@ -144,7 +144,7 @@
             if (session) {
                 currentUser = session.user;
                 // LOGIKA ADMIN (Ganti email ini dengan email admin Abang)
-                isAdmin = currentUser.email === "admin@kse.com"; 
+                isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com"; 
                 
                 if(isAdmin) document.getElementById('admin-panel').classList.remove('hidden');
 
@@ -251,3 +251,4 @@
     </script>
 </body>
 </html>
+
