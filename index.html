@@ -18,6 +18,7 @@
         .page.active { display: flex; }
         .section { display: none; }
         .section.active { display: block; }
+        .dropdown:hover .dropdown-menu { display: block; }
     </style>
 </head>
 <body class="text-slate-800">
@@ -46,42 +47,89 @@
 
     <main id="page-dashboard" class="page flex-col min-h-screen">
         <nav class="kse-dark text-white px-8 py-6 flex justify-between items-center shadow-2xl">
-            <h1 class="text-2xl font-black italic uppercase tracking-tighter">PT KSE</h1>
-            <div class="flex items-center space-x-6">
-                <button onclick="showSection('harga')" class="text-xs font-black uppercase">Harga BBM</button>
-                <button onclick="handleLogout()" class="bg-red-600 px-6 py-2 rounded-xl text-xs font-black uppercase">Keluar</button>
+            <h1 class="text-2xl font-black italic uppercase tracking-tighter cursor-pointer" onclick="showSection('profile')">PT KSE</h1>
+            
+            <div class="flex items-center space-x-8">
+                <button onclick="showSection('profile')" class="text-[10px] font-black uppercase tracking-widest hover:text-teal-400">Profil</button>
+                
+                <div class="relative dropdown">
+                    <button class="text-[10px] font-black uppercase tracking-widest text-teal-400 flex items-center gap-1">E-Document ▼</button>
+                    <div class="dropdown-menu absolute hidden right-0 w-56 bg-white border-2 shadow-2xl rounded-2xl py-2 z-50 text-slate-800">
+                        <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 text-[10px] font-black uppercase border-b">Purchase Order</button>
+                        <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 text-[10px] font-black uppercase border-b">Surat Jalan</button>
+                        <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 text-[10px] font-black uppercase border-b">Invoice</button>
+                        <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 text-[10px] font-black uppercase text-red-600">Faktur Pajak</button>
+                    </div>
+                </div>
+
+                <button onclick="showSection('harga')" class="text-[10px] font-black uppercase tracking-widest">Harga BBM</button>
+                <button onclick="handleLogout()" class="bg-red-600 px-5 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg">Keluar</button>
             </div>
         </nav>
 
         <div class="container mx-auto px-8 py-12 flex-1">
-            <section id="section-harga" class="section active">
+            
+            <section id="section-profile" class="section active">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="kse-dark p-12 rounded-[3rem] text-white shadow-2xl">
+                        <h2 class="text-3xl font-black italic uppercase mb-6 underline decoration-teal-400">Tentang KSE</h2>
+                        <p class="text-lg font-medium italic opacity-90 leading-relaxed">Penyedia BBM Industri Berkualitas Tinggi untuk wilayah Kalimantan Tengah dan sekitarnya.</p>
+                    </div>
+                    <div class="bg-white p-12 rounded-[3rem] border-2 border-teal-50 shadow-sm">
+                        <h3 class="text-xl font-black text-[#064e3b] uppercase italic mb-4">Legalitas Resmi</h3>
+                        <p class="font-bold text-slate-600 uppercase text-xs tracking-widest">✔️ Izin Niaga Umum Migas<br>✔️ Izin Transportasi BBM<br>✔️ Sertifikasi Metrologi</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-harga" class="section">
                 <div class="text-center mb-16">
                     <h2 class="text-5xl font-black text-[#064e3b] italic uppercase">Update Harga Publish</h2>
                 </div>
                 <div id="harga-grid" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
             </section>
+
+            <section id="section-documents" class="section">
+                <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden">
+                    <div class="p-8 kse-dark text-white">
+                        <h3 id="doc-title" class="font-black uppercase italic text-2xl tracking-tighter">Arsip Dokumen</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-teal-50 text-teal-800 font-black uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-8">Nama Dokumen</th>
+                                    <th class="p-8 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="file-table-body" class="divide-y-2 divide-teal-50 text-sm font-bold"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
     <script>
-        // --- KONFIGURASI ---
-        const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co";
-        // PENTING: Gunakan key yang diawali "eyJ...", JANGAN yang "sb_publishable..."
-        const SB_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc"; 
+        // --- KONFIGURASI PROYEK BARU ---
+        const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
+        const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc"; 
         
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
-
-        // Firebase Setup
         const firebaseConfig = { projectId: "kse-harga-bbm-update", apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM" };
         firebase.initializeApp(firebaseConfig);
         const dbFirebase = firebase.firestore();
 
+        let currentUser = null;
+
         async function checkAuth() {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
+                currentUser = session.user;
                 document.getElementById('page-login').classList.remove('active');
                 document.getElementById('page-dashboard').classList.add('active');
                 initHarga();
+                showSection('profile');
             } else {
                 document.getElementById('page-login').classList.add('active');
             }
@@ -120,12 +168,32 @@
             });
         }
 
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+        }
+
+        async function loadDocuments(cat) {
+            showSection('documents');
+            document.getElementById('doc-title').innerText = cat;
+            // Filter berdasarkan user yang sedang login
+            const { data } = await _supabase.from('documents').select('*').eq('type', cat).eq('user_id', currentUser.id);
+            const tbody = document.getElementById('file-table-body');
+            tbody.innerHTML = data?.length ? data.map(d => `
+                <tr>
+                    <td class="p-8">${d.name}</td>
+                    <td class="p-8 text-center">
+                        <a href="${d.url}" target="_blank" class="bg-[#064e3b] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase">Download</a>
+                    </td>
+                </tr>
+            `).join('') : `<tr><td colspan="2" class="p-20 text-center opacity-30 font-black italic uppercase">File Belum Tersedia</td></tr>`;
+        }
+
         async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
 
         window.onload = checkAuth;
     </script>
 </body>
 </html>
-
 
 
