@@ -1,332 +1,181 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT KHATULISTIWA SINAR ENERGI</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .section { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
-        .section.active { display: block; opacity: 1; transform: translateY(0); }
-        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .dropdown:hover .dropdown-menu { display: block; }
-        .dashboard-font { font-size: 11px; font-weight: 700; text-transform: lowercase; letter-spacing: 0.025em; }
-        .line-detail { width: 50px; height: 4px; background: #064e3b; margin: 1.5rem 0; }
-        
-        /* Animasi halu untuk logo */
-        .logo-container img {
-            transition: transform 0.3s ease;
-        }
-        .logo-container:hover img {
-            transform: scale(1.05);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Dokumen</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f1f5f9;
+    margin:0;
+    padding:40px;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+h1{
+    margin-top:0;
+}
+button{
+    background:#064e3b;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{
+    background:#022c22;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:25px;
+}
+td,th{
+    padding:12px;
+    border-bottom:1px solid #e2e8f0;
+}
+th{
+    text-align:left;
+    background:#f8fafc;
+}
+.tag{
+    background:#e2e8f0;
+    padding:3px 10px;
+    border-radius:6px;
+    font-size:12px;
+    font-weight:bold;
+}
+</style>
 </head>
-<body class="bg-[#F8FAFC] text-slate-900">
+<body>
 
-    <nav class="sticky top-0 z-[100] glass-nav border-b border-slate-200">
-        <div class="container mx-auto px-8 py-4 flex justify-between items-center">
-            
-            <div class="flex items-center space-x-4 cursor-pointer logo-container" onclick="showSection('home')">
-                <div class="h-14 w-14 bg-white rounded-xl shadow-sm border border-slate-100 p-1 flex items-center justify-center">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFm0lEQVR4nO2dS2hcVRjHf+fOJJNMMk0m09S2pS3SStM+SIsiKtoq6mNREerGR10I6saFuunGjbiS6saFuunG6saVuunGjaK40I2PrS98YIsitY8m09S0SdrMJDN3X869Sds0M3fmzj333mTSf8DAnXvO+X73O+fc75w799I4jkMIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCHEnfAAd8ADXAYfSABfAQX6uYIAtpDHeYwL9L8P8RljvAEO0A99wF06tW947A/wYI7fAdp0at/wWI79AbzWqX3DYzv2B2A2ndpXfO6XN/9Ue6S4O5Djt0u79vP00y7t7NLOFv1t0U43vO9Ylv8Lw7/V59+mXU6fP0+7Ffofov8N+p2jH76v2O3I8dujP0K7VfrZol0X3m7O8T8Mv6LPP027nN4P026D7ofof5h+Z+jnCHW65vjt1h8Yfqt0u063777fM/479DtCv0fpe5Y6OfE9xrL8X6K/S7uM3v/B91fo/xR9j9DPNP3MkNMVx2+v/oDhX6PbNP10fX9i/Hfod4I+Z+mnh/p66B9x/PbqDwL/p98y/fT8vmf8v9FvD/320O8p+umkvhXHb59++9Y93/4M0N8YfcYpI4Q4A9T8v6p7mP6G6X+Q/ofpZ4Z+pujH69f2K/HbpT84/H26Xab/f7qO/0X9jtDPDP3MUF8X9S2O3x799u0E/5f0f4A+p+knh/p66B9x/HbpDwL/l/S/S3+f7vv8X6b7WfqZpZ9u6luivs7x26M/OPyv6vM96uOkviXq66S+xfHbY9v67Xm99v2L7s/QZ5w6FMc3v7/O777D6vP9S9TvTf/99N9H/330P0X/fep7jGOX/3v09+jv099f7vf9I+rvp99++u6v+f6vOfY97v6+mY/9U9R3mXofpM6X7vf999F9P33P0vcYdbnm+O3W36fbfPrvX/f776P7HvoeoZ9p+pmnzlvU3+L4HdUfoP8y3SboZ5D6Zqk/P7996v0N9XVSX9f6Fscvvz9InTfof4H6rtN9gPqz89un3hX6v0D/Y/T7u+33O64v6/hH6HeOPhPUNzP8E3S7RrebdJunn866+3X7H9Rvef6z5/idps9f9P6Y7uPUPU7dE/S7RLdLtOt0m6KPLtrpsf/3t33/72n7fT8+9sc5fmeof97Pj9Ftmj5vU+8Mff40fX6iz1v0eYv6Zun3Fv19R68rzt/fR/0p+p2n3v/A/7u/5/u+p6hzjj5v0+8cfX6hz9v0PUXfU/Q9S9991N+Xm9/Xdf89v6v76/7WfX99f9v3v0T3S/TdR50vXf8v0OcsfdY5v7/X9/3G+P2+v8u87588n//XqG+Ofmbp50/X5xT1LVEvV7/p9H6Yfu7T6SbdbtBt7X/5B9Vp6v9U6qfUeYn6LtHtKt0maTNL39+v9P3v6Xv6rP17f9e/90v9u7T7BvV+pZ8X6LdHuzW6rdLtOnU36Hadvm9r7fvD6vStPzD8H9DfEP0NUu8I/cyS86C6m6m7f8X3B6vT2P8pdaap86I6f+F1v9S/S7uvUecSdb5S5wZ16tUuD6nTs/7A8N+nzlvU+Uo9U+R8S8635Pwt6v9A96vU/XfK36XdV6j7lTrXqXONOl19p6t/L9T/A+r0rj8w/Pfpe5/u9+l+lX6O6PdH/Z+k/k9S9yT1f+LxP6A+E9T/A+r80+Mfo06W/pfo/zZ9f03/Zzgep9v99MOn6eeAfrbR/y79j9DvMf0fo9+T9DPu9D3p+8O08/TD9/S3R38j9D9CP+P0M0E/0/QTpp8p+uml3m7q6X7vH9GOf6NOfuR0S5u0W6XPL6nL5/T5H636F606+X8fAAAAAElFTkSuQmCC" 
-                     alt="PT KSE Logo">
-                </div>
-                <div class="flex flex-col leading-tight border-l pl-4 border-slate-200">
-                    <span class="text-xl font-black tracking-tighter text-[#064e3b] uppercase italic leading-none">PT KSE</span>
-                    <span class="text-[9px] font-bold text-slate-500 tracking-[0.05em] uppercase mt-1">Khatulistiwa Sinar Energi</span>
-                </div>
-            </div>
-            
-            <div class="hidden md:flex items-center space-x-10 text-[11px] font-black uppercase tracking-widest">
-                <button onclick="showSection('home')" class="hover:text-emerald-700 transition-colors">Beranda</button>
-                <div class="relative dropdown group">
-                    <button class="hover:text-emerald-700 flex items-center gap-1 py-2 transition-colors">Tentang Kami ▼</button>
-                    <div class="dropdown-menu absolute hidden left-0 mt-0 w-56 bg-white border border-slate-100 shadow-2xl rounded-2xl overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                        <button onclick="showSection('profile')" class="block w-full text-left px-6 py-4 hover:bg-emerald-50 border-b border-slate-50 text-[10px] transition-colors">Profil Perusahaan</button>
-                        <button onclick="showSection('visi-misi')" class="block w-full text-left px-6 py-4 hover:bg-emerald-50 border-b border-slate-50 text-[10px] transition-colors">Visi & Misi</button>
-                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-emerald-50 text-[10px] transition-colors">Data Armada</button>
-                    </div>
-                </div>
-                <button onclick="showSection('harga-pertamina')" class="hover:text-emerald-700 transition-colors">Harga BBM</button>
-                
-                <div id="auth-ui">
-                    <button onclick="showSection('login')" class="bg-[#064e3b] text-white px-8 py-3 rounded-full shadow-lg hover:bg-emerald-900 transition-all hover:scale-105 active:scale-95">Portal Login</button>
-                </div>
-                
-                <div id="user-ui" class="hidden flex items-center gap-6 border-l pl-6">
-                    <div class="text-right leading-none">
-                        <p id="user-role-tag" class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded mb-1 font-bold inline-block"></p>
-                        <p id="user-email" class="text-[10px] text-slate-400 lowercase"></p>
-                        <button onclick="showSection('dashboard')" class="text-emerald-700 font-black hover:underline uppercase block mt-1">DASHBOARD</button>
-                    </div>
-                    <button onclick="handleLogout()" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition uppercase text-[10px]">Logout</button>
-                </div>
-            </div>
-        </div>
-    </nav>
+<div class="container">
 
-    <main class="container mx-auto px-8 pb-20">
-        
-        <section id="home" class="section active py-20">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="animate-in fade-in slide-in-from-left duration-700">
-                    <span class="inline-block px-4 py-2 bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-bold mb-6 uppercase tracking-widest">Energy Distribution Leader</span>
-                    <h1 class="text-7xl font-black leading-[0.9] tracking-tighter mb-8 uppercase italic text-slate-900">High Quality <br><span class="text-[#064e3b]">Industrial</span> Fuel.</h1>
-                    <p class="text-slate-500 mb-10 text-lg max-w-md leading-relaxed">Menyediakan solusi energi berkelanjutan untuk mendorong pertumbuhan industri nasional dengan sistem logistik yang presisi.</p>
-                    <div class="flex gap-4">
-                        <button onclick="showSection('harga-pertamina')" class="bg-[#064e3b] text-white px-10 py-5 rounded-2xl font-black shadow-2xl uppercase text-xs italic transition-transform hover:scale-105">Cek Harga Realtime</button>
-                        <button onclick="showSection('profile')" class="border-2 border-[#064e3b] text-[#064e3b] px-10 py-5 rounded-2xl font-black uppercase text-xs italic hover:bg-emerald-50 transition-all">Profil KSE</button>
-                    </div>
-                </div>
-                <div class="relative animate-in fade-in zoom-in duration-1000">
-                    <div class="absolute -inset-4 bg-emerald-100 rounded-[4rem] -z-10 rotate-3"></div>
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1000&q=80" class="rounded-[4rem] shadow-2xl border-[15px] border-white object-cover h-[500px] w-full">
-                </div>
-            </div>
-        </section>
+<h1>📁 Dashboard Dokumen</h1>
 
-        <section id="profile" class="section py-20">
-            <div class="max-w-5xl mx-auto bg-white p-12 md:p-24 rounded-[4rem] shadow-sm border border-slate-100">
-                <span class="text-emerald-600 font-black uppercase text-[10px] tracking-[0.3em]">Corporate Profile</span>
-                <h2 class="text-6xl font-black mt-4 italic uppercase tracking-tighter text-[#064e3b]">PT KHATULISTIWA <br>SINAR ENERGI</h2>
-                <div class="line-detail"></div>
-                <div class="grid md:grid-cols-2 gap-12 text-slate-600 text-lg leading-relaxed mt-10 font-medium">
-                    <p>PT Khatulistiwa Sinar Energi (KSE) didirikan dengan dedikasi penuh untuk menjadi garda terdepan dalam rantai pasok energi industri di Indonesia. Kami memahami bahwa energi adalah darah dari setiap roda produksi.</p>
-                    <p>Kami telah membangun jaringan distribusi yang mencakup wilayah darat maupun perairan (marine), melayani berbagai sektor strategis mulai dari pertambangan, konstruksi, hingga kapal niaga.</p>
-                </div>
-            </div>
-        </section>
+<h3>Upload Dokumen (Admin)</h3>
 
-        <section id="harga-pertamina" class="section py-20">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-black uppercase italic tracking-tighter text-[#064e3b]">Harga Publish BBM Industri</h2>
-                <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 italic">Update Real-time Periode Pertamina Patra Niaga</p>
-            </div>
-            <div id="harga-container" class="grid md:grid-cols-4 gap-8">
-                <div class="animate-pulse bg-slate-100 h-48 rounded-[3rem]"></div>
-                <div class="animate-pulse bg-slate-100 h-48 rounded-[3rem]"></div>
-                <div class="animate-pulse bg-slate-100 h-48 rounded-[3rem]"></div>
-                <div class="animate-pulse bg-slate-100 h-48 rounded-[3rem]"></div>
-            </div>
-        </section>
+<select id="jenis">
+<option value="po">PO</option>
+<option value="invoice">Invoice</option>
+<option value="surat jalan">Surat Jalan</option>
+</select>
 
-        <section id="login" class="section py-20">
-            <div class="max-w-md mx-auto bg-white p-12 rounded-[3.5rem] shadow-2xl text-center border border-slate-100">
-                <h2 class="text-3xl font-black mb-10 uppercase italic tracking-tighter text-[#064e3b]">Portal Login</h2>
-                <div class="space-y-4 text-left">
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-2 block tracking-widest">Email Address</label>
-                        <input type="email" id="email" class="w-full p-5 bg-slate-50 rounded-2xl outline-none font-bold text-sm border border-slate-100 focus:border-emerald-500 transition-all">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-2 block tracking-widest">Secure Password</label>
-                        <input type="password" id="password" class="w-full p-5 bg-slate-50 rounded-2xl outline-none font-bold text-sm border border-slate-100 focus:border-emerald-500 transition-all">
-                    </div>
-                    <button onclick="handleLogin()" id="btn-login" class="w-full bg-[#064e3b] text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl mt-4 hover:bg-emerald-900 transition-all">Masuk Sekarang</button>
-                </div>
-            </div>
-        </section>
+<input type="file" id="file">
 
-        <section id="dashboard" class="section py-10">
-            <div id="admin-form" class="hidden bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100 mb-10">
-                <h3 class="dashboard-font text-lg mb-6 text-[#064e3b]">Unggah Dokumen Baru</h3>
-                <div class="flex flex-wrap gap-4 items-end">
-                    <div class="flex-1 min-w-[200px]">
-                        <label class="dashboard-font block mb-2 text-slate-400 uppercase">Pilih Berkas</label>
-                        <input type="file" id="file-input" class="w-full p-3 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 text-[#064e3b] text-xs">
-                    </div>
-                    <div class="w-full md:w-64">
-                        <label class="dashboard-font block mb-2 text-slate-400 uppercase">Kategori</label>
-                        <select id="file-category" class="w-full p-4 bg-slate-50 rounded-xl outline-none border border-slate-100 text-[#064e3b] text-xs font-bold uppercase">
-                            <option value="po">purchase order</option>
-                            <option value="invoice">invoice</option>
-                            <option value="do">surat jalan</option>
-                        </select>
-                    </div>
-                    <button id="btn-upload" onclick="uploadFile()" class="bg-[#064e3b] text-white px-10 py-4 rounded-xl shadow-lg hover:bg-emerald-900 transition-all text-xs font-black uppercase tracking-widest">Simpan</button>
-                </div>
-            </div>
+<button onclick="upload()">Upload</button>
 
-            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-                <div class="p-8 border-b border-slate-50 bg-slate-50/50">
-                    <h3 class="dashboard-font text-base text-[#064e3b] uppercase">Arsip Dokumen Anda</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-[#064e3b]">
-                            <tr>
-                                <th class="dashboard-font p-6 text-white uppercase">Kategori</th>
-                                <th class="dashboard-font p-6 text-white uppercase">Nama Berkas</th>
-                                <th class="dashboard-font p-6 text-white text-center uppercase">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="file-table-body" class="divide-y divide-slate-100">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+<hr>
 
-    </main>
+<h3>Daftar Dokumen</h3>
 
-    <script>
-        // -- INITIALIZATION --
-        const SUPABASE_URL = "https://wrkmmeojhqpxchetaltl.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_HAdGJewkvKqOZ0cX7qPSZw_DjMDcATK";
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<table>
+<thead>
+<tr>
+<th>Jenis</th>
+<th>Nama</th>
+<th>Download</th>
+</tr>
+</thead>
+<tbody id="list"></tbody>
+</table>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-            authDomain: "kse-harga-bbm-update.firebaseapp.com",
-            projectId: "kse-harga-bbm-update",
-            storageBucket: "kse-harga-bbm-update.firebasestorage.app",
-            messagingSenderId: "764165984284",
-            appId: "1:764165984284:web:a74aed43317539f5f1cfd9"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+</div>
 
-        const ADMIN_EMAILS = ["pt.khatulistiwa.sinar.energi@gmail.com"];
+<script>
+const supabase = window.supabase.createClient(
+"https://wrkmmeojhqpxchetaltl.supabase.co",
+"sb_publishable_HAdGJewkvKqOZ0cX7qPSZw_DjMDcATK"
+);
 
-        // -- NAVIGATION --
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => {
-                s.classList.remove('active');
-            });
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
+// LOAD DATA
+async function load(){
 
-        // -- AUTH & UI --
-        async function handleLogin() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btn = document.getElementById('btn-login');
-            
-            if(!email || !password) return alert("Silakan masukkan email dan password.");
-            btn.innerText = "AUTHENTICATING...";
-            
-            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-            if(error) {
-                alert("Login Gagal: " + error.message);
-                btn.innerText = "Masuk Sekarang";
-            } else {
-                updateUI(data.user);
-            }
-        }
+const {data,error} = await supabase
+.from("documents")
+.select("*")
+.order("created_at",{ascending:false});
 
-        function updateUI(user) {
-            if(!user) return;
-            const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase());
-            
-            document.getElementById('auth-ui').classList.add('hidden');
-            document.getElementById('user-ui').classList.remove('hidden');
-            document.getElementById('user-email').innerText = user.email;
-            document.getElementById('user-role-tag').innerText = isAdmin ? "ADMINISTRATOR" : "AUTHORIZED USER";
-            
-            if(isAdmin) {
-                document.getElementById('admin-form').classList.remove('hidden');
-            }
-            
-            showSection('dashboard');
-            loadDocuments();
-        }
+if(error){
+console.log(error);
+return;
+}
 
-        async function handleLogout() {
-            await _supabase.auth.signOut();
-            window.location.reload();
-        }
+const list = document.getElementById("list");
 
-        // -- DATA OPS --
-        async function loadDocuments() {
-            const { data, error } = await _supabase.from('documents').select('*').order('created_at', { ascending: false });
-            const tbody = document.getElementById('file-table-body');
-            if(error || !data) return;
-            
-            tbody.innerHTML = data.map(d => `
-                <tr class="hover:bg-slate-50 transition-all">
-                    <td class="p-6"><span class="bg-slate-100 text-slate-600 px-3 py-1 rounded text-[10px] font-black uppercase">${d.type}</span></td>
-                    <td class="p-6 text-sm font-bold text-slate-800">${d.name}</td>
-                    <td class="p-6 text-center">
-                        <a href="${d.url}" target="_blank" class="bg-[#064e3b]/10 text-[#064e3b] px-4 py-2 rounded-lg font-black text-[10px] uppercase hover:bg-[#064e3b] hover:text-white transition-all">Download</a>
-                    </td>
-                </tr>
-            `).join('');
-        }
+list.innerHTML = data.map(d=>`
+<tr>
+<td><span class="tag">${d.jenis}</span></td>
+<td>${d.nomor}</td>
+<td><a href="${d.file_url}" target="_blank">Download</a></td>
+</tr>
+`).join("");
 
-        async function uploadFile() {
-            const input = document.getElementById('file-input');
-            const cat = document.getElementById('file-category').value;
-            const btn = document.getElementById('btn-upload');
+}
 
-            if(!input.files[0]) return alert("Pilih file terlebih dahulu.");
-            
-            const file = input.files[0];
-            const fileName = `${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-            btn.innerText = "UPLOADING...";
-            btn.disabled = true;
+load();
 
-            try {
-                const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, file);
-                if(upErr) throw upErr;
 
-                const { data: linkData } = _supabase.storage.from('documents').getPublicUrl(fileName);
-                const { error: dbErr } = await _supabase.from('documents').insert([{
-                    name: file.name,
-                    type: cat,
-                    url: linkData.publicUrl
-                }]);
+// UPLOAD FILE
+async function upload(){
 
-                if(dbErr) throw dbErr;
-                alert("Dokumen berhasil diunggah!");
-                input.value = "";
-                loadDocuments();
-            } catch (err) {
-                alert("Gagal: " + err.message);
-            } finally {
-                btn.innerText = "SIMPAN";
-                btn.disabled = false;
-            }
-        }
+const fileInput=document.getElementById("file");
+const jenis=document.getElementById("jenis").value;
 
-        // -- HARGA SYNC --
-        function initHarga() {
-            const container = document.getElementById('harga-container');
-            db.collection("hargaBBM").doc("periode").onSnapshot((doc) => {
-                if(!doc.exists) return;
-                const data = doc.data();
-                container.innerHTML = "";
-                for(let i=1; i<=4; i++) {
-                    const val = data.sekarang[`wilayah${i}`] || 0;
-                    container.innerHTML += `
-                        <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm text-center hover:shadow-xl transition-all">
-                            <h4 class="text-[10px] font-black text-slate-400 mb-2 uppercase italic tracking-widest italic">Wilayah ${i}</h4>
-                            <p class="text-3xl font-black text-[#064e3b] italic leading-none mb-2">Rp ${parseInt(val).toLocaleString('id-ID')}</p>
-                            <span class="text-[8px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">TERVERIFIKASI</span>
-                        </div>
-                    `;
-                }
-            }, (error) => {
-                container.innerHTML = `<p class="col-span-4 text-center text-red-500 font-bold">Gagal memuat data harga.</p>`;
-            });
-        }
+if(!fileInput.files[0]){
+alert("Pilih file dulu");
+return;
+}
 
-        window.onload = () => {
-            initHarga();
-            _supabase.auth.getSession().then(({ data }) => {
-                if(data.session) updateUI(data.session.user);
-            });
-        };
-    </script>
+const file=fileInput.files[0];
+const fileName=Date.now()+"_"+file.name.replace(/\s/g,"_");
+
+// upload storage
+const {error:uploadError}=await supabase.storage
+.from("documents")
+.upload(fileName,file);
+
+if(uploadError){
+alert(uploadError.message);
+return;
+}
+
+// ambil url
+const {data:urlData}=supabase.storage
+.from("documents")
+.getPublicUrl(fileName);
+
+// simpan db
+const {error:dbError}=await supabase
+.from("documents")
+.insert([{
+jenis:jenis,
+nomor:file.name,
+file_url:urlData.publicUrl
+}]);
+
+if(dbError){
+alert(dbError.message);
+return;
+}
+
+alert("Upload berhasil");
+fileInput.value="";
+load();
+
+}
+</script>
+
 </body>
 </html>
