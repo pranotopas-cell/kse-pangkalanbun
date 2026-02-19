@@ -8,138 +8,156 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .section { display: none; }
         .section.active { display: block; }
         .kse-green { color: #064e3b; }
         .bg-kse-green { background-color: #064e3b; }
+        .dropdown:hover .dropdown-menu { display: block; }
     </style>
 </head>
-<body class="bg-[#FBFDFD] text-slate-800">
+<body class="bg-[#F8FAFC] text-slate-800">
 
-    <nav class="sticky top-0 z-[100] bg-white/90 backdrop-blur-md border-b border-teal-100/50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4 cursor-pointer" onclick="showPage('home')">
+    <nav class="sticky top-0 z-[100] bg-white border-b border-slate-200">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-4 cursor-pointer" onclick="initApp()">
                 <div class="flex flex-col leading-none border-l-2 pl-3 border-teal-600">
-                    <span class="text-xl font-black tracking-tight kse-green italic">PT KSE</span>
+                    <span class="text-xl font-black kse-green italic">PT KSE</span>
                     <span class="text-[8px] font-bold text-teal-600 uppercase tracking-widest">Khatulistiwa Sinar Energi</span>
                 </div>
             </div>
 
-            <div id="nav-menu" class="flex items-center gap-4">
+            <div id="main-nav" class="hidden md:flex items-center space-x-6">
+                <div class="relative dropdown group">
+                    <button class="text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:text-teal-600 flex items-center gap-1 py-2">Profile ▼</button>
+                    <div class="dropdown-menu absolute hidden left-0 w-48 bg-white border border-slate-100 shadow-xl rounded-xl py-2 z-50">
+                        <button onclick="showSection('profile-tentang')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Tentang Kami</button>
+                        <button onclick="showSection('profile-visi')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Visi & Misi</button>
+                        <button onclick="showSection('profile-legal')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Legalitas</button>
+                        <button onclick="showSection('profile-armada')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Data Armada</button>
+                    </div>
                 </div>
+
+                <div class="relative dropdown group">
+                    <button class="text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:text-teal-600 flex items-center gap-1 py-2">Dokumen ▼</button>
+                    <div class="dropdown-menu absolute hidden left-0 w-48 bg-white border border-slate-100 shadow-xl rounded-xl py-2 z-50">
+                        <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Purchase Order</button>
+                        <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Surat Jalan</button>
+                        <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Invoice</button>
+                        <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-4 py-2 hover:bg-teal-50 text-[10px] font-bold">Faktur Pajak</button>
+                    </div>
+                </div>
+
+                <button onclick="showSection('harga-pertamina')" class="text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:text-teal-600">Harga Publish</button>
+                
+                <div class="flex items-center gap-3 border-l pl-6 border-slate-200">
+                    <button onclick="openPasswordModal()" class="text-[10px] font-black text-teal-600 uppercase underline">Password</button>
+                    <button onclick="handleLogout()" class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Logout</button>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-6 pb-20">
+    <main class="container mx-auto px-6 py-8">
         
-        <section id="page-home" class="section active py-10">
-            <div class="bg-kse-green rounded-[3rem] p-12 text-white flex flex-col md:flex-row items-center gap-12 shadow-2xl mb-16">
-                <div class="flex-1 space-y-6 text-center md:text-left">
-                    <h1 class="text-5xl font-black italic leading-[0.9]">HIGH ENERGY <br><span class="text-teal-400">PARTNER.</span></h1>
-                    <p class="text-teal-50/70 text-lg">Solusi distribusi BBM Industri terpercaya.</p>
-                </div>
-                <div class="flex-1 w-full max-w-sm bg-white p-8 rounded-[2.5rem] shadow-xl text-slate-800">
-                    <h2 class="text-xl font-black kse-green italic mb-6 text-center">LOGIN PORTAL</h2>
-                    <div class="space-y-4">
-                        <input type="email" id="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm outline-none focus:border-teal-500">
-                        <input type="password" id="password" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm outline-none focus:border-teal-500">
-                        <button onclick="handleLogin()" id="btn-login" class="w-full bg-kse-green text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-teal-800 transition-all">Masuk Dashboard</button>
-                        <div class="text-center">
-                            <button onclick="forgotPassword()" class="text-[10px] font-bold text-slate-400 hover:text-teal-600 uppercase">Lupa Password?</button>
-                        </div>
-                    </div>
+        <section id="section-login" class="section active py-20">
+            <div class="max-w-md mx-auto bg-white p-12 rounded-[3.5rem] shadow-2xl border border-teal-50">
+                <h2 class="text-3xl font-black kse-green italic mb-8 text-center uppercase">Portal Login</h2>
+                <div class="space-y-4">
+                    <input type="email" id="email" placeholder="Email" class="w-full p-5 bg-slate-50 rounded-2xl border border-slate-100 text-sm outline-none focus:border-teal-500">
+                    <input type="password" id="password" placeholder="Password" class="w-full p-5 bg-slate-50 rounded-2xl border border-slate-100 text-sm outline-none focus:border-teal-500">
+                    <button onclick="handleLogin()" id="btn-login" class="w-full bg-kse-green text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl">Masuk Dashboard</button>
                 </div>
             </div>
         </section>
 
-        <section id="page-dashboard" class="section py-10">
-            <div class="bg-teal-50 p-8 rounded-[2.5rem] border border-teal-100 shadow-inner mb-8">
-                <h3 class="text-xs font-black kse-green uppercase mb-6 flex items-center gap-2">
-                    <span class="h-4 w-1 bg-teal-500 rounded-full"></span> Upload Dokumen Baru
-                </h3>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="text-[9px] font-bold text-slate-400 uppercase ml-2 mb-1 block">Pilih File</label>
-                        <input type="file" id="file-input" class="w-full text-xs p-3 bg-white rounded-xl border border-teal-100">
-                    </div>
-                    <div>
-                        <label class="text-[9px] font-bold text-slate-400 uppercase ml-2 mb-1 block">Kategori</label>
-                        <select id="file-category" class="w-full p-3 bg-white rounded-xl border border-teal-100 text-xs font-bold uppercase">
-                            <option value="PURCHASE ORDER">Purchase Order (PO)</option>
-                            <option value="INVOICE">Invoice</option>
-                            <option value="SURAT JALAN">Surat Jalan (DO)</option>
-                            <option value="FAKTUR PAJAK">Faktur Pajak</option>
-                        </select>
-                    </div>
-                    <div class="flex items-end">
-                        <button id="btn-upload" onclick="uploadFile()" class="w-full bg-teal-600 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-kse-green transition-all shadow-md">Simpan Data</button>
-                    </div>
+        <section id="section-profile-tentang" class="section space-y-6">
+            <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <h2 class="text-3xl font-black kse-green italic uppercase mb-4">Tentang Kami</h2>
+                <p class="text-slate-600 leading-relaxed">PT Khatulistiwa Sinar Energi adalah penyedia solusi energi terintegrasi...</p>
+            </div>
+        </section>
+
+        <section id="section-dokumen" class="section space-y-6">
+            <div id="upload-panel" class="bg-teal-50 p-8 rounded-[2.5rem] border border-teal-100 shadow-inner">
+                <h3 class="text-xs font-black kse-green uppercase mb-4">Upload Dokumen <span id="current-cat-label"></span></h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <input type="file" id="file-input" class="w-full text-xs p-3 bg-white rounded-xl border border-teal-100">
+                    <button id="btn-upload" onclick="uploadFile()" class="bg-teal-600 text-white py-3 rounded-xl font-black uppercase text-[10px] shadow-md">Simpan Dokumen</button>
                 </div>
             </div>
 
             <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
-                <div class="p-8 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="text-xs font-black kse-green uppercase tracking-widest">Dokumen Saya</h3>
+                <div class="p-6 bg-slate-50 border-b flex justify-between items-center">
+                    <h3 class="text-xs font-black kse-green uppercase tracking-widest" id="table-title">File List</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-teal-50/50">
-                            <tr class="text-[10px] font-black text-slate-400 uppercase">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 font-black uppercase text-slate-400 text-[10px]">
+                            <tr>
                                 <th class="p-6">Kategori</th>
                                 <th class="p-6">Nama File</th>
+                                <th class="p-6">User/Pemilik</th>
                                 <th class="p-6 text-center">Tindakan</th>
                             </tr>
                         </thead>
-                        <tbody id="file-table-body" class="divide-y divide-slate-50">
-                            </tbody>
+                        <tbody id="file-table-body" class="divide-y divide-slate-100"></tbody>
                     </table>
                 </div>
             </div>
         </section>
+
+        <section id="section-harga-pertamina" class="section">
+            <h2 class="text-xl font-black kse-green italic mb-8 text-center uppercase tracking-widest">Update Harga Publish Pertamina</h2>
+            <div id="harga-container" class="grid md:grid-cols-4 gap-6">
+                </div>
+        </section>
+
     </main>
 
     <div id="preview-modal" class="hidden fixed inset-0 bg-black/90 z-[200] flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-5xl h-[90vh] rounded-[2rem] overflow-hidden flex flex-col shadow-2xl">
             <div class="p-5 border-b flex justify-between items-center bg-slate-50">
-                <span class="font-bold text-sm text-slate-700 truncate" id="preview-title">Preview</span>
+                <span class="font-bold text-xs uppercase text-slate-500" id="preview-title">Preview</span>
                 <button onclick="closePreview()" class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-xs font-black">TUTUP</button>
             </div>
-            <div id="preview-content" class="w-full h-full bg-slate-200 flex items-center justify-center overflow-auto p-4"></div>
-        </div>
-    </div>
-
-    <div id="password-modal" class="hidden fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl">
-            <h3 class="text-xl font-black kse-green italic mb-6 uppercase">Ganti Password</h3>
-            <input type="password" id="new-password" placeholder="Password Baru" class="w-full p-4 bg-slate-50 rounded-2xl border mb-4 outline-none">
-            <button onclick="updatePassword()" id="btn-update-pass" class="w-full bg-kse-green text-white py-4 rounded-2xl font-black uppercase text-xs">Update Sekarang</button>
-            <button onclick="closePasswordModal()" class="w-full text-slate-400 text-[10px] font-bold mt-4">BATAL</button>
+            <div id="preview-content" class="w-full h-full bg-slate-200 flex items-center justify-center p-4"></div>
         </div>
     </div>
 
     <script>
+        // 1. CONFIGURATION
         const _supabase = supabase.createClient("https://yqdtgcjpfhiskywhowhu.supabase.co", "sb_publishable_jTiO9iFFy7wu-ntlT0GJJQ_mUcSUt3Q");
-        let currentUser = null;
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
+            projectId: "kse-harga-bbm-update",
+            authDomain: "kse-harga-bbm-update.firebaseapp.com",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // --- AUTH LOGIC ---
+        let currentUser = null;
+        let currentCategory = "PURCHASE ORDER";
+
+        // 2. CORE FUNCTIONS
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('section-' + id);
+            if(target) target.classList.add('active');
+        }
+
         async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const btn = document.getElementById('btn-login');
-
-            if(!email || !password) return alert("Isi email & password!");
-            btn.innerText = "AUTHENTICATING...";
-
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-            if(error) {
-                alert("Gagal: " + error.message);
-                btn.innerText = "Masuk Dashboard";
-            } else {
-                initApp();
-            }
+            
+            if(error) alert(error.message);
+            else initApp();
         }
 
         async function handleLogout() {
@@ -147,134 +165,122 @@
             location.reload();
         }
 
-        async function forgotPassword() {
-            const email = document.getElementById('email').value;
-            if(!email) return alert("Ketik email Anda dulu di kotak login!");
-            const { error } = await _supabase.auth.resetPasswordForEmail(email);
-            if(error) alert(error.message);
-            else alert("Cek email Anda untuk link reset password!");
-        }
-
-        async function updatePassword() {
-            const newPass = document.getElementById('new-password').value;
-            if(newPass.length < 6) return alert("Minimal 6 karakter!");
-            const { error } = await _supabase.auth.updateUser({ password: newPass });
-            if(error) alert(error.message);
-            else { alert("Sukses ganti password!"); closePasswordModal(); }
-        }
-
-        // --- APP STATE ---
-        function showPage(pageId) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            updateNavbar(pageId);
-        }
-
-        function updateNavbar(pageId) {
-            const nav = document.getElementById('nav-menu');
-            if(pageId === 'dashboard') {
-                nav.innerHTML = `
-                    <button onclick="openPasswordModal()" class="text-[10px] font-bold text-teal-600 uppercase">Ganti Password</button>
-                    <button onclick="handleLogout()" class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Logout</button>
-                `;
+        async function initApp() {
+            const { data } = await _supabase.auth.getSession();
+            if(data.session) {
+                currentUser = data.session.user;
+                document.getElementById('section-login').classList.remove('active');
+                document.getElementById('main-nav').classList.remove('hidden');
+                showSection('profile-tentang'); // Default page setelah login
+                initHarga();
             } else {
-                nav.innerHTML = `<span class="text-[10px] font-bold text-slate-400">OFFICIAL PORTAL</span>`;
+                showSection('login');
+                document.getElementById('main-nav').classList.add('hidden');
             }
         }
 
-        // --- STORAGE & DATABASE ---
-        async function uploadFile() {
-            const input = document.getElementById('file-input');
-            const cat = document.getElementById('file-category').value;
-            const btn = document.getElementById('btn-upload');
+        // 3. DOCUMENT LOGIC
+        async function loadDocuments(category) {
+            currentCategory = category;
+            document.getElementById('current-cat-label').innerText = "("+category+")";
+            document.getElementById('table-title').innerText = "DATA " + category;
+            showSection('dokumen');
 
-            if(!input.files[0]) return alert("Pilih file!");
-            const file = input.files[0];
-            const fileName = `${currentUser.id}/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+            // Cek role dari metadata (diset di dashboard supabase)
+            const isAdmin = currentUser.user_metadata?.role === 'admin';
             
-            btn.disabled = true;
-            btn.innerText = "SENDING...";
+            let query = _supabase.from('documents').select('*').eq('type', category);
+            
+            // Filter: Kalau bukan admin, hanya ambil milik sendiri
+            if(!isAdmin) {
+                query = query.eq('user_id', currentUser.id);
+            }
 
-            try {
-                const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, file);
-                if(upErr) throw upErr;
-
-                const { data: link } = _supabase.storage.from('documents').getPublicUrl(fileName);
-
-                const { error: dbErr } = await _supabase.from('documents').insert([{
-                    name: file.name,
-                    type: cat,
-                    url: link.publicUrl,
-                    user_id: currentUser.id
-                }]);
-
-                if(dbErr) throw dbErr;
-                alert("Berhasil disimpan!");
-                input.value = "";
-                loadDocuments();
-            } catch (e) { alert(e.message); }
-            finally { btn.disabled = false; btn.innerText = "Simpan Data"; }
-        }
-
-        async function loadDocuments() {
-            const { data, error } = await _supabase.from('documents')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false });
-
+            const { data, error } = await query.order('created_at', { ascending: false });
+            
             const tbody = document.getElementById('file-table-body');
-            if(error || !data) return;
-
             tbody.innerHTML = data.map(d => `
-                <tr class="hover:bg-teal-50/30 transition-colors">
-                    <td class="p-6"><span class="bg-teal-100 text-teal-800 px-2 py-1 rounded-lg text-[9px] font-black uppercase">${d.type}</span></td>
-                    <td class="p-6 font-bold text-slate-700 text-xs">${d.name}</td>
+                <tr class="hover:bg-slate-50 transition-all">
+                    <td class="p-6"><span class="bg-teal-100 text-teal-800 px-2 py-1 rounded-lg text-[9px] font-black">${d.type}</span></td>
+                    <td class="p-6 font-bold text-slate-700">${d.name}</td>
+                    <td class="p-6 text-slate-400 text-[10px]">${d.user_email || 'User'}</td>
                     <td class="p-6 text-center flex justify-center gap-2">
-                        <button onclick="openPreview('${d.url}', '${d.name}')" class="bg-kse-green text-white px-4 py-2 rounded-xl text-[9px] font-black uppercase shadow-sm">Preview</button>
-                        <button onclick="deleteDoc('${d.id}', '${d.url}')" class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-[9px] font-black uppercase shadow-sm">Hapus</button>
+                        <button onclick="openPreview('${d.url}', '${d.name}')" class="bg-kse-green text-white px-4 py-2 rounded-xl text-[9px] font-black uppercase">Preview</button>
+                        <button onclick="deleteDoc('${d.id}', '${d.url}')" class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-[9px] font-black uppercase">Hapus</button>
                     </td>
                 </tr>
             `).join('');
         }
 
+        async function uploadFile() {
+            const input = document.getElementById('file-input');
+            if(!input.files[0]) return alert("Pilih file!");
+            
+            const file = input.files[0];
+            const btn = document.getElementById('btn-upload');
+            const fileName = `${currentUser.id}/${Date.now()}_${file.name}`;
+            
+            btn.innerText = "UPLOADING...";
+            
+            try {
+                await _supabase.storage.from('documents').upload(fileName, file);
+                const { data: link } = _supabase.storage.from('documents').getPublicUrl(fileName);
+                
+                await _supabase.from('documents').insert([{
+                    name: file.name,
+                    type: currentCategory,
+                    url: link.publicUrl,
+                    user_id: currentUser.id,
+                    user_email: currentUser.email
+                }]);
+                
+                alert("Upload Berhasil!");
+                loadDocuments(currentCategory);
+            } catch (e) { alert(e.message); }
+            finally { btn.innerText = "Simpan Dokumen"; }
+        }
+
         async function deleteDoc(id, url) {
-            if(!confirm("Hapus file ini?")) return;
+            if(!confirm("Hapus file?")) return;
             const path = url.split('/public/documents/')[1];
             await _supabase.storage.from('documents').remove([path]);
             await _supabase.from('documents').delete().eq('id', id);
-            loadDocuments();
+            loadDocuments(currentCategory);
         }
 
-        // --- UI HELPERS ---
+        // 4. PRICE LOGIC (FIREBASE)
+        function initHarga() {
+            const container = document.getElementById('harga-container');
+            db.collection("hargaBBM").doc("periode").onSnapshot((doc) => {
+                if(!doc.exists) return;
+                const data = doc.data().sekarang;
+                container.innerHTML = "";
+                for(let i=1; i<=4; i++) {
+                    const val = data["wilayah" + i] || 0;
+                    container.innerHTML += `
+                        <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 text-center">
+                            <h4 class="text-[9px] font-black text-slate-400 mb-2 uppercase italic tracking-widest">Wilayah ${i}</h4>
+                            <p class="text-2xl font-black kse-green italic leading-none mb-1">Rp ${parseInt(val).toLocaleString('id-ID')}</p>
+                            <span class="text-[7px] font-bold text-teal-500 uppercase tracking-widest">Pertamina Publish</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // 5. UI HELPERS
         function openPreview(url, name) {
             const content = document.getElementById('preview-content');
             document.getElementById('preview-title').innerText = name;
             document.getElementById('preview-modal').classList.remove('hidden');
-            
             const ext = url.split('.').pop().toLowerCase().split('?')[0];
-            if(['jpg','jpeg','png','webp'].includes(ext)) {
-                content.innerHTML = `<img src="${url}" class="max-w-full max-h-full rounded-lg shadow-lg border-4 border-white">`;
+            if(['jpg','jpeg','png'].includes(ext)) {
+                content.innerHTML = `<img src="${url}" class="max-w-full max-h-full shadow-lg rounded-xl border-4 border-white">`;
             } else {
-                content.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-lg"></iframe>`;
+                content.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-xl"></iframe>`;
             }
         }
-
         function closePreview() { document.getElementById('preview-modal').classList.add('hidden'); }
-        function openPasswordModal() { document.getElementById('password-modal').classList.remove('hidden'); }
-        function closePasswordModal() { document.getElementById('password-modal').classList.add('hidden'); }
-
-        // --- INITIALIZE ---
-        async function initApp() {
-            const { data } = await _supabase.auth.getSession();
-            if(data.session) {
-                currentUser = data.session.user;
-                showPage('dashboard');
-                loadDocuments();
-            } else {
-                showPage('home');
-            }
-        }
-
         window.onload = initApp;
     </script>
 </body>
