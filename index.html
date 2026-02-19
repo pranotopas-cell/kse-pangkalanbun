@@ -145,7 +145,46 @@
         </section>
 
        <section id="dashboard" class="section py-10">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+   <section id="dashboard" class="section py-10">
+    <div class="flex flex-col lg:flex-row justify-between items-start mb-12 gap-8">
+        <div>
+            <h2 class="text-5xl font-black text-slate-900 italic tracking-tighter uppercase leading-[0.8]">Arsip <br><span class="text-emerald-600">Transaksi</span></h2>
+            <p class="text-slate-400 font-bold text-xs uppercase tracking-[0.3em] mt-4">Manajemen Dokumen Digital</p>
+        </div>
+        
+        <div id="admin-upload-area" class="w-full lg:w-auto bg-white p-8 rounded-[3rem] shadow-2xl border border-slate-50 grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+            <div class="flex flex-col">
+                <label class="text-[10px] font-black text-slate-400 mb-3 uppercase tracking-widest ml-2">1. Pilih Berkas</label>
+                <input type="file" id="file-input" class="text-xs font-bold text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:text-[10px] file:font-black file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition cursor-pointer">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-[10px] font-black text-slate-400 mb-3 uppercase tracking-widest ml-2">2. Klasifikasi</label>
+                <select id="file-category" class="text-xs font-black bg-slate-50 p-4 rounded-2xl outline-none border-none text-slate-700 appearance-none cursor-pointer">
+                    <option value="PO">📄 PO (PURCHASE ORDER)</option>
+                    <option value="SURAT JALAN">🚚 SURAT JALAN</option>
+                    <option value="INVOICE">💰 INVOICE</option>
+                    <option value="FAKTUR PAJAK">🏛️ FAKTUR PAJAK</option>
+                </select>
+            </div>
+            <button onclick="uploadFile()" id="btn-upload" class="bg-[#064e3b] text-white px-10 py-5 rounded-2xl font-black text-xs hover:bg-black transition shadow-xl shadow-emerald-900/20 uppercase tracking-widest">Unggah Berkas</button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50/50 border-b border-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                <tr>
+                    <th class="px-10 py-8">Kategori</th>
+                    <th class="px-10 py-8">Nama Dokumen</th>
+                    <th class="px-10 py-8">Tanggal Input</th>
+                    <th class="px-10 py-8 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="file-table-body" class="divide-y divide-slate-50">
+                </tbody>
+        </table>
+    </div>
+</section>
         <div>
             <h2 class="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">Repository Dokumen</h2>
             <p class="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-2">Panel Kontrol Arsip Digital</p>
@@ -409,6 +448,7 @@ async function loadDocuments() {
     </script>
 </body>
 </html>
+
 
 
 
