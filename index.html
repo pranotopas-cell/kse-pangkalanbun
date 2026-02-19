@@ -182,139 +182,182 @@
     </footer>
 
     <script>
-        // -- KONFIGURASI -- (Sesuai dengan data Anda)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
-            authDomain: "kse-harga-bbm-update.firebaseapp.com",
-            projectId: "kse-harga-bbm-update",
-            storageBucket: "kse-harga-bbm-update.firebasestorage.app",
-            messagingSenderId: "764165984284",
-            appId: "1:764165984284:web:a74aed43317539f5f1cfd9"
-        };
+       <script>
+    // -- KONFIGURASI FIREBASE (FIRESTORE) --
+    const firebaseConfig = {
+        apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM",
+        authDomain: "kse-harga-bbm-update.firebaseapp.com",
+        projectId: "kse-harga-bbm-update",
+        storageBucket: "kse-harga-bbm-update.firebasestorage.app",
+        messagingSenderId: "764165984284",
+        appId: "1:764165984284:web:a74aed43317539f5f1cfd9"
+    };
+    
+    // Inisialisasi Firebase
+    if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    }
+    const db = firebase.firestore();
 
-        const _supabase = supabase.createClient("https://secasrbeamduxqxwlspv.supabase.co", "sb_publishable_caJyFg1_Z89oUhtKg5XyoA_DfIgh6br");
+    // -- KONFIGURASI SUPABASE --
+    // Menggunakan URL dan Key dari kode asli Anda
+    const SUPABASE_URL = "https://wrkmmeojhqpxchetaltl.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_HAdGJewkvKqOZ0cX7qPSZw_DjMDcATK";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const activeSec = document.getElementById(id);
-            activeSec.style.display = 'block';
-            setTimeout(() => activeSec.classList.add('active'), 50);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    // Fungsi Navigasi Seksi
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => {
+            s.classList.remove('active');
+            s.style.display = 'none';
+        });
+        const activeSec = document.getElementById(id);
+        activeSec.style.display = 'block';
+        setTimeout(() => activeSec.classList.add('active'), 50);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        // -- LOGIC HARGA (FIRESTORE) --
-        let hargaSekarangGlobal = {};
-        function loadHarga() {
-            db.collection("hargaBBM").doc("periode").onSnapshot((doc) => {
-                if (!doc.exists) return;
-                const data = doc.data();
-                hargaSekarangGlobal = data.sekarang || {};
+    // -- LOGIC HARGA (FIRESTORE) --
+    let hargaSekarangGlobal = {};
+    function loadHarga() {
+        db.collection("hargaBBM").doc("periode").onSnapshot((doc) => {
+            if (!doc.exists) return;
+            const data = doc.data();
+            hargaSekarangGlobal = data.sekarang || {};
 
-                for(let i=1; i<=4; i++) {
-                    const w = `wilayah${i}`;
-                    const now = parseInt(data.sekarang?.[w] || 0);
-                    const prev = parseInt(data.kemarin?.[w] || 0);
-                    const diff = now - prev;
-                    
-                    const card = document.getElementById(`card${w}`);
-                    card.querySelector('h3').innerText = `Rp ${now.toLocaleString('id-ID')}`;
-                    
-                    const ket = card.querySelector('.keteranganKmr');
-                    if(diff > 0) { 
-                        ket.innerText = `▲ +Rp ${diff.toLocaleString()}`; 
-                        ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-red-50 text-red-600";
-                    } else if(diff < 0) { 
-                        ket.innerText = `▼ -Rp ${Math.abs(diff).toLocaleString()}`; 
-                        ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-emerald-50 text-emerald-600";
-                    } else { 
-                        ket.innerText = "● Stabil"; 
-                        ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-slate-100 text-slate-500";
-                    }
+            for(let i=1; i<=4; i++) {
+                const w = `wilayah${i}`;
+                const now = parseInt(data.sekarang?.[w] || 0);
+                const prev = parseInt(data.kemarin?.[w] || 0);
+                const diff = now - prev;
+                
+                const card = document.getElementById(`cardwilayah${i}`);
+                if (!card) continue;
+
+                card.querySelector('h3').innerText = `Rp ${now.toLocaleString('id-ID')}`;
+                
+                const ket = card.querySelector('.keteranganKmr');
+                if(diff > 0) { 
+                    ket.innerText = `▲ Naik Rp ${diff.toLocaleString()}`; 
+                    ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-red-50 text-red-600";
+                } else if(diff < 0) { 
+                    ket.innerText = `▼ Turun Rp ${Math.abs(diff).toLocaleString()}`; 
+                    ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-emerald-50 text-emerald-600";
+                } else { 
+                    ket.innerText = "● Stabil"; 
+                    ket.className = "keteranganKmr text-xs font-bold py-1 px-3 rounded-lg bg-slate-100 text-slate-500";
+                }
+            }
+        });
+    }
+
+    // Update Harga ke Firestore (Admin Only)
+    async function saveHargaBaru() {
+        const val = [
+            document.getElementById('input-w1').value,
+            document.getElementById('input-w2').value,
+            document.getElementById('input-w3').value,
+            document.getElementById('input-w4').value
+        ];
+        if(val.includes("")) return alert("Mohon lengkapi semua input harga.");
+
+        try {
+            await db.collection("hargaBBM").doc("periode").update({
+                kemarin: hargaSekarangGlobal,
+                sekarang: { 
+                    wilayah1: val[0], 
+                    wilayah2: val[1], 
+                    wilayah3: val[2], 
+                    wilayah4: val[3] 
                 }
             });
+            alert("Harga Berhasil di Update & Dipublikasikan!");
+            showSection('harga-pertamina');
+        } catch (e) { 
+            alert("Gagal Simpan. Pastikan Anda sudah Login Admin."); 
         }
+    }
 
-        async function saveHargaBaru() {
-            const val = [
-                document.getElementById('input-w1').value,
-                document.getElementById('input-w2').value,
-                document.getElementById('input-w3').value,
-                document.getElementById('input-w4').value
-            ];
-            if(val.includes("")) return alert("Mohon lengkapi semua data.");
+    // -- LOGIC AUTH & DOKUMEN (SUPABASE) --
+    async function handleLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        const { data, error } = await _supabase.auth.signInWithPassword({ 
+            email: email, 
+            password: password 
+        });
 
-            try {
-                await db.collection("hargaBBM").doc("periode").set({
-                    kemarin: hargaSekarangGlobal,
-                    sekarang: { wilayah1: val[0], wilayah2: val[1], wilayah3: val[2], wilayah4: val[3] }
-                });
-                alert("Database Berhasil Diperbarui!");
-                showSection('harga-pertamina');
-            } catch (e) { alert("Error: Pastikan Anda memiliki akses."); }
-        }
-
-        // -- LOGIC DOKUMEN (SUPABASE) --
-        async function handleLogin() {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
-            const { data, error } = await _supabase.auth.signInWithPassword({ email: e, password: p });
-            if (error) return alert("Akses Ditolak: " + error.message);
+        if (error) {
+            alert("Login Gagal: " + error.message);
+        } else {
             updateAuthUI(data.user);
         }
+    }
 
-        function updateAuthUI(user) {
-            if (!user) return;
-            document.getElementById('btn-login-view').classList.add('hidden');
-            document.getElementById('user-logged-in').classList.remove('hidden');
-            document.getElementById('display-email').innerText = user.email;
-            document.getElementById('nav-edit-harga').classList.remove('hidden');
+    function updateAuthUI(user) {
+        if (!user) return;
+        document.getElementById('btn-login-view').classList.add('hidden');
+        document.getElementById('user-logged-in').classList.remove('hidden');
+        document.getElementById('display-email').innerText = user.email;
+        
+        // Munculkan menu Admin
+        document.getElementById('nav-edit-harga').classList.remove('hidden');
+        if(document.getElementById('admin-upload-controls')) {
             document.getElementById('admin-upload-controls').classList.remove('hidden');
-            showSection('dashboard');
-            loadFiles();
+        }
+        
+        showSection('dashboard');
+        loadFiles();
+    }
+
+    async function loadFiles(filter = null) {
+        let query = _supabase.from('documents').select('*').order('created_at', { ascending: false });
+        if (filter) query = query.eq('type', filter);
+        
+        const { data, error } = await query;
+        
+        const tbody = document.getElementById('file-table-body');
+        if (error || !data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-10 text-center text-slate-400">Tidak ada dokumen ditemukan.</td></tr>`;
+            return;
         }
 
-        async function loadFiles(filter = null) {
-            let query = _supabase.from('documents').select('*').order('created_at', { ascending: false });
-            if (filter) query = query.eq('type', filter);
-            const { data } = await query;
-            
-            const tbody = document.getElementById('file-table-body');
-            if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-10 text-center text-slate-400 font-medium">Belum ada dokumen yang tersedia.</td></tr>`;
-                return;
-            }
+        tbody.innerHTML = data.map(f => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-8 py-5"><span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded text-[10px] font-bold uppercase">${f.type}</span></td>
+                <td class="px-8 py-5 text-sm font-semibold text-slate-700">${f.name}</td>
+                <td class="px-8 py-5 text-xs text-slate-400">${new Date(f.created_at).toLocaleDateString('id-ID')}</td>
+                <td class="px-8 py-5 text-center">
+                    <a href="${f.url}" target="_blank" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-emerald-600 transition">VIEW / DOWNLOAD</a>
+                </td>
+            </tr>
+        `).join('');
+    }
 
-            tbody.innerHTML = data.map(f => `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-8 py-5"><span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-tighter">${f.type}</span></td>
-                    <td class="px-8 py-5 text-sm font-bold text-slate-700">${f.name}</td>
-                    <td class="px-8 py-5 text-xs text-slate-400 font-medium">${new Date(f.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="px-8 py-5 text-center">
-                        <a href="${f.url}" target="_blank" class="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-emerald-600 transition shadow-lg shadow-slate-100">
-                            DOWNLOAD
-                        </a>
-                    </td>
-                </tr>
-            `).join('');
-        }
+    function filterFiles(type) {
+        showSection('dashboard');
+        document.getElementById('dash-title').innerText = "Arsip: " + type;
+        loadFiles(type);
+    }
 
-        function filterFiles(type) {
-            showSection('dashboard');
-            document.getElementById('dash-title').innerText = "Arsip: " + type;
-            loadFiles(type);
-        }
+    async function handleLogout() { 
+        await _supabase.auth.signOut(); 
+        location.reload(); 
+    }
 
-        async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
-
-        // Init
-        loadHarga();
-        _supabase.auth.getSession().then(({data}) => { if (data.session) updateAuthUI(data.session.user); });
-
+    // Inisialisasi awal saat halaman dibuka
+    loadHarga();
+    
+    // Cek sesi login yang tersimpan
+    _supabase.auth.getSession().then(({data}) => { 
+        if (data.session) updateAuthUI(data.session.user); 
+    });
+</script>
     </script>
 </body>
 </html>
+
 
 
 
