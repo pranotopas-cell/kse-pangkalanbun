@@ -3,163 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE-PANGKALANBUN | Portal</title>
-    
+    <title>KSE Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .kse-dark { background-color: #064e3b; }
-        .page { display: none; }
-        .page.active { display: flex; }
-        .section { display: none; }
-        .section.active { display: block; }
+        body { font-family: sans-serif; background: #f4f7f6; }
+        .kse-dark { background: #064e3b; }
+        .page, .section { display: none; }
+        .active { display: block; }
+        .flex-active { display: flex; }
         .dropdown:hover .dropdown-menu { display: block; }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
 
-    <main id="page-login" class="page min-h-screen items-center justify-center p-6 bg-white">
-        <div class="container mx-auto flex flex-col md:flex-row items-center gap-12">
-            <div class="flex-1 space-y-8 text-center md:text-left">
-                <h1 class="text-6xl md:text-8xl font-black text-[#064e3b] italic leading-[0.85] tracking-tighter uppercase">Reliable <br><span class="text-teal-500 underline decoration-teal-200 text-7xl md:text-9xl">Energy.</span></h1>
-                <p class="text-slate-500 text-2xl font-bold italic">"Energi Hebat, Mitra Sahabat."</p>
-            </div>
-            <div class="w-full max-w-lg bg-white p-12 rounded-[3.5rem] shadow-2xl border border-teal-50">
-                <input type="email" id="login-email" placeholder="Email Kantor" class="w-full p-6 bg-slate-100 rounded-2xl font-bold mb-4 outline-none focus:ring-2 ring-teal-500">
-                <input type="password" id="login-pass" placeholder="Password" class="w-full p-6 bg-slate-100 rounded-2xl font-bold mb-6 outline-none focus:ring-2 ring-teal-500">
-                <button onclick="handleLogin()" id="btn-login" class="w-full kse-dark text-white py-6 rounded-2xl text-xl font-black uppercase shadow-xl">Masuk</button>
-            </div>
+    <main id="page-login" class="page flex-active min-h-screen items-center justify-center p-4 bg-white">
+        <div class="w-full max-w-md p-8 border rounded-3xl shadow-lg">
+            <h1 class="text-4xl font-black text-[#064e3b] italic italic mb-8 uppercase text-center">KSE PORTAL</h1>
+            <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-gray-100 rounded-xl mb-3 outline-none font-bold">
+            <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-gray-100 rounded-xl mb-6 outline-none font-bold">
+            <button onclick="handleLogin()" id="btn-login" class="w-full kse-dark text-white py-4 rounded-xl font-black uppercase shadow-lg">Masuk</button>
         </div>
     </main>
 
     <main id="page-dashboard" class="page flex-col min-h-screen">
-        <nav class="kse-dark text-white px-8 py-6 flex justify-between items-center shadow-2xl sticky top-0 z-50">
-            <h1 class="text-2xl font-black italic uppercase tracking-tighter cursor-pointer" onclick="showSection('profile')">PT KSE</h1>
-            
-            <div class="flex items-center space-x-6">
+        <nav class="kse-dark text-white p-5 flex justify-between items-center sticky top-0 z-50">
+            <h1 class="text-xl font-black italic uppercase" onclick="showSection('profile')">PT KSE</h1>
+            <div class="flex gap-4 text-[10px] font-black uppercase">
                 <div class="relative dropdown">
-                    <button class="text-[10px] font-black uppercase tracking-widest text-white">Tentang Kami ▼</button>
-                    <div class="dropdown-menu absolute hidden left-0 w-48 bg-white border-2 shadow-2xl rounded-2xl py-2 z-50 text-slate-800 font-black text-[10px]">
-                        <button onclick="showSection('profile')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b">Profile</button>
-                        <button onclick="showSection('visi-misi')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b">Visi & Misi</button>
-                        <button onclick="showSection('legalitas')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b">Legalitas</button>
-                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-3 hover:bg-teal-50">Data Armada</button>
+                    <button>Tentang Kami ▼</button>
+                    <div class="dropdown-menu absolute hidden left-0 w-40 bg-white text-black shadow-xl rounded-xl mt-2 overflow-hidden">
+                        <button onclick="showSection('profile')" class="block w-full p-3 hover:bg-gray-100 border-b text-left">Profile</button>
+                        <button onclick="showSection('visi-misi')" class="block w-full p-3 hover:bg-gray-100 border-b text-left">Visi Misi</button>
+                        <button onclick="showSection('legalitas')" class="block w-full p-3 hover:bg-gray-100 border-b text-left">Legalitas</button>
+                        <button onclick="showSection('armada')" class="block w-full p-3 hover:bg-gray-100 text-left">Armada</button>
                     </div>
                 </div>
-
-                <div class="relative dropdown">
-                    <button class="text-[10px] font-black uppercase tracking-widest text-teal-400">E-Document ▼</button>
-                    <div class="dropdown-menu absolute hidden right-0 w-56 bg-white border-2 shadow-2xl rounded-2xl py-2 z-50 text-slate-800 font-black text-[10px]">
-                        <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b">PO</button>
-                        <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b">SURAT JALAN</button>
-                        <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b">INVOICE</button>
-                        <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 text-red-600">FAKTUR PAJAK</button>
+                <div class="relative dropdown text-teal-400">
+                    <button>E-Doc ▼</button>
+                    <div class="dropdown-menu absolute hidden right-0 w-40 bg-white text-black shadow-xl rounded-xl mt-2 overflow-hidden">
+                        <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full p-3 hover:bg-gray-100 border-b text-left">PO</button>
+                        <button onclick="loadDocuments('SURAT JALAN')" class="block w-full p-3 hover:bg-gray-100 border-b text-left">Surat Jalan</button>
+                        <button onclick="loadDocuments('INVOICE')" class="block w-full p-3 hover:bg-gray-100 text-left">Invoice</button>
                     </div>
                 </div>
-                
-                <button onclick="showSection('harga')" class="text-[10px] font-black uppercase">Harga</button>
-                <button onclick="handleLogout()" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Keluar</button>
+                <button onclick="showSection('harga')">Harga</button>
+                <button onclick="handleLogout()" class="text-red-400">Keluar</button>
             </div>
         </nav>
 
-        <div class="container mx-auto px-8 py-12 flex-1">
-            
-            <div id="admin-panel" class="hidden mb-12 bg-white p-8 rounded-[3rem] border-4 border-teal-500/20 shadow-xl">
-                <h3 class="font-black italic uppercase text-[#064e3b] mb-6 text-xl underline">Admin Panel</h3>
-                <div class="flex flex-wrap gap-4 items-end">
-                    <div class="flex-1 min-w-[200px]">
-                        <label class="text-[10px] font-black uppercase ml-2 block mb-2">1. Pilih File</label>
-                        <input type="file" id="file-input" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold">
-                    </div>
-                    <div class="flex-1 min-w-[200px]">
-                        <label class="text-[10px] font-black uppercase ml-2 block mb-2">2. Kategori</label>
-                        <select id="doc-category" class="w-full p-3 bg-slate-50 rounded-xl font-bold text-xs">
-                            <option value="PURCHASE ORDER">PURCHASE ORDER</option>
-                            <option value="SURAT JALAN">SURAT JALAN</option>
-                            <option value="INVOICE">INVOICE</option>
-                            <option value="FAKTUR PAJAK">FAKTUR PAJAK</option>
-                        </select>
-                    </div>
-                    <button onclick="startUploadProcess()" id="btn-upload" class="bg-teal-600 text-white px-10 py-4 rounded-xl font-black text-xs uppercase hover:bg-teal-700 shadow-lg">Upload & Kirim</button>
-                </div>
-                <div id="upload-history" class="mt-4 p-4 bg-teal-50 rounded-2xl hidden text-[10px] font-bold text-teal-800 italic">
-                    Riwayat terakhir: <span id="last-email-sent">-</span>
+        <div class="p-6 max-w-5xl mx-auto w-full">
+            <div id="admin-panel" class="hidden mb-8 bg-teal-50 p-6 rounded-3xl border-2 border-teal-200">
+                <h3 class="font-black italic text-[#064e3b] mb-4 uppercase">Admin: Cepat Upload</h3>
+                <div class="flex flex-wrap gap-3">
+                    <input type="file" id="file-input" class="text-xs bg-white p-2 rounded-lg border flex-1">
+                    <select id="doc-category" class="text-xs p-2 rounded-lg border">
+                        <option value="PURCHASE ORDER">PO</option>
+                        <option value="SURAT JALAN">SURAT JALAN</option>
+                        <option value="INVOICE">INVOICE</option>
+                    </select>
+                    <button onclick="startUpload()" id="btn-upload" class="bg-teal-600 text-white px-6 py-2 rounded-lg text-xs font-black uppercase">Upload & Kirim</button>
                 </div>
             </div>
 
             <section id="section-profile" class="section active">
-                <div class="kse-dark p-16 rounded-[4rem] text-white shadow-2xl">
-                    <h2 class="text-5xl font-black italic uppercase mb-6 underline decoration-teal-400">Profile</h2>
-                    <p class="text-2xl font-medium italic opacity-90 leading-relaxed">PT Khatulistiwa Sinar Energi (KSE) adalah distributor BBM Industri resmi yang melayani area Kalimantan Tengah dengan profesionalisme tinggi.</p>
+                <div class="kse-dark p-10 rounded-[2rem] text-white shadow-xl">
+                    <h2 class="text-3xl font-black italic uppercase mb-4">Profile</h2>
+                    <p class="text-lg italic opacity-90">Distributor BBM Industri Resmi Kalimantan Tengah.</p>
                 </div>
             </section>
 
             <section id="section-visi-misi" class="section">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="bg-white p-12 rounded-[3rem] border-2 border-teal-50 shadow-xl">
-                        <h2 class="text-3xl font-black italic uppercase text-[#064e3b] mb-4">Visi</h2>
-                        <p class="font-bold italic text-slate-500">Menjadi pilar utama distribusi energi yang terpercaya di Indonesia.</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white p-8 rounded-3xl shadow">
+                        <h2 class="text-2xl font-black italic text-[#064e3b] uppercase mb-2">Visi</h2>
+                        <p class="text-gray-600 font-bold italic">Menjadi pilar utama distribusi energi terpercaya.</p>
                     </div>
-                    <div class="bg-white p-12 rounded-[3rem] border-2 border-teal-50 shadow-xl">
-                        <h2 class="text-3xl font-black italic uppercase text-[#064e3b] mb-4">Misi</h2>
-                        <p class="font-bold italic text-slate-500">Mendistribusikan energi berkualitas dengan ketepatan waktu dan transparansi dokumen.</p>
+                    <div class="bg-white p-8 rounded-3xl shadow">
+                        <h2 class="text-2xl font-black italic text-[#064e3b] uppercase mb-2">Misi</h2>
+                        <p class="text-gray-600 font-bold italic">Layanan tepat waktu dan dokumen transparan.</p>
                     </div>
                 </div>
             </section>
 
             <section id="section-legalitas" class="section">
-                <div class="bg-white p-12 rounded-[3rem] border-2 border-teal-50 shadow-xl">
-                    <h2 class="text-3xl font-black italic uppercase text-[#064e3b] mb-6 underline">Legalitas Perusahaan</h2>
-                    <ul class="space-y-4 text-lg font-bold italic text-slate-600 uppercase tracking-tighter">
-                        <li>✔️ Izin Niaga Umum Migas</li>
-                        <li>✔️ Izin Transportasi BBM Khusus</li>
-                        <li>✔️ Sertifikat Metrologi Bejana Ukur</li>
-                        <li>✔️ SIUP & TDP Aktif</li>
-                    </ul>
+                <div class="bg-white p-8 rounded-3xl shadow">
+                    <h2 class="text-2xl font-black italic text-[#064e3b] uppercase mb-4">Legalitas</h2>
+                    <p class="font-bold text-gray-700 italic">Izin Niaga Umum, Izin Transportasi, Sertifikat Metrologi.</p>
                 </div>
             </section>
 
             <section id="section-armada" class="section">
-                <div class="bg-white p-12 rounded-[3rem] border-2 border-teal-50 shadow-xl">
-                    <h2 class="text-3xl font-black italic uppercase text-[#064e3b] mb-6">Data Armada</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="p-6 bg-slate-50 rounded-2xl text-center">
-                            <span class="block text-2xl font-black italic">5.000 L</span>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Tank Truck</span>
-                        </div>
-                        <div class="p-6 bg-slate-50 rounded-2xl text-center">
-                            <span class="block text-2xl font-black italic">10.000 L</span>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Tank Truck</span>
-                        </div>
+                <div class="bg-white p-8 rounded-3xl shadow text-center">
+                    <h2 class="text-2xl font-black italic text-[#064e3b] uppercase mb-4">Data Armada</h2>
+                    <div class="flex justify-around font-black italic">
+                        <div><p class="text-3xl">5K</p><p class="text-[10px] text-gray-400">LITER</p></div>
+                        <div><p class="text-3xl">10K</p><p class="text-[10px] text-gray-400">LITER</p></div>
                     </div>
                 </div>
             </section>
 
             <section id="section-harga" class="section">
-                <div id="harga-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+                <div id="harga-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
             </section>
 
             <section id="section-documents" class="section">
-                <div class="bg-white rounded-[3.5rem] shadow-2xl overflow-hidden border-2 border-teal-50">
-                    <div class="p-8 kse-dark text-white"><h3 id="doc-title" class="font-black uppercase italic text-2xl">Arsip</h3></div>
-                    <table class="w-full text-left">
-                        <tbody id="file-table-body" class="divide-y-2 divide-teal-50 text-sm font-bold"></tbody>
-                    </table>
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border">
+                    <div class="p-4 kse-dark text-white font-black italic uppercase" id="doc-title">Arsip</div>
+                    <div id="file-table-body" class="p-2 space-y-2"></div>
                 </div>
             </section>
         </div>
     </main>
 
     <script>
-        const SB_URL = "https://wrkmmeojhqpxchetaltl.supabase.co"; 
-        const SB_KEY = "MASUKKAN_ANON_KEY_EYJ_ABANG_DI_SINI"; 
+        const SB_URL = "https://wrkmmeojhqpxchetaltl.supabase.co";
+        const SB_KEY = "MASUKKAN_ANON_KEY_ABANG"; 
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
+        // Firebase Setup (Ringan)
         const firebaseConfig = { projectId: "kse-harga-bbm-update", apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM" };
         firebase.initializeApp(firebaseConfig);
         const dbFirebase = firebase.firestore();
@@ -171,100 +135,15 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                isAdmin = currentUser.email === "admin@kse.com"; // GANTI EMAIL ADMIN ABANG
+                isAdmin = currentUser.email === "admin@kse.com"; // Sesuaikan
                 if(isAdmin) document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('page-login').classList.remove('active');
-                document.getElementById('page-dashboard').classList.add('active');
+                document.getElementById('page-login').classList.remove('flex-active');
+                document.getElementById('page-dashboard').classList.add('flex-active');
                 initHarga();
                 showSection('profile');
             } else {
-                document.getElementById('page-login').classList.add('active');
+                document.getElementById('page-login').classList.add('flex-active');
             }
-        }
-
-        // --- PROSES UPLOAD DENGAN INPUT EMAIL DI DIALOG ---
-        async function startUploadProcess() {
-            const fileInput = document.getElementById('file-input');
-            const cat = document.getElementById('doc-category').value;
-            if(!fileInput.files[0]) return alert("Pilih file dulu Bang!");
-
-            // 1. Munculkan Dialog Input Email
-            const targetEmail = prompt("Masukkan Email Client Penerima:");
-            if(!targetEmail) return;
-
-            const btn = document.getElementById('btn-upload');
-            btn.innerText = "MENCARI USER...";
-
-            // 2. Cari UID berdasarkan email tersebut (Simulasi atau panggil DB)
-            // Di Supabase, Admin bisa cari user, tapi untuk simplifikasi kita insert & user_id manual jika tahu
-            // Atau lebih baik, Abang masukkan UID langsung di prompt tadi jika email belum terdaftar
-            
-            // Kita coba proses upload
-            btn.innerText = "UPLOADING...";
-            const file = fileInput.files[0];
-            const fileName = `${Date.now()}_${file.name}`;
-
-            const { data: sData, error: sErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
-            if(sErr) return alert(sErr.message);
-
-            const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
-
-            // Simpan ke DB (Note: user_id diisi email atau UID hasil pencarian)
-            // Agar riwayat tersimpan otomatis:
-            const { error: dbErr } = await _supabase.from('documents').insert([
-                { name: file.name, url: urlData.publicUrl, type: cat, user_id: targetEmail } // Di sini kita simpan email sebagai ID sementara jika UID belum ada
-            ]);
-
-            if(dbErr) alert(dbErr.message);
-            else {
-                alert("Berhasil Terkirim ke: " + targetEmail);
-                document.getElementById('upload-history').classList.remove('hidden');
-                document.getElementById('last-email-sent').innerText = targetEmail;
-                btn.innerText = "Upload & Kirim";
-            }
-        }
-
-        function initHarga() {
-            dbFirebase.collection("hargaBBM").doc("periode").onSnapshot(doc => {
-                if(doc.exists) {
-                    const data = doc.data().sekarang || {};
-                    const grid = document.getElementById('harga-grid');
-                    grid.innerHTML = "";
-                    for(let i=1; i<=4; i++) {
-                        const h = parseInt(data['wilayah'+i] || 0);
-                        grid.innerHTML += `<div class="bg-white p-8 rounded-[2.5rem] shadow-xl border-2 border-teal-50 text-center">
-                            <span class="text-[10px] font-black text-slate-400 uppercase">Wilayah ${i}</span>
-                            <h3 class="text-2xl font-black text-[#064e3b] italic tracking-tighter leading-none">Rp ${h.toLocaleString('id-ID')}</h3>
-                        </div>`;
-                    }
-                }
-            });
-        }
-
-        async function loadDocuments(cat) {
-            showSection('documents');
-            document.getElementById('doc-title').innerText = cat;
-            let q = _supabase.from('documents').select('*').eq('type', cat);
-            // Jika user biasa, filter berdasarkan email mereka
-            if(!isAdmin) q = q.eq('user_id', currentUser.email);
-            
-            const { data } = await q;
-            const tbody = document.getElementById('file-table-body');
-            tbody.innerHTML = data?.length ? data.map(d => `
-                <tr>
-                    <td class="p-8 uppercase italic font-black text-[#064e3b] tracking-tighter">${d.name}</td>
-                    <td class="p-8 text-right space-x-2">
-                        <button onclick="window.open('${d.url}')" class="bg-teal-50 text-teal-700 px-6 py-2 rounded-xl text-[10px] font-black uppercase">Preview</button>
-                        <a href="${d.url}" download class="bg-[#064e3b] text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg">Download</a>
-                    </td>
-                </tr>
-            `).join('') : `<tr><td colspan="2" class="p-20 text-center opacity-30 italic font-black uppercase">Data Kosong</td></tr>`;
-        }
-
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + id).classList.add('active');
-            window.scrollTo(0,0);
         }
 
         async function handleLogin() {
@@ -274,9 +153,60 @@
             if (error) alert(error.message); else location.reload();
         }
 
+        async function startUpload() {
+            const fileInput = document.getElementById('file-input');
+            const cat = document.getElementById('doc-category').value;
+            if(!fileInput.files[0]) return alert("File?");
+            const email = prompt("Email Penerima:");
+            if(!email) return;
+
+            const file = fileInput.files[0];
+            const name = `${Date.now()}_${file.name}`;
+            await _supabase.storage.from('kse-files').upload(name, file);
+            const { data: u } = _supabase.storage.from('kse-files').getPublicUrl(name);
+            await _supabase.from('documents').insert([{ name: file.name, url: u.publicUrl, type: cat, user_id: email }]);
+            alert("Sent!"); location.reload();
+        }
+
+        function initHarga() {
+            dbFirebase.collection("hargaBBM").doc("periode").onSnapshot(doc => {
+                const data = doc.data()?.sekarang || {};
+                const grid = document.getElementById('harga-grid');
+                grid.innerHTML = "";
+                for(let i=1; i<=4; i++) {
+                    grid.innerHTML += `<div class="bg-white p-6 rounded-3xl shadow border-2 border-teal-50 text-center">
+                        <span class="text-[8px] font-black text-gray-400">W${i}</span>
+                        <p class="text-xl font-black text-[#064e3b] italic">Rp ${(data['wilayah'+i]||0).toLocaleString('id-ID')}</p>
+                    </div>`;
+                }
+            });
+        }
+
+        async function loadDocuments(cat) {
+            showSection('documents');
+            document.getElementById('doc-title').innerText = cat;
+            let q = _supabase.from('documents').select('*').eq('type', cat);
+            if(!isAdmin) q = q.eq('user_id', currentUser.email);
+            const { data } = await q;
+            const box = document.getElementById('file-table-body');
+            box.innerHTML = data?.length ? data.map(d => `
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl border">
+                    <span class="text-xs font-bold uppercase italic">${d.name}</span>
+                    <div class="flex gap-2">
+                        <button onclick="window.open('${d.url}')" class="bg-teal-100 text-teal-800 p-2 rounded-lg text-[8px] font-black">PREVIEW</button>
+                        <a href="${d.url}" download class="bg-[#064e3b] text-white p-2 rounded-lg text-[8px] font-black">UNDUH</a>
+                    </div>
+                </div>
+            `).join('') : '<p class="p-10 text-center text-xs opacity-50">KOSONG</p>';
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+        }
+
         async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
         window.onload = checkAuth;
     </script>
 </body>
 </html>
-
