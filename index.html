@@ -19,8 +19,6 @@
         .flex-active { display: flex; }
         .btn-hover { transition: all 0.3s ease; }
         .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        
-        /* Dropdown Fix */
         .dropdown:hover .dropdown-menu { display: block !important; }
         .dropdown-menu { display: none; }
     </style>
@@ -86,7 +84,7 @@
             <div id="admin-panel" class="hidden mb-10 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-2 h-6 bg-teal-500 rounded-full"></div>
-                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Admin Console</h3>
+                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Admin Console (Upload Dokumen)</h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <div class="space-y-2">
@@ -103,55 +101,47 @@
                         </select>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400">3. UID Baru</label>
-                        <input type="text" id="manual-uid" placeholder="UID/Email..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">3. UID/Email Baru</label>
+                        <input type="text" id="manual-uid" placeholder="Ketik email..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History UID</label>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client</label>
                         <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
-                            <option value="">-- Pilih History --</option>
+                            <option value="">-- History --</option>
                         </select>
                     </div>
                     <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload & Kirim</button>
                 </div>
             </div>
 
-            <section id="section-profile" class="section active space-y-8">
-                <div class="kse-gradient p-16 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
-                    <div class="relative z-10 max-w-3xl">
-                        <h2 class="text-5xl font-black mb-6 tracking-tighter uppercase italic leading-none">Profil<br>Perusahaan</h2>
-                        <p class="text-xl font-light opacity-90 leading-relaxed mb-6">PT Khatulistiwa Sinar Energi (KSE) adalah entitas bisnis yang berdedikasi tinggi dalam menyediakan solusi energi cair berkualitas untuk mendukung laju industri di tanah air.</p>
-                        <p class="text-xl font-light opacity-90 leading-relaxed">Sebagai Agen & Distributor BBM Industri resmi, kami mengedepankan ketepatan waktu distribusi dan transparansi dokumen bagi seluruh mitra strategis kami.</p>
-                    </div>
-                    <div class="absolute -right-20 -bottom-20 text-[20rem] font-black opacity-10 italic">KSE</div>
+            <section id="section-profile" class="section active">
+                <div class="kse-gradient p-16 rounded-[3rem] text-white shadow-2xl">
+                    <h2 class="text-5xl font-black mb-6 tracking-tighter uppercase italic">Profil Perusahaan</h2>
+                    <p class="text-xl font-light opacity-90 leading-relaxed max-w-3xl">PT Khatulistiwa Sinar Energi (KSE) berdedikasi tinggi dalam menyediakan solusi energi cair berkualitas untuk industri di Kalimantan Tengah.</p>
                 </div>
             </section>
 
             <section id="section-visi-misi" class="section">
                 <div class="grid md:grid-cols-2 gap-10">
-                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-lg">
-                        <h2 class="text-xs font-black text-teal-600 uppercase tracking-[0.2em] mb-6">Our Vision</h2>
-                        <p class="text-2xl font-bold text-slate-800 italic leading-snug">"Menjadi pemimpin distribusi energi terpadu dengan standar pelayanan digital terbaik."</p>
+                    <div class="bg-white p-12 rounded-[2.5rem] shadow-lg">
+                        <h2 class="text-xs font-black text-teal-600 uppercase mb-6">Vision</h2>
+                        <p class="text-2xl font-bold text-slate-800 italic">"Pemimpin distribusi energi dengan layanan digital terbaik."</p>
                     </div>
-                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-lg">
-                        <h2 class="text-xs font-black text-teal-600 uppercase tracking-[0.2em] mb-6">Our Mission</h2>
-                        <ul class="space-y-4 text-slate-600 font-semibold italic">
-                            <li>1. Distribusi BBM industri berkualitas tinggi.</li>
-                            <li>2. Jaminan ketepatan waktu pengiriman.</li>
-                            <li>3. Transparansi dokumen lewat sistem E-Doc.</li>
-                        </ul>
+                    <div class="bg-white p-12 rounded-[2.5rem] shadow-lg">
+                        <h2 class="text-xs font-black text-teal-600 uppercase mb-6">Mission</h2>
+                        <p class="font-bold text-slate-600 italic leading-relaxed">Ketepatan waktu, kualitas terjamin, dan transparansi administrasi.</p>
                     </div>
                 </div>
             </section>
 
             <section id="section-legalitas" class="section">
-                <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-xl max-w-4xl">
-                    <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic tracking-tighter border-b pb-4">Dokumen & Legalitas Resmi</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700 font-bold uppercase italic text-sm">
+                <div class="bg-white p-12 rounded-[3rem] shadow-xl max-w-4xl">
+                    <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic border-b pb-4">Legalitas Resmi</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700 font-bold uppercase text-sm italic">
                         <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Niaga Umum Migas</div>
-                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Transportasi BBM Khusus</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Transportasi BBM</div>
                         <div class="p-4 bg-slate-50 rounded-2xl">✔️ SIUP & NPWP Aktif</div>
-                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Sertifikasi Metrologi Legal</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Sertifikasi Metrologi</div>
                     </div>
                 </div>
             </section>
@@ -160,15 +150,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
                         <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Small Truck</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block">Small Truck</span>
                     </div>
                     <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
                         <span class="block text-4xl font-black text-[#064e3b]">10.000 L</span>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Medium Truck</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block">Medium Truck</span>
                     </div>
                     <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
                         <span class="block text-4xl font-black text-[#064e3b]">20.000 L</span>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Large Truck</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block">Large Truck</span>
                     </div>
                 </div>
             </section>
@@ -180,7 +170,7 @@
             <section id="section-documents" class="section">
                 <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
                     <div class="p-8 border-b border-slate-50 bg-slate-50">
-                        <h3 id="doc-title" class="font-bold uppercase text-slate-800 tracking-tight">Repository</h3>
+                        <h3 id="doc-title" class="font-bold uppercase text-slate-800 tracking-tight italic">Repository</h3>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
@@ -193,7 +183,7 @@
     </main>
 
     <script>
-        // DATA API & CONFIG (TETAP SAMA)
+        // CONFIG & API (TETAP SAMA)
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -227,41 +217,45 @@
             const { data } = await _supabase.from('documents').select('user_id');
             const uniqueEmails = [...new Set(data?.map(d => d.user_id))];
             const select = document.getElementById('select-penerima-history');
-            select.innerHTML = '<option value="">-- Pilih History --</option>';
-            uniqueEmails.forEach(email => {
-                if(email) select.innerHTML += `<option value="${email}">${email}</option>`;
-            });
+            select.innerHTML = '<option value="">-- History --</option>';
+            uniqueEmails.forEach(email => { if(email) select.innerHTML += `<option value="${email}">${email}</option>`; });
         }
 
-        function syncManualUid(val) {
-            if(val) document.getElementById('manual-uid').value = val;
-        }
+        function syncManualUid(val) { if(val) document.getElementById('manual-uid').value = val; }
 
         async function startUploadProcess() {
             const fileInput = document.getElementById('file-input');
             const cat = document.getElementById('doc-category').value;
             const target = document.getElementById('manual-uid').value;
             if(!fileInput.files[0] || !target) return alert("Lengkapi data!");
-            const confirmSend = confirm(`Kirim ${cat} ke: ${target}?`);
-            if(!confirmSend) return;
+            if(!confirm(`Kirim ${cat} ke: ${target}?`)) return;
+
             const btn = document.getElementById('btn-upload');
-            btn.innerText = "PROSES...";
-            btn.disabled = true;
+            btn.innerText = "PROSES..."; btn.disabled = true;
+
             const file = fileInput.files[0];
             const fileName = `${Date.now()}_${file.name}`;
             const { data: sData, error: sErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
             if(sErr) { btn.disabled = false; btn.innerText = "Upload & Kirim"; return alert(sErr.message); }
+
             const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
             const { error: dbErr } = await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: cat, user_id: target }]);
             if(dbErr) alert(dbErr.message); else { alert("BERHASIL!"); location.reload(); }
+        }
+
+        // FUNGSI KHUSUS ADMIN: Hapus File
+        async function deleteFile(id, fileName) {
+            if(!confirm("Yakin ingin menghapus dokumen ini selamanya?")) return;
+            // 1. Hapus dari DB
+            const { error: dbErr } = await _supabase.from('documents').delete().eq('id', id);
+            if(dbErr) alert("Gagal hapus DB"); else location.reload();
         }
 
         function initHarga() {
             dbFirebase.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
                     const data = doc.data().sekarang || {};
-                    const grid = document.getElementById('harga-grid');
-                    grid.innerHTML = "";
+                    const grid = document.getElementById('harga-grid'); grid.innerHTML = "";
                     for(let i=1; i<=4; i++) {
                         const h = parseInt(data['wilayah'+i] || 0);
                         grid.innerHTML += `<div class="bg-white p-8 rounded-[2rem] border border-slate-100 text-center shadow-sm">
@@ -273,14 +267,6 @@
             });
         }
 
-        // --- FIX PREVIEW AGAR TIDAK LANGSUNG DOWNLOAD ---
-        function openPreview(url) {
-            // Membuka file di tab baru, browser akan merender jika PDF/Gambar
-            const win = window.open(url, '_blank');
-            if (win) win.focus();
-            else alert('Mohon izinkan pop-up untuk melihat dokumen');
-        }
-
         async function loadDocuments(cat) {
             showSection('documents');
             document.getElementById('doc-title').innerText = cat;
@@ -289,21 +275,40 @@
             
             const { data } = await q;
             const tbody = document.getElementById('file-table-body');
-            tbody.innerHTML = data?.length ? data.map(d => `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="p-6 font-bold text-slate-700 uppercase italic text-sm tracking-tight">${d.name}</td>
-                    <td class="p-6 text-right space-x-3">
-                        <button onclick="openPreview('${d.url}')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
-                        
+            
+            tbody.innerHTML = data?.length ? data.map(d => {
+                // LOGIKA TOMBOL: Admin (Preview & Hapus) vs User (Preview & Download)
+                let actionButtons = '';
+                
+                if(isAdmin) {
+                    // Tampilan ADMIN: Preview & Hapus
+                    actionButtons = `
+                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
+                        <button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover">Hapus</button>
+                    `;
+                } else {
+                    // Tampilan USER: Preview & Download (Ikon Panah)
+                    actionButtons = `
+                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
                         <a href="${d.url}" download="${d.name}" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover inline-flex items-center gap-2">
                             <span>Download</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                             </svg>
                         </a>
-                    </td>
-                </tr>
-            `).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>`;
+                    `;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-6">
+                            <div class="font-bold text-slate-700 uppercase italic text-sm tracking-tight">${d.name}</div>
+                            ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold opacity-60">To: ${d.user_id}</div>` : ''}
+                        </td>
+                        <td class="p-6 text-right space-x-3">${actionButtons}</td>
+                    </tr>
+                `;
+            }).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>`;
         }
 
         function showSection(id) {
