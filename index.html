@@ -66,8 +66,8 @@
                     </div>
                 </div>
 
-                <div class="relative dropdown group">
-                    <button class="text-xs font-bold uppercase tracking-widest text-teal-300 py-2">E-Document ▼</button>
+                <div class="relative dropdown group text-teal-300">
+                    <button class="text-xs font-bold uppercase tracking-widest py-2">E-Document ▼</button>
                     <div class="dropdown-menu absolute right-0 w-56 bg-white border shadow-2xl rounded-2xl py-2 mt-2 z-[110] text-slate-700 font-semibold text-xs overflow-hidden">
                         <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Purchase Order (PO)</button>
                         <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Surat Jalan</button>
@@ -86,7 +86,7 @@
             <div id="admin-panel" class="hidden mb-10 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-2 h-6 bg-teal-500 rounded-full"></div>
-                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Admin Console (Upload Dokumen)</h3>
+                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Admin Console</h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <div class="space-y-2">
@@ -120,12 +120,8 @@
                 <div class="kse-gradient p-16 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
                     <div class="relative z-10 max-w-3xl">
                         <h2 class="text-5xl font-black mb-6 tracking-tighter uppercase italic leading-none">Profil<br>Perusahaan</h2>
-                        <p class="text-xl font-light opacity-90 leading-relaxed mb-6">
-                            PT Khatulistiwa Sinar Energi (KSE) adalah entitas bisnis yang berdedikasi tinggi dalam menyediakan solusi energi cair berkualitas untuk mendukung laju industri di tanah air, khususnya di wilayah Kalimantan Tengah. 
-                        </p>
-                        <p class="text-xl font-light opacity-90 leading-relaxed">
-                            Sebagai Agen & Distributor BBM Industri resmi, kami memahami bahwa ketepatan waktu distribusi dan transparansi dokumen adalah napas bagi operasional mitra bisnis kami. Dengan manajemen modern, KSE terus bertransformasi menjadi mitra strategis yang tak hanya menjual produk, tapi juga memberikan kepastian pasokan bagi sektor pertambangan, perkebunan, dan konstruksi.
-                        </p>
+                        <p class="text-xl font-light opacity-90 leading-relaxed mb-6">PT Khatulistiwa Sinar Energi (KSE) adalah entitas bisnis yang berdedikasi tinggi dalam menyediakan solusi energi cair berkualitas untuk mendukung laju industri di tanah air.</p>
+                        <p class="text-xl font-light opacity-90 leading-relaxed">Sebagai Agen & Distributor BBM Industri resmi, kami mengedepankan ketepatan waktu distribusi dan transparansi dokumen bagi seluruh mitra strategis kami.</p>
                     </div>
                     <div class="absolute -right-20 -bottom-20 text-[20rem] font-black opacity-10 italic">KSE</div>
                 </div>
@@ -135,17 +131,14 @@
                 <div class="grid md:grid-cols-2 gap-10">
                     <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-lg">
                         <h2 class="text-xs font-black text-teal-600 uppercase tracking-[0.2em] mb-6">Our Vision</h2>
-                        <p class="text-2xl font-bold text-slate-800 italic leading-snug">
-                            "Menjadi pemimpin distribusi energi terpadu di Kalimantan dengan standar pelayanan digital terbaik, mengedepankan integritas, dan memberikan dampak positif bagi pertumbuhan ekonomi daerah."
-                        </p>
+                        <p class="text-2xl font-bold text-slate-800 italic leading-snug">"Menjadi pemimpin distribusi energi terpadu dengan standar pelayanan digital terbaik."</p>
                     </div>
-                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-lg space-y-6">
-                        <h2 class="text-xs font-black text-teal-600 uppercase tracking-[0.2em] mb-2">Our Mission</h2>
+                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-lg">
+                        <h2 class="text-xs font-black text-teal-600 uppercase tracking-[0.2em] mb-6">Our Mission</h2>
                         <ul class="space-y-4 text-slate-600 font-semibold italic">
-                            <li class="flex gap-4 border-b pb-2"><span>1.</span> Memberikan pelayanan distribusi BBM non-subsidi dengan standar kualitas produk yang terjamin.</li>
-                            <li class="flex gap-4 border-b pb-2"><span>2.</span> Menjamin ketepatan waktu pengiriman guna menghindari downtime operasional pada sisi pelanggan.</li>
-                            <li class="flex gap-4 border-b pb-2"><span>3.</span> Mengimplementasikan sistem manajemen dokumen elektronik (E-Doc) untuk transparansi administrasi mitra.</li>
-                            <li class="flex gap-4 border-b pb-2"><span>4.</span> Membina hubungan kerja sama jangka panjang yang saling menguntungkan dengan seluruh stakeholder.</li>
+                            <li>1. Distribusi BBM industri berkualitas tinggi.</li>
+                            <li>2. Jaminan ketepatan waktu pengiriman.</li>
+                            <li>3. Transparansi dokumen lewat sistem E-Doc.</li>
                         </ul>
                     </div>
                 </div>
@@ -154,41 +147,28 @@
             <section id="section-legalitas" class="section">
                 <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-xl max-w-4xl">
                     <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic tracking-tighter border-b pb-4">Dokumen & Legalitas Resmi</h2>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="space-y-4 text-slate-700 font-bold uppercase italic text-sm">
-                            <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">✔️ Izin Niaga Umum Migas</div>
-                            <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">✔️ Izin Transportasi BBM Khusus</div>
-                            <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">✔️ Surat Izin Usaha Perdagangan (SIUP)</div>
-                        </div>
-                        <div class="space-y-4 text-slate-700 font-bold uppercase italic text-sm">
-                            <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">✔️ Tanda Daftar Perusahaan (TDP)</div>
-                            <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">✔️ Sertifikasi Metrologi Legal Bejana Ukur</div>
-                            <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">✔️ NPWP & Pengukuhan PKP Perusahaan</div>
-                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700 font-bold uppercase italic text-sm">
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Niaga Umum Migas</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Transportasi BBM Khusus</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ SIUP & NPWP Aktif</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Sertifikasi Metrologi Legal</div>
                     </div>
-                    <p class="mt-8 text-slate-400 text-xs italic font-medium">Seluruh operasional PT KSE dijalankan di bawah pengawasan regulasi pemerintah yang ketat demi menjamin keamanan dan keabsahan transaksi.</p>
                 </div>
             </section>
 
             <section id="section-armada" class="section">
-                <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-xl">
-                    <h2 class="text-3xl font-bold text-[#064e3b] mb-6 uppercase italic">Infrastruktur Armada</h2>
-                    <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-3xl">
-                        Untuk menjamin distribusi menjangkau area tersulit sekalipun, PT KSE mengoperasikan unit armada Truck Tanki milik sendiri dengan berbagai kapasitas angkut. Setiap unit dilengkapi dengan perlengkapan keamanan standar Migas dan pengukur kapasitas yang telah dikalibrasi (Metrologi).
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-slate-50 p-8 rounded-[2.5rem] text-center border-b-4 border-teal-500">
-                            <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Small Capacity Truck</span>
-                        </div>
-                        <div class="bg-slate-50 p-8 rounded-[2.5rem] text-center border-b-4 border-teal-500">
-                            <span class="block text-4xl font-black text-[#064e3b]">10.000 L</span>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Medium Capacity Truck</span>
-                        </div>
-                        <div class="bg-slate-50 p-8 rounded-[2.5rem] text-center border-b-4 border-teal-500">
-                            <span class="block text-4xl font-black text-[#064e3b]">20.000 L</span>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Large Multi-Axle Truck</span>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
+                        <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Small Truck</span>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
+                        <span class="block text-4xl font-black text-[#064e3b]">10.000 L</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Medium Truck</span>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
+                        <span class="block text-4xl font-black text-[#064e3b]">20.000 L</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 block">Large Truck</span>
                     </div>
                 </div>
             </section>
@@ -199,7 +179,7 @@
 
             <section id="section-documents" class="section">
                 <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
-                    <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50">
+                    <div class="p-8 border-b border-slate-50 bg-slate-50">
                         <h3 id="doc-title" class="font-bold uppercase text-slate-800 tracking-tight">Repository</h3>
                     </div>
                     <div class="overflow-x-auto">
@@ -210,10 +190,10 @@
                 </div>
             </section>
         </div>
-    </nav>
+    </main>
 
     <script>
-        // DATA TETAP (Jangan Diubah)
+        // DATA API & CONFIG (TETAP SAMA)
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -261,30 +241,19 @@
             const fileInput = document.getElementById('file-input');
             const cat = document.getElementById('doc-category').value;
             const target = document.getElementById('manual-uid').value;
-
-            if(!fileInput.files[0] || !target) return alert("Lengkapi data upload!");
-
+            if(!fileInput.files[0] || !target) return alert("Lengkapi data!");
             const confirmSend = confirm(`Kirim ${cat} ke: ${target}?`);
             if(!confirmSend) return;
-
             const btn = document.getElementById('btn-upload');
             btn.innerText = "PROSES...";
             btn.disabled = true;
-
             const file = fileInput.files[0];
             const fileName = `${Date.now()}_${file.name}`;
-
             const { data: sData, error: sErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
             if(sErr) { btn.disabled = false; btn.innerText = "Upload & Kirim"; return alert(sErr.message); }
-
             const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
-
-            const { error: dbErr } = await _supabase.from('documents').insert([
-                { name: file.name, url: urlData.publicUrl, type: cat, user_id: target }
-            ]);
-
-            if(dbErr) alert(dbErr.message);
-            else { alert("BERHASIL!"); location.reload(); }
+            const { error: dbErr } = await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: cat, user_id: target }]);
+            if(dbErr) alert(dbErr.message); else { alert("BERHASIL!"); location.reload(); }
         }
 
         function initHarga() {
@@ -304,6 +273,14 @@
             });
         }
 
+        // --- FIX PREVIEW AGAR TIDAK LANGSUNG DOWNLOAD ---
+        function openPreview(url) {
+            // Membuka file di tab baru, browser akan merender jika PDF/Gambar
+            const win = window.open(url, '_blank');
+            if (win) win.focus();
+            else alert('Mohon izinkan pop-up untuk melihat dokumen');
+        }
+
         async function loadDocuments(cat) {
             showSection('documents');
             document.getElementById('doc-title').innerText = cat;
@@ -316,8 +293,14 @@
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="p-6 font-bold text-slate-700 uppercase italic text-sm tracking-tight">${d.name}</td>
                     <td class="p-6 text-right space-x-3">
-                        <button onclick="window.open('${d.url}')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
-                        <a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover inline-block">Download</a>
+                        <button onclick="openPreview('${d.url}')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
+                        
+                        <a href="${d.url}" download="${d.name}" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover inline-flex items-center gap-2">
+                            <span>Download</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                        </a>
                     </td>
                 </tr>
             `).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>`;
@@ -341,5 +324,3 @@
     </script>
 </body>
 </html>
-
-
