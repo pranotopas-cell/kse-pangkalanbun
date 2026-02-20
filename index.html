@@ -281,11 +281,18 @@ const grid = document.getElementById('harga-grid');
 grid.innerHTML = "";
 
 const wilayahNama = {
-  1: "wilayah 1"
-      "Jawa ,Sumatra ,bali Madura",
-  2: "Wilayah 2-Kalimantan",
-  3: "Wilayah 3-Sulawesi,NTB",
-  4: "wilayah 4-Maluku,NTT,Papua"
+  1: { 
+  title:"wilayah 1"
+  detail:"Jawa ,Sumatra ,bali, Madura"
+  2: {
+  title:"Wilayah 2"
+  detail:"Kalimantan"
+  3: {
+   title:"Wilayah 3"
+   detail:"Sulawesi,NTB"
+  4: {
+     title:"wilayah 4"
+     detail:"Maluku,NTT,Papua"
 };
 
 // fungsi animasi angka
@@ -394,6 +401,7 @@ for(let i = 1; i <= 4; i++) {
     </script>
 </body>
 </html>
+
 
 
 
