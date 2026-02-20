@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE Portal | Corporate Client System</title>
+    <title>KSE-E_document</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -28,9 +28,9 @@
     <main id="page-login" class="page min-h-screen items-center justify-center p-6 bg-[#f8fafc]">
         <div class="container mx-auto flex flex-col md:flex-row items-center gap-16">
             <div class="flex-1 space-y-8 text-center md:text-left">
-                <img src="https://i.ibb.co/qFf0N6p/logo.png" alt="Logo KSE" class="w-48 mx-auto md:mx-0 shadow-lg rounded-xl">
+                <img src="https://i.ibb.co/qFf0N6p/logo.png" alt="Logo.png" class="w-48 mx-auto md:mx-0 shadow-lg rounded-xl">
                 <div>
-                    <h1 class="text-6xl font-extrabold text-[#064e3b] tracking-tighter leading-none">RELIABLE<br><span class="text-teal-600">ENERGY.</span></h1>
+                    <h1 class="text-6xl font-extrabold text-[#064e3b] tracking-tighter leading-none">KHATULISTIWA SINAR ENERGI<br><span class="text-teal-600">Sinergi Mengalirkan Energi</span></h1>
                     <p class="mt-4 text-slate-500 text-xl font-medium italic">"Energi Hebat, Mitra Sahabat."</p>
                 </div>
             </div>
@@ -38,9 +38,9 @@
             <div class="w-full max-w-md bg-white p-10 rounded-[2.5rem] shadow-2xl border border-slate-100">
                 <h2 class="text-2xl font-bold text-slate-800 mb-6">Client Portal</h2>
                 <div class="space-y-4">
-                    <input type="email" id="login-email" placeholder="Email Kantor" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold">
+                    <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold">
                     <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold">
-                    <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-bold uppercase tracking-widest btn-hover shadow-lg">Masuk Sistem</button>
+                    <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-bold uppercase tracking-widest btn-hover shadow-lg">Login</button>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
         <nav class="kse-gradient text-white px-10 py-5 flex justify-between items-center sticky top-0 z-[100] shadow-xl">
             <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('profile')">
                 <img src="https://i.ibb.co/qFf0N6p/logo.png" class="h-10 rounded bg-white p-1">
-                <h1 class="text-xl font-bold tracking-tighter uppercase">PT KSE</h1>
+                <h1 class="text-xl font-bold tracking-tighter uppercase">PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</h1>
             </div>
             
             <div class="flex items-center space-x-8">
@@ -60,7 +60,7 @@
                         <button onclick="showSection('profile')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Profil Perusahaan</button>
                         <button onclick="showSection('visi-misi')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Visi & Misi Kami</button>
                         <button onclick="showSection('legalitas')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Legalitas & Izin</button>
-                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Data Armada Truck</button>
+                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Data Armada </button>
                     </div>
                 </div>
 
@@ -75,7 +75,7 @@
                 </div>
                 
                 <button onclick="showSection('harga')" class="text-xs font-bold uppercase tracking-widest opacity-80 hover:opacity-100">Harga BBM</button>
-                <button onclick="handleLogout()" class="bg-red-500/20 hover:bg-red-600 px-4 py-2 rounded-lg text-xs font-bold transition-all uppercase">Keluar</button>
+                <button onclick="handleLogout()" class="bg-red-500/20 hover:bg-red-600 px-4 py-2 rounded-lg text-xs font-bold transition-all uppercase">sign out</button>
             </div>
         </nav>
 
@@ -110,7 +110,7 @@
                             <option value="">-- History --</option>
                         </select>
                     </div>
-                    <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload & Kirim</button>
+                    <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
                 </div>
             </div>
 
@@ -329,3 +329,4 @@
     </script>
 </body>
 </html>
+
