@@ -1,131 +1,391 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dashboard</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-body{
-font-family:'Plus Jakarta Sans',sans-serif;
-background:#f1f5f9;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSE-E_document</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfdfe; scroll-behavior: smooth; }
+        .kse-gradient { background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); }
+        .page, .section { display: none; }
+        .active { display: block; }
+        .flex-active { display: flex; }
+        .btn-hover { transition: all 0.3s ease; }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .dropdown:hover .dropdown-menu { display: block !important; }
+        .dropdown-menu { display: none; }
+    </style>
 </head>
+<body class="text-slate-900">
 
-<body class="p-6">
+    <main id="page-login" class="page min-h-screen items-center justify-center p-6 bg-[#f8fafc]">
+        <div class="container mx-auto flex flex-col md:flex-row items-center gap-16">
+        <div class="min-h-screen flex items-center justify-center bg-[#f8fafc]">
 
-<div id="harga-grid" class="grid md:grid-cols-4 gap-6"></div>
+  <div class="text-center space-y-6">
 
+    <img src="logo.png" class="w-64 mx-auto">
+    
+    <h1 class="text-5xl font-extrabold text-[#064e3b]">
+      PT.KHATULISTIWA SINAR ENERGI
+    </h1>
 
-<script type="module">
+    <p class="text-2xl font-semibold text-emerald-600">
+      Sinergi Mengalirkan Energi
+    </p>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { doc,onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    <p class="italic text-gray-500">
+      "Energi Hebat, Mitra Sahabat."
+    </p>
 
+  </div>
 
-// ================= FIREBASE CONFIG =================
-const firebaseConfig = {
-apiKey:"APIKEY",
-authDomain:"DOMAIN",
-projectId:"PROJECTID",
-storageBucket:"BUCKET",
-messagingSenderId:"SENDER",
-appId:"APPID"
-};
-
-const app = initializeApp(firebaseConfig);
-const dbFirebase = getFirestore(app);
-
-
-// ================= INIT HARGA =================
-function initHarga(){
-
-const ref = doc(dbFirebase,"hargaBBM","periode");
-
-onSnapshot(ref,(docSnap)=>{
-
-if(docSnap.exists()){
-
-const data = docSnap.data().sekarang || {};
-const grid = document.getElementById('harga-grid');
-grid.innerHTML="";
-
-
-// ===== DATA WILAYAH =====
-const wilayahNama={
-1:{title:"Wilayah 1",detail:"Jawa ,Sumatra ,Bali ,Madura"},
-2:{title:"Wilayah 2",detail:"Kalimantan"},
-3:{title:"Wilayah 3",detail:"Sulawesi ,NTB"},
-4:{title:"Wilayah 4",detail:"Maluku ,NTT ,Papua"}
-};
-
-
-// ===== ANIMASI ANGKA =====
-function animateValue(el,start,end,duration=800){
-let startTime=null;
-function step(t){
-if(!startTime)startTime=t;
-const progress=Math.min((t-startTime)/duration,1);
-const val=Math.floor(progress*(end-start)+start);
-el.textContent="Rp "+val.toLocaleString('id-ID');
-if(progress<1)requestAnimationFrame(step);
-}
-requestAnimationFrame(step);
-}
-
-
-// ===== LOOP CARD =====
-for(let i=1;i<=4;i++){
-
-const h=parseInt(data['wilayah'+i]||0);
-const naik=parseInt(data['kenaikan'+i]||0);
-
-const card=document.createElement("div");
-card.className="bg-white p-8 rounded-[2rem] border border-slate-100 text-center shadow-sm";
-
-card.innerHTML=`
-<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-${wilayahNama[i].title}
-</span>
-
-<div class="text-[11px] text-slate-400 mt-1">
-${wilayahNama[i].detail}
 </div>
+            
+            <div class="bg-white p-6 rounded-2x1 shadow-x1 w-full max-w-sm">
+                <h2 class="font-bold text-slate-800 mb-6 text-center">
+                    Masuk Dashboard
+                </h2>
+                <div class="space-y-4">
+                    <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold">
+                    <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold">
+                    <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-bold uppercase tracking-widest btn-hover shadow-lg">Login</button>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<h3 id="harga${i}" class="text-2xl font-black text-[#064e3b] italic leading-none mt-2">
-Rp 0
-</h3>
+    <main id="page-dashboard" class="page flex-col min-h-screen">
+        <nav class="kse-gradient text-white px-10 py-5 flex justify-between items-center sticky top-0 z-[100] shadow-xl">
+            <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('profile')">
+                <img src="assets/logo-full.png" class="h-10 rounded bg-white p-1">
+                <h1 class="text-xl font-bold tracking-tighter">PT.KHATULISTIWA SINAR ENERGI - Sinergi Mengalirkan Energi</h1>
+            </div>
+            
+            <div class="flex items-center space-x-8">
+                <div class="relative dropdown group">
+                    <button class="text-xs font-bold uppercase tracking-widest opacity-80 hover:opacity-100 py-2">Company Profile ▼</button>
+                    <div class="dropdown-menu absolute right-0 md:left-0 w-56 bg-white border shadow-2xl rounded-2xl py-2 mt-2 z-[110] text-slate-700 font-semibold text-xs overflow-hidden">
+                        <button onclick="showSection('profile')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Profil Perusahaan</button>
+                        <button onclick="showSection('visi-misi')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Visi & Misi Kami</button>
+                        <button onclick="showSection('legalitas')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Legalitas & Izin</button>
+                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Data Armada </button>
+                    </div>
+                </div>
 
-<p id="naik${i}" class="text-xs text-emerald-600 font-semibold mt-2">
-Kenaikan periode ini: Rp 0
-</p>
-`;
+                <div class="relative dropdown group text-teal-300">
+                    <button class="text-xs font-bold uppercase tracking-widest py-2">E-Document ▼</button>
+                    <div class="dropdown-menu absolute right-0 w-56 bg-white border shadow-2xl rounded-2xl py-2 mt-2 z-[110] text-slate-700 font-semibold text-xs overflow-hidden">
+                        <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Purchase Order (PO)</button>
+                        <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Surat Jalan</button>
+                        <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Invoice</button>
+                        <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 text-red-600">Faktur Pajak</button>
+                    </div>
+                </div>
+                
+                <button onclick="showSection('harga')" class="text-xs font-bold uppercase tracking-widest opacity-80 hover:opacity-100">Publish Pertamina</button>
+                <button onclick="handleLogout()" class="bg-red-500/20 hover:bg-red-600 px-4 py-2 rounded-lg text-xs font-bold transition-all uppercase">sign out</button>
+            </div>
+        </nav>
 
-grid.appendChild(card);
+        <div class="container mx-auto px-6 md:px-10 py-10 flex-1">
+            
+            <div id="admin-panel" class="hidden mb-10 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-2 h-6 bg-teal-500 rounded-full"></div>
+                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Admin Dashboard</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">1. Pilih File</label>
+                        <input type="file" id="file-input" class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">2. Kategori</label>
+                        <select id="doc-category" class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
+                            <option value="PURCHASE ORDER">PURCHASE ORDER</option>
+                            <option value="SURAT JALAN">SURAT JALAN</option>
+                            <option value="INVOICE">INVOICE</option>
+                            <option value="FAKTUR PAJAK">FAKTUR PAJAK</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">3. UID/Email Baru</label>
+                        <input type="text" id="manual-uid" placeholder="Ketik email..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client</label>
+                        <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
+                            <option value="">-- History --</option>
+                        </select>
+                    </div>
+                    <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
+                </div>
+            </div>
 
-animateValue(document.getElementById(`harga${i}`),0,h);
-animateValue(document.getElementById(`naik${i}`),0,naik);
+            <section id="section-profile" class="section active">
+                <div class="kse-gradient p-16 rounded-[3rem] text-white shadow-2xl">
+                    <h2 class="text-5xl font-black mb-6 tracking-tighter uppercase italic">Profil Perusahaan</h2>
+                    <p class="text-xl font-light opacity-90 leading-relaxed max-w-3xl">PT Khatulistiwa Sinar Energi adalah perusahaan yang bergerak di bidang penyaluran dan transportasi BBM industri yang beroperasi di wilayah Kalimantan Tengah. Perusahaan hadir sebagai mitra strategis bagi berbagai sektor usaha yang membutuhkan pasokan energi andal, mulai dari pertambangan, perkebunan, konstruksi, hingga industri logistik. </p>
+                </div>
+            </section>
+
+            <section id="section-visi-misi" class="section">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-white p-12 rounded-[2.5rem] shadow-lg">
+                        <h2 class="text-xs font-black text-teal-600 uppercase mb-6">Vision</h2>
+                        <p class="text-2xl font-bold text-slate-800 italic">"Menjadi mitra distribusi energi industri terpercaya di Kalimantan yang dikenal atas profesionalisme, ketepatan layanan, dan integritas operasional."</p>
+                    </div>
+                    <div class="bg-white p-12 rounded-[2.5rem] shadow-lg">
+                        <h2 class="text-xs font-black text-teal-600 uppercase mb-6">Mission</h2>
+                        <p class="font-bold text-slate-600 italic leading-relaxed">Menyediakan layanan penyaluran BBM industri yang cepat, aman, dan akurat.
+
+Membangun kemitraan jangka panjang dengan pelanggan berbasis kepercayaan.
+
+Menjaga standar keselamatan dan kepatuhan regulasi dalam setiap operasional.
+
+Mengoptimalkan sistem logistik untuk efisiensi distribusi energi..</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-legalitas" class="section">
+                <div class="bg-white p-12 rounded-[3rem] shadow-xl max-w-4xl">
+                    <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic border-b pb-4">Legalitas Resmi</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700 font-bold uppercase text-sm italic">
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Niaga Umum Migas</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Izin Transportasi BBM</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ SIUP & NPWP Aktif</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">✔️ Sertifikasi Metrologi</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-armada" class="section">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
+                        <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block">Small Truck</span>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
+                        <span class="block text-4xl font-black text-[#064e3b]">10.000 L</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block">Medium Truck</span>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-4 border-teal-500">
+                        <span class="block text-4xl font-black text-[#064e3b]">20.000 L</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block">Large Truck</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-harga" class="section">
+                <div id="harga-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+            </section>
+
+            <section id="section-documents" class="section">
+                <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
+                    <div class="p-8 border-b border-slate-50 bg-slate-50">
+                        <h3 id="doc-title" class="font-bold uppercase text-slate-800 tracking-tight italic">Repository</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <tbody id="file-table-body" class="divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // CONFIG & API (TETAP SAMA)
+        const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
+        const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
+
+        const firebaseConfig = { projectId: "kse-harga-bbm-update", apiKey: "AIzaSyDenqfuE7Sjy773lp3k7WYh_3RRSr3nojM" };
+        firebase.initializeApp(firebaseConfig);
+        const dbFirebase = firebase.firestore();
+
+        let currentUser = null;
+        let isAdmin = false;
+
+        async function checkAuth() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
+                if(isAdmin) {
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                    loadHistoryReceivers(); 
+                }
+                document.getElementById('page-login').classList.remove('active', 'flex-active');
+                document.getElementById('page-dashboard').classList.add('flex-active');
+                initHarga();
+                showSection('profile');
+            } else {
+                document.getElementById('page-login').classList.add('flex-active');
+            }
+        }
+
+        async function loadHistoryReceivers() {
+            const { data } = await _supabase.from('documents').select('user_id');
+            const uniqueEmails = [...new Set(data?.map(d => d.user_id))];
+            const select = document.getElementById('select-penerima-history');
+            select.innerHTML = '<option value="">-- History --</option>';
+            uniqueEmails.forEach(email => { if(email) select.innerHTML += `<option value="${email}">${email}</option>`; });
+        }
+
+        function syncManualUid(val) { if(val) document.getElementById('manual-uid').value = val; }
+
+        async function startUploadProcess() {
+            const fileInput = document.getElementById('file-input');
+            const cat = document.getElementById('doc-category').value;
+            const target = document.getElementById('manual-uid').value;
+            if(!fileInput.files[0] || !target) return alert("Lengkapi data!");
+            if(!confirm(`Kirim ${cat} ke: ${target}?`)) return;
+
+            const btn = document.getElementById('btn-upload');
+            btn.innerText = "PROSES..."; btn.disabled = true;
+
+            const file = fileInput.files[0];
+            const fileName = `${Date.now()}_${file.name}`;
+            const { data: sData, error: sErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
+            if(sErr) { btn.disabled = false; btn.innerText = "Upload & Kirim"; return alert(sErr.message); }
+
+            const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
+            const { error: dbErr } = await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: cat, user_id: target }]);
+            if(dbErr) alert(dbErr.message); else { alert("BERHASIL!"); location.reload(); }
+        }
+
+        // FUNGSI KHUSUS ADMIN: Hapus File
+        async function deleteFile(id, fileName) {
+            if(!confirm("Yakin ingin menghapus dokumen ini selamanya?")) return;
+            // 1. Hapus dari DB
+            const { error: dbErr } = await _supabase.from('documents').delete().eq('id', id);
+            if(dbErr) alert("Gagal hapus DB"); else location.reload();
+        }
+
+        function initHarga() {
+            dbFirebase.collection("hargaBBM").doc("periode").onSnapshot(doc => {
+                if(doc.exists) {
+                    const data = doc.data().sekarang || {};
+const grid = document.getElementById('harga-grid'); 
+grid.innerHTML = "";
+
+const wilayahNama = {
+  1: "Jawa Madura",
+  2: "Kalimantan",
+  3: "Sulawesi",
+  4: "Papua"
+};
+
+// fungsi animasi angka
+function animateValue(el, start, end, duration = 800) {
+    let startTime = null;
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const value = Math.floor(progress * (end - start) + start);
+        el.textContent = "Rp " + value.toLocaleString('id-ID');
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
 }
 
+for(let i = 1; i <= 4; i++) {
+    const h = parseInt(data['wilayah' + i] || 0);
+    const naik = parseInt(data['kenaikan' + i] || 0);
+
+    const card = document.createElement("div");
+    card.className = "bg-white p-8 rounded-[2rem] border border-slate-100 text-center shadow-sm";
+
+    card.innerHTML = `
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            ${wilayahNama[i]}
+        </span>
+
+        <h3 id="harga${i}" class="text-2xl font-black text-[#064e3b] italic leading-none mt-2">
+            Rp 0
+        </h3>
+
+        <p id="naik${i}" class="text-xs text-emerald-600 font-semibold mt-2">
+            Kenaikan periode ini: Rp 0
+        </p>
+    `;
+
+    grid.appendChild(card);
+
+    animateValue(document.getElementById(`harga${i}`), 0, h);
+    animateValue(document.getElementById(`naik${i}`), 0, naik);
 }
 
-});
+        async function loadDocuments(cat) {
+            showSection('documents');
+            document.getElementById('doc-title').innerText = cat;
+            let q = _supabase.from('documents').select('*').eq('type', cat);
+            if(!isAdmin) q = q.eq('user_id', currentUser.email);
+            
+            const { data } = await q;
+            const tbody = document.getElementById('file-table-body');
+            
+            tbody.innerHTML = data?.length ? data.map(d => {
+                // LOGIKA TOMBOL: Admin (Preview & Hapus) vs User (Preview & Download)
+                let actionButtons = '';
+                
+                if(isAdmin) {
+                    // Tampilan ADMIN: Preview & Hapus
+                    actionButtons = `
+                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
+                        <button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover">Hapus</button>
+                    `;
+                } else {
+                    // Tampilan USER: Preview & Download (Ikon Panah)
+                    actionButtons = `
+                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
+                        <a href="${d.url}" download="${d.name}" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover inline-flex items-center gap-2">
+                            <span>Download</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                        </a>
+                    `;
+                }
 
-}
+                return `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-6">
+                            <div class="font-bold text-slate-700 uppercase italic text-sm tracking-tight">${d.name}</div>
+                            ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold opacity-60">To: ${d.user_id}</div>` : ''}
+                        </td>
+                        <td class="p-6 text-right space-x-3">${actionButtons}</td>
+                    </tr>
+                `;
+            }).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>`;
+        }
 
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+            window.scrollTo(0,0);
+        }
 
-// ===== JALANKAN =====
-initHarga();
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
+            if (error) alert(error.message); else location.reload();
+        }
 
-</script>
-
+        async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
+        window.onload = checkAuth;
+    </script>
 </body>
 </html>
-
