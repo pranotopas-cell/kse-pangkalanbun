@@ -64,7 +64,7 @@
                         <button onclick="showSection('visi-misi')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Visi & Misi Kami</button>
                         <button onclick="showSection('legalitas')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Legalitas & Izin</button>
                         <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Data Armada </button>
-                       <button onclick="showSection('kontak')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Hubungi Kami </button> 
+                        <button onclick="showSection('kontak')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Hubungi Kami</button>
                     </div>
                 </div>
 
@@ -178,29 +178,35 @@
         </div>
     </div>
 
-    <div class="mb-8 flex items-center gap-3">
-        <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
-        <h2 class="text-2xl font-bold text-slate-800 uppercase italic tracking-tight">Hubungi Kami</h2>
+   <section id="section-kontak" class="section">
+    <div class="mb-10 text-center">
+        <h2 class="text-2xl font-bold text-slate-800 uppercase italic">Hubungi Kami</h2>
+        <p class="text-sm text-slate-500 font-semibold italic">Layanan Support & Informasi PT. KSE</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500 transform transition hover:scale-105">
-            <a href="https://wa.me/6281158841410" target="_blank" class="block text-2xl font-black text-[#064e3b] hover:text-emerald-600 transition-colors">0811-5884-1410</a>
-            <span class="text-xs font-bold text-slate-400 uppercase mt-2 block tracking-widest">Hotline / WhatsApp</span>
+            <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">Hotline / WhatsApp</span>
+            <a href="https://wa.me/6281158841410" target="_blank" class="block text-2xl font-black text-[#064e3b] hover:text-emerald-600 transition-colors italic">
+                0811-5884-1410
+            </a>
         </div>
         
         <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500 transform transition hover:scale-105">
-            <span class="block text-sm font-bold text-[#064e3b] break-all leading-relaxed">pt.khatulistiwa.sinar.energi@gmail.com</span>
-            <span class="text-xs font-bold text-slate-400 uppercase mt-2 block tracking-widest">Email Official</span>
+            <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">Email Official</span>
+            <span class="block text-sm font-bold text-[#064e3b] break-all leading-relaxed lowercase">
+                pt.khatulistiwa.sinar.energi@gmail.com
+            </span>
         </div>
 
         <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500 transform transition hover:scale-105">
-            <span class="block text-sm font-bold text-[#064e3b] leading-snug">Jl. H.M Rafi' RT.24<br>Pangkalan Bun</span>
-            <span class="text-xs font-bold text-slate-400 uppercase mt-2 block tracking-widest">Branch Office</span>
+            <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">Branch Office</span>
+            <span class="block text-sm font-bold text-[#064e3b] leading-snug italic">
+                Jl. H.M Rafi' RT.24<br>Pangkalan Bun, Kalteng
+            </span>
         </div>
     </div>
 </section>
-
             <section id="section-harga" class="section">
                 <div class="mb-10 flex items-center justify-between">
                     <div>
@@ -367,6 +373,7 @@
     </script>
 </body>
 </html>
+
 
 
 
