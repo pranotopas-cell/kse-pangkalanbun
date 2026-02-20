@@ -34,7 +34,7 @@
             </div>
             
             <div class="w-full max-w-md glass-card p-10 rounded-[2.5rem] shadow-2xl">
-                <div class="mb-8">
+                <div class="mb-8 text-center">
                     <h2 class="text-2xl font-bold text-slate-800">Client Login</h2>
                     <p class="text-sm text-slate-400 font-medium">Please enter your credentials</p>
                 </div>
@@ -65,8 +65,8 @@
                     </div>
                 </div>
 
-                <div class="relative dropdown">
-                    <button class="text-xs font-bold uppercase tracking-widest text-teal-300">E-Document ▼</button>
+                <div class="relative dropdown text-teal-300">
+                    <button class="text-xs font-bold uppercase tracking-widest">E-Document ▼</button>
                     <div class="dropdown-menu absolute hidden right-0 w-56 bg-white border shadow-2xl rounded-2xl py-2 mt-4 z-50 text-slate-700 font-semibold text-xs">
                         <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b border-slate-50">Purchase Order</button>
                         <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-3 hover:bg-teal-50 border-b border-slate-50">Surat Jalan</button>
@@ -84,15 +84,15 @@
             <div id="admin-panel" class="hidden mb-10 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-2 h-6 bg-teal-500 rounded-full"></div>
-                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Management Console</h3>
+                    <h3 class="font-bold uppercase text-slate-800 tracking-tight">Admin Console</h3>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">Document File</label>
-                        <input type="file" id="file-input" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-semibold border border-dashed border-slate-300">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div class="space-y-2 col-span-1">
+                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">1. File</label>
+                        <input type="file" id="file-input" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-semibold border border-slate-200">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">Classification</label>
+                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">2. Category</label>
                         <select id="doc-category" class="w-full p-3 bg-slate-50 rounded-xl font-semibold text-xs border border-slate-200 outline-none">
                             <option value="PURCHASE ORDER">PURCHASE ORDER</option>
                             <option value="SURAT JALAN">SURAT JALAN</option>
@@ -101,12 +101,16 @@
                         </select>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">Quick Select (History)</label>
-                        <select id="select-penerima-history" onchange="copyEmailToInput(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100 outline-none">
+                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">3. Input UID Baru</label>
+                        <input type="text" id="manual-uid" placeholder="Ketik UID/Email..." class="w-full p-3 bg-slate-50 rounded-xl font-semibold text-xs border border-slate-200 outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold uppercase text-slate-400 ml-1">4. Dari History</label>
+                        <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100 outline-none">
                             <option value="">-- Recent Clients --</option>
                         </select>
                     </div>
-                    <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Execute Upload</button>
+                    <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload & Send</button>
                 </div>
             </div>
 
@@ -122,13 +126,13 @@
 
             <section id="section-visi-misi" class="section">
                 <div class="grid md:grid-cols-2 gap-10">
-                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm text-center">
                         <h2 class="text-sm font-black text-teal-600 uppercase tracking-[0.2em] mb-4">Vision</h2>
-                        <p class="text-3xl font-bold text-slate-800 italic tracking-tight">Leading the energy distribution landscape with unwavering trust and digital excellence.</p>
+                        <p class="text-2xl font-bold text-slate-800 italic">Leading the energy distribution landscape with trust.</p>
                     </div>
-                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm text-center">
                         <h2 class="text-sm font-black text-teal-600 uppercase tracking-[0.2em] mb-4">Mission</h2>
-                        <p class="text-3xl font-bold text-slate-800 italic tracking-tight">Delivering premium fuel with precision timing and total document transparency.</p>
+                        <p class="text-2xl font-bold text-slate-800 italic">Premium fuel precision and total transparency.</p>
                     </div>
                 </div>
             </section>
@@ -136,45 +140,35 @@
             <section id="section-legalitas" class="section">
                 <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-sm max-w-2xl">
                     <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic tracking-tighter">Legal Compliance</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl font-bold text-slate-600">
-                            <span class="text-teal-500">✔</span> Izin Niaga Umum Migas
-                        </div>
-                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl font-bold text-slate-600">
-                            <span class="text-teal-500">✔</span> Izin Transportasi BBM Khusus
-                        </div>
-                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl font-bold text-slate-600">
-                            <span class="text-teal-500">✔</span> Sertifikasi Metrologi Legal
-                        </div>
-                    </div>
+                    <ul class="space-y-4 font-bold text-slate-600">
+                        <li>✔️ Izin Niaga Umum Migas</li>
+                        <li>✔️ Izin Transportasi BBM Khusus</li>
+                        <li>✔️ Sertifikasi Metrologi Legal</li>
+                    </ul>
                 </div>
             </section>
 
             <section id="section-armada" class="section">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 text-center shadow-sm">
-                        <span class="block text-4xl font-black text-[#064e3b]">5K</span>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Capacity (L)</span>
+                        <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Truck Tank</span>
                     </div>
                     <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 text-center shadow-sm">
-                        <span class="block text-4xl font-black text-[#064e3b]">10K</span>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Capacity (L)</span>
+                        <span class="block text-4xl font-black text-[#064e3b]">10.000 L</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Truck Tank</span>
                     </div>
                 </div>
             </section>
 
             <section id="section-harga" class="section">
-                <div class="mb-10 text-center">
-                    <h2 class="text-4xl font-black text-[#064e3b] uppercase italic tracking-tighter">Market Update</h2>
-                    <p class="text-slate-400 font-medium">Real-time daily fuel price publication</p>
-                </div>
                 <div id="harga-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
             </section>
 
             <section id="section-documents" class="section">
                 <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
-                    <div class="p-8 border-b border-slate-50 flex justify-between items-center">
-                        <h3 id="doc-title" class="font-bold uppercase text-slate-800 tracking-tight">Document Repository</h3>
+                    <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50">
+                        <h3 id="doc-title" class="font-bold uppercase text-slate-800 tracking-tight">Repository</h3>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
@@ -187,6 +181,7 @@
     </main>
 
     <script>
+        // DATA API TETAP AMAN (Sesuai Permintaan)
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -205,7 +200,7 @@
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    loadHistoryReceivers(); // Load riwayat saat admin masuk
+                    loadHistoryReceivers(); 
                 }
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
@@ -216,7 +211,7 @@
             }
         }
 
-        // --- FUNGSI RIWAYAT PENERIMA ---
+        // --- FUNGSI RIWAYAT & SYNC ---
         async function loadHistoryReceivers() {
             const { data } = await _supabase.from('documents').select('user_id');
             const uniqueEmails = [...new Set(data?.map(d => d.user_id))];
@@ -227,41 +222,48 @@
             });
         }
 
-        function copyEmailToInput(val) {
-            // Kita simpan value terakhir agar saat prompt muncul bisa di-paste atau jadi default
-            if(val) window.lastSelectedEmail = val;
+        function syncManualUid(val) {
+            if(val) document.getElementById('manual-uid').value = val;
         }
 
         async function startUploadProcess() {
             const fileInput = document.getElementById('file-input');
             const cat = document.getElementById('doc-category').value;
-            if(!fileInput.files[0]) return alert("Please select a file.");
+            const target = document.getElementById('manual-uid').value;
 
-            // Gunakan email terakhir jika ada sebagai default di prompt
-            const defaultEmail = window.lastSelectedEmail || "";
-            const targetEmail = prompt("Target Client Email / UID:", defaultEmail);
-            if(!targetEmail) return;
+            if(!fileInput.files[0]) return alert("Pilih file dulu Bang!");
+            if(!target) return alert("Masukkan UID atau pilih dari History!");
+
+            // POP UP KONFIRMASI
+            const confirmSend = confirm(`Konfirmasi:\nKirim dokumen ${cat} ke penerima: ${target}?`);
+            if(!confirmSend) return;
 
             const btn = document.getElementById('btn-upload');
-            btn.innerText = "EXECUTING...";
+            btn.innerText = "PROCESSING...";
             btn.disabled = true;
 
             const file = fileInput.files[0];
             const fileName = `${Date.now()}_${file.name}`;
 
+            // Upload ke Storage
             const { data: sData, error: sErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
-            if(sErr) { btn.disabled = false; btn.innerText = "Execute Upload"; return alert(sErr.message); }
+            if(sErr) { 
+                btn.disabled = false; 
+                btn.innerText = "Upload & Send"; 
+                return alert("Storage Error: " + sErr.message); 
+            }
 
             const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
 
+            // Simpan ke Database
             const { error: dbErr } = await _supabase.from('documents').insert([
-                { name: file.name, url: urlData.publicUrl, type: cat, user_id: targetEmail }
+                { name: file.name, url: urlData.publicUrl, type: cat, user_id: target }
             ]);
 
-            if(dbErr) alert(dbErr.message);
-            else {
-                alert("Success! Document linked to: " + targetEmail);
-                loadHistoryReceivers(); // Update dropdown history
+            if(dbErr) {
+                alert("Database Error: " + dbErr.message);
+            } else {
+                alert("BERHASIL! Dokumen tersimpan di history untuk: " + target);
                 location.reload();
             }
         }
@@ -274,8 +276,8 @@
                     grid.innerHTML = "";
                     for(let i=1; i<=4; i++) {
                         const h = parseInt(data['wilayah'+i] || 0);
-                        grid.innerHTML += `<div class="bg-white p-8 rounded-[2rem] border border-slate-100 text-center">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Region ${i}</span>
+                        grid.innerHTML += `<div class="bg-white p-8 rounded-[2rem] border border-slate-100 text-center shadow-sm">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Region ${i}</span>
                             <h3 class="text-2xl font-black text-[#064e3b] italic leading-none mt-2">Rp ${h.toLocaleString('id-ID')}</h3>
                         </div>`;
                     }
@@ -285,7 +287,7 @@
 
         async function loadDocuments(cat) {
             showSection('documents');
-            document.getElementById('doc-title').innerText = "Repository: " + cat;
+            document.getElementById('doc-title').innerText = "Category: " + cat;
             let q = _supabase.from('documents').select('*').eq('type', cat);
             if(!isAdmin) q = q.eq('user_id', currentUser.email);
             
@@ -293,13 +295,13 @@
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="p-6 font-bold text-slate-700 uppercase italic text-sm tracking-tight">${d.name}</td>
+                    <td class="p-6 font-bold text-slate-700 uppercase italic text-sm">${d.name}</td>
                     <td class="p-6 text-right space-x-3">
-                        <button onclick="window.open('${d.url}')" class="text-[10px] font-bold uppercase tracking-widest text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50 transition-all">Preview</button>
-                        <a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest btn-hover inline-block">Download</a>
+                        <button onclick="window.open('${d.url}')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50">Preview</button>
+                        <a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase inline-block">Download</a>
                     </td>
                 </tr>
-            `).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase tracking-widest italic text-sm">No data available in this category</td></tr>`;
+            `).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">No documents found.</td></tr>`;
         }
 
         function showSection(id) {
@@ -320,3 +322,4 @@
     </script>
 </body>
 </html>
+
