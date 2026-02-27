@@ -265,8 +265,11 @@
                 document.getElementById('display-user-email').innerText = currentUser.email;
                 
                 if(isAdmin) {
+                    // RESET INPUT SETIAP LOGIN
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    document.getElementById('manual-uid').value = "";
+                    document.getElementById('manual-uid').value = ""; // Pastikan UUID kosong
+                    document.getElementById('file-input').value = ""; // Pastikan input file kosong
+                    document.getElementById('select-penerima-history').value = ""; // Reset dropdown
                     loadHistoryReceivers(); 
                 }
                 
@@ -343,7 +346,6 @@
             tbody.innerHTML = data?.length ? data.map(d => {
                 let btnAction = isAdmin ? `<button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Download</a>`;
                 
-                // Perbaikan Preview: Menggunakan d.url langsung secara eksplisit
                 return `<tr class="hover:bg-slate-50 transition-colors"><td class="p-6">
                         <div class="font-bold text-slate-700 uppercase italic text-sm">${d.name}</div>
                         ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">Target UUID: ${d.user_id}</div>` : ''}
@@ -407,7 +409,6 @@
                     client_email: foundEmail 
                 }]);
                 
-                // Tambahan Notifikasi Sukses
                 alert("Dokumen berhasil diunggah dan disimpan!");
                 location.reload();
             } catch (err) {
