@@ -257,16 +257,20 @@
         let isAdmin = false;
 
         async function checkAuth() {
-            initHarga(); // Panggil harga agar muncul di login page dulu
+            initHarga();
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 document.getElementById('display-user-email').innerText = currentUser.email;
+                
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
+                    // Reset input manual jadi kosong
+                    document.getElementById('manual-uid').value = "";
                     loadHistoryReceivers(); 
                 }
+                
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
                 showSection('profile');
@@ -308,7 +312,6 @@
                         const h = parseInt(data['wilayah' + i] || 0);
                         const hargaFormatted = "Rp " + h.toLocaleString('id-ID');
 
-                        // Update Halaman Login (Kecil & Rata)
                         if (loginDisplay) {
                             loginDisplay.innerHTML += `
                                 <div class="text-center p-2 border border-slate-100 rounded-lg bg-white/50">
@@ -317,7 +320,6 @@
                                 </div>`;
                         }
 
-                        // Update Halaman Dashboard (Besar)
                         if (dashboardGrid) {
                             const card = document.createElement("div");
                             card.className = "bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-xl transform transition hover:scale-105";
@@ -330,18 +332,6 @@
                     }
                 }
             });
-        }
-
-        function animateValue(el, start, end, duration = 800) {
-            let startTime = null;
-            function step(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const progress = Math.min((timestamp - startTime) / duration, 1);
-                const value = Math.floor(progress * (end - start) + start);
-                el.textContent = "Rp " + value.toLocaleString('id-ID');
-                if (progress < 1) requestAnimationFrame(step);
-            }
-            requestAnimationFrame(step);
         }
 
         async function loadDocuments(cat) {
@@ -365,11 +355,19 @@
         async function loadHistoryReceivers() {
             const { data } = await _supabase.from('documents').select('user_id, client_email');
             const historyMap = new Map();
-            data?.forEach(item => { if(item.user_id && item.client_email) historyMap.set(item.user_id, item.client_email); });
+            
+            // Simpan unik UUID dan Email
+            data?.forEach(item => { 
+                if(item.user_id && item.client_email) historyMap.set(item.user_id, item.client_email); 
+            });
+
             const select = document.getElementById('select-penerima-history');
+            select.innerHTML = '<option value="">-- Cari UUID --</option>'; // Reset dropdown
+
             historyMap.forEach((email, uuid) => {
                 const opt = document.createElement('option');
                 opt.value = uuid;
+                // Format history: Email (8 digit awal UUID...)
                 opt.textContent = `${email} (${uuid.substring(0,8)}...)`;
                 select.appendChild(opt);
             });
@@ -381,21 +379,37 @@
             const fileInput = document.getElementById('file-input');
             const targetUuid = document.getElementById('manual-uid').value; 
             if(!fileInput.files[0] || !targetUuid) return alert("Lengkapi file dan UUID!");
+            
             const btn = document.getElementById('btn-upload'); 
             btn.innerText = "PROSES..."; 
             btn.disabled = true;
+            
             const file = fileInput.files[0];
             const fileName = `${targetUuid}_${Date.now()}_${file.name}`;
+            
             try {
+                // Proses Upload
                 await _supabase.storage.from('kse-files').upload(fileName, file);
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
+                
+                // Cari apakah UUID ini sudah punya email di history dropdown
+                const historySelect = document.getElementById('select-penerima-history');
+                let foundEmail = "Client UUID";
+                for (let i = 0; i < historySelect.options.length; i++) {
+                    if (historySelect.options[i].value === targetUuid) {
+                        foundEmail = historySelect.options[i].text.split(' (')[0];
+                        break;
+                    }
+                }
+
                 await _supabase.from('documents').insert([{ 
                     name: file.name, 
                     url: urlData.publicUrl, 
                     type: document.getElementById('doc-category').value, 
                     user_id: targetUuid,
-                    client_email: targetUuid.includes('@') ? targetUuid : "Client UUID" 
+                    client_email: foundEmail 
                 }]);
+                
                 location.reload();
             } catch (err) {
                 alert("Error: " + err.message);
