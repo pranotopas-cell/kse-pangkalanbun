@@ -205,6 +205,7 @@
     </main>
 
     <script>
+        // CONFIGURATIONS
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -216,14 +217,15 @@
         let currentUser = null;
         let isAdmin = false;
 
+        // AUTH CHECK
         async function checkAuth() {
             initHarga();
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                // LOGIN ADMIN TETAP AWAL
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 document.getElementById('display-user-email').innerText = currentUser.email;
+                
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     loadClientsFromSupabase(); 
@@ -235,28 +237,36 @@
             }
         }
 
-        // PERBAIKAN: AMBIL DATA DARI TABEL DOCUMENTS UNTUK DROPDOWN CLIENT
+        // LOAD CLIENTS FROM PROFILES TABLE
         async function loadClientsFromSupabase() {
-            const { data, error } = await _supabase.from('documents').select('user_id, client_email');
+            const { data, error } = await _supabase.from('profiles').select('id, email');
             const select = document.getElementById('select-penerima-auth');
-            const uniqueMap = new Map();
             if(data) {
-                data.forEach(item => { if(item.user_id && item.client_email) uniqueMap.set(item.user_id, item.client_email); });
-                uniqueMap.forEach((email, uuid) => {
+                select.innerHTML = '<option value="">-- Cari Nama Client --</option>';
+                data.forEach(item => {
                     const opt = document.createElement('option');
-                    opt.value = uuid; opt.textContent = email;
+                    opt.value = item.id; 
+                    opt.textContent = item.email;
                     select.appendChild(opt);
                 });
             }
         }
 
+        // LOGIN HANDLER
         async function handleLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
-            if (error) alert("Login Gagal!"); else location.reload();
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password: pass });
+            if (error) {
+                alert("Login Gagal!");
+            } else {
+                // Catat profile saat login agar Admin bisa melihat di dropdown
+                await _supabase.from('profiles').upsert({ id: data.user.id, email: data.user.email });
+                location.reload();
+            }
         }
 
+        // FIREBASE PRICE UPDATER
         function initHarga() {
             dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
@@ -279,6 +289,7 @@
             });
         }
 
+        // UPLOAD PROCESS
         async function startUploadProcess() {
             const fIn = document.getElementById('file-input');
             const uid = document.getElementById('manual-uid').value.trim();
@@ -289,27 +300,37 @@
             btn.innerText = "PROSES..."; btn.disabled = true;
 
             const file = fIn.files[0];
-            const fileName = `${uid}_${Date.now()}_${file.name}`;
+            const fileName = `${uid}/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
             
             try {
-                await _supabase.storage.from('kse-files').upload(fileName, file);
+                const { error: storageErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
+                if(storageErr) throw storageErr;
+
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 let emailLabel = sel.selectedIndex > 0 ? sel.options[sel.selectedIndex].text : "Manual Client";
 
-                await _supabase.from('documents').insert([{ 
+                const { error: dbErr } = await _supabase.from('documents').insert([{ 
                     name: file.name, url: urlData.publicUrl, 
                     type: document.getElementById('doc-category').value, 
                     user_id: uid, client_email: emailLabel
                 }]);
+                if(dbErr) throw dbErr;
+
                 alert("Berhasil!"); location.reload();
-            } catch (err) { alert(err.message); btn.innerText = "Upload"; btn.disabled = false; }
+            } catch (err) { 
+                alert(err.message); 
+                btn.innerText = "Upload"; 
+                btn.disabled = false; 
+            }
         }
 
+        // DOCUMENT VIEW HANDLER
         async function loadDocuments(cat) {
             showSection('documents');
             document.getElementById('doc-title').innerText = cat;
             let q = _supabase.from('documents').select('*').eq('type', cat).order('created_at', { ascending: false });
             if(!isAdmin) q = q.eq('user_id', currentUser.id); 
+            
             const { data } = await q;
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
@@ -325,6 +346,7 @@
                 </tr>`).join('') : '<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>';
         }
 
+        // UTILITIES
         async function deleteDoc(id) { if(confirm("Hapus?")) { await _supabase.from('documents').delete().eq('id', id); location.reload(); } }
         function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById('section-' + id).classList.add('active'); window.scrollTo(0,0); }
         function handleLogout() { _supabase.auth.signOut(); location.reload(); }
