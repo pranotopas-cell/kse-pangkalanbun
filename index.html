@@ -117,12 +117,12 @@
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase text-slate-400">3. Target UUID Client</label>
-                        <input type="text" id="manual-uid" placeholder="Tempel UUID..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
+                        <input type="text" id="manual-uid" placeholder="UUID akan muncul di sini..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200" readonly>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client</label>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client (Supabase)</label>
                         <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
-                            <option value="">-- Pilih UUID --</option>
+                            <option value="">-- Pilih Client --</option>
                         </select>
                     </div>
                     <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
@@ -134,12 +134,7 @@
                     <div class="relative z-10">
                         <h2 class="text-5xl font-black mb-8 tracking-tighter uppercase italic">Profil Perusahaan</h2>
                         <div class="space-y-6 text-lg md:text-xl font-light opacity-95 leading-relaxed max-w-4xl">
-                            <p>
-                                <strong>PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas bisnis yang berdedikasi tinggi dalam manajemen logistik dan penyaluran bahan bakar minyak (BBM) non-subsidi untuk sektor industri. Berbasis strategis di Kalimantan Tengah, kami memahami bahwa energi adalah urat nadi bagi kemajuan setiap operasional industri.
-                            </p>
-                            <p>
-                                Kami hadir untuk menjembatani kebutuhan energi dengan standar pelayanan kelas dunia. Dengan dukungan infrastruktur armada yang modern dan manajemen rantai pasok yang terintegrasi, KSE berkomitmen untuk memastikan setiap liter BBM sampai ke titik lokasi pelanggan dengan kualitas terjaga, volume yang akurat, dan ketepatan waktu yang maksimal.
-                            </p>
+                            <p><strong>PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas bisnis yang berdedikasi tinggi dalam manajemen logistik dan penyaluran BBM non-subsidi untuk sektor industri.</p>
                         </div>
                     </div>
                 </div>
@@ -149,17 +144,7 @@
                 <div class="grid md:grid-cols-2 gap-10">
                     <div class="bg-white p-12 rounded-[2.5rem] shadow-xl border-t-8 border-emerald-600">
                         <h2 class="text-sm font-black text-emerald-600 uppercase mb-6 tracking-widest italic">— Vision</h2>
-                        <p class="text-3xl font-bold text-slate-800 italic leading-snug">
-                            "Menjadi Perusahaan Nasional dalam distribusi energi BBM industri terdepan di wilayah Kalimantan yang diakui atas keunggulan operasional dan integritas."
-                        </p>
-                    </div>
-                    <div class="bg-white p-12 rounded-[2.5rem] shadow-xl border-t-8 border-emerald-800">
-                        <h2 class="text-sm font-black text-emerald-800 uppercase mb-6 tracking-widest italic">— Mission</h2>
-                        <ul class="space-y-4 text-slate-600 font-medium italic text-lg">
-                            <li class="flex gap-4"><span class="text-emerald-600 font-bold">01.</span><span>Menjamin ketersediaan pasokan energi yang stabil dan berkualitas.</span></li>
-                            <li class="flex gap-4"><span class="text-emerald-600 font-bold">02.</span><span>Menerapkan teknologi logistik terkini untuk transparansi pengiriman.</span></li>
-                            <li class="flex gap-4"><span class="text-emerald-600 font-bold">03.</span><span>Menjaga kepatuhan penuh terhadap regulasi lingkungan dan hukum energi.</span></li>
-                        </ul>
+                        <p class="text-3xl font-bold text-slate-800 italic">"Menjadi Perusahaan Nasional dalam distribusi energi BBM industri terdepan..."</p>
                     </div>
                 </div>
             </section>
@@ -167,65 +152,26 @@
             <section id="section-legalitas" class="section">
                 <div class="bg-white p-12 rounded-[3rem] shadow-xl max-w-4xl border-l-8 border-teal-600">
                     <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic border-b pb-4">Legalitas & Izin</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700 font-bold uppercase text-sm italic">
-                        <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-3"><span class="text-emerald-600 text-xl">✓</span> Izin Mitra Penyalur dari BPU INU</div>
-                        <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-3"><span class="text-emerald-600 text-xl">✓</span> Izin Khusus B3 dan Kartu Pengawasan Transportasi BBM Industri</div>
-                        <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-3"><span class="text-emerald-600 text-xl">✓</span> Sertifikasi Standar Quantity Ukuran dari Metrologi</div>
-                        <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-3"><span class="text-emerald-600 text-xl">✓</span> Dokumen Lingkungan & K3S serta Amdalnet</div>
-                    </div>
                 </div>
             </section>
 
             <section id="section-armada" class="section">
-                <div class="mb-8 flex items-center gap-3">
-                    <div class="w-2 h-8 bg-teal-600 rounded-full"></div>
-                    <h2 class="text-2xl font-bold text-slate-800 uppercase italic tracking-tight">Kesiapan Armada Logistik</h2>
-                </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-teal-500 transform transition hover:scale-105">
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-teal-500">
                         <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
-                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block tracking-widest">Small Tank Truck</span>
-                    </div>
-                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-teal-500 transform transition hover:scale-105">
-                        <span class="block text-4xl font-black text-[#064e3b]">10.000 L</span>
-                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block tracking-widest">Medium Tank Truck</span>
-                    </div>
-                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-teal-500 transform transition hover:scale-105">
-                        <span class="block text-4xl font-black text-[#064e3b]">20.000 L</span>
-                        <span class="text-xs font-bold text-slate-400 uppercase mt-2 block tracking-widest">Large Tank Truck</span>
                     </div>
                 </div>
             </section>
 
             <section id="section-kontak" class="section">
-                <div class="mb-10 text-center">
-                    <h2 class="text-2xl font-bold text-slate-800 uppercase italic">Hubungi Kami</h2>
-                    <p class="text-sm text-slate-500 font-semibold italic">Layanan Support & Informasi PT. KSE</p>
-                </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500 transform transition hover:scale-105">
-                        <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">Hotline / WhatsApp</span>
-                        <a href="https://wa.me/6281158841410" target="_blank" class="block text-2xl font-black text-[#064e3b] hover:text-emerald-600 transition-colors italic">0811-5884-1410</a>
-                    </div>
-                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500 transform transition hover:scale-105">
-                        <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">Email Official</span>
-                        <span class="block text-sm font-bold text-[#064e3b] break-all leading-relaxed lowercase">pt.khatulistiwa.sinar.energi@gmail.com</span>
-                    </div>
-                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500 transform transition hover:scale-105">
-                        <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">Branch Office</span>
-                        <span class="block text-sm font-bold text-[#064e3b] leading-snug italic">Jl. H.M Rafi' RT.24<br>Pangkalan Bun, Kalteng</span>
+                    <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500">
+                        <a href="https://wa.me/6281158841410" target="_blank" class="block text-2xl font-black text-[#064e3b]">0811-5884-1410</a>
                     </div>
                 </div>
             </section>
             
             <section id="section-harga" class="section">
-                <div class="mb-10 flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800 uppercase italic">Publish Harga Keekonomian Pertamina Patra Niaga</h2>
-                        <p class="text-sm text-slate-500 font-semibold italic">Update otomatis sesuai periode resmi Pertamina Patra Niaga</p>
-                    </div>
-                    <div class="h-10 w-10 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
-                </div>
                 <div id="harga-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6"></div>
             </section>
 
@@ -265,11 +211,8 @@
                 document.getElementById('display-user-email').innerText = currentUser.email;
                 
                 if(isAdmin) {
-                    // RESET SEMUA INPUT ADMIN SAAT LOGIN
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    document.getElementById('manual-uid').value = ""; 
-                    document.getElementById('file-input').value = ""; 
-                    document.getElementById('select-penerima-history').value = ""; 
+                    document.getElementById('manual-uid').value = ""; // Pastikan kosong saat login
                     loadHistoryReceivers(); 
                 }
                 
@@ -289,46 +232,22 @@
             if (error) alert("Gagal masuk: " + error.message); else location.reload();
         }
 
-        function handleForgotPassword() {
-            const email = document.getElementById('login-email').value;
-            if(!email) return alert("Masukkan email Anda terlebih dahulu di kotak email!");
-            alert("Sistem akan mengirimkan tautan atur ulang password ke: " + email);
-            _supabase.auth.resetPasswordForEmail(email);
-        }
-
         async function handleLogout() { await _supabase.auth.signOut(); location.reload(); }
 
         function initHarga() {
             dbFirebase.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
                     const data = doc.data().sekarang || {};
-                    const loginDisplay = document.querySelector('#login-harga-display .grid');
                     const dashboardGrid = document.getElementById('harga-grid'); 
-                    
                     const wilayahNama = { 1: "JAMALI", 2: "KALIMANTAN", 3: "SULAWESI", 4: "PAPUA" };
-                    
-                    if (loginDisplay) loginDisplay.innerHTML = "";
-                    if (dashboardGrid) dashboardGrid.innerHTML = "";
-
-                    for(let i = 1; i <= 4; i++) {
-                        const h = parseInt(data['wilayah' + i] || 0);
-                        const hargaFormatted = "Rp " + h.toLocaleString('id-ID');
-
-                        if (loginDisplay) {
-                            loginDisplay.innerHTML += `
-                                <div class="text-center p-2 border border-slate-100 rounded-lg bg-white/50">
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase">${wilayahNama[i]}</p>
-                                    <p class="text-xs font-black text-[#064e3b]">${hargaFormatted}</p>
-                                </div>`;
-                        }
-
-                        if (dashboardGrid) {
+                    if (dashboardGrid) {
+                        dashboardGrid.innerHTML = "";
+                        for(let i = 1; i <= 4; i++) {
+                            const h = parseInt(data['wilayah' + i] || 0);
                             const card = document.createElement("div");
-                            card.className = "bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-xl transform transition hover:scale-105";
-                            card.innerHTML = `
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${wilayahNama[i]}</span>
-                                <h3 class="text-3xl font-black text-[#064e3b] italic leading-none mt-4">${hargaFormatted}</h3>
-                                <p class="text-[10px] text-emerald-600 font-bold mt-4 uppercase">Update Terkini</p>`;
+                            card.className = "bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-lg";
+                            card.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase">${wilayahNama[i]}</span>
+                                              <h3 class="text-2xl font-black text-[#064e3b] mt-2">Rp ${h.toLocaleString('id-ID')}</h3>`;
                             dashboardGrid.appendChild(card);
                         }
                     }
@@ -343,51 +262,55 @@
             if(!isAdmin) q = q.eq('user_id', currentUser.id); 
             const { data } = await q;
             const tbody = document.getElementById('file-table-body');
+            
             tbody.innerHTML = data?.length ? data.map(d => {
-                let btnAction = isAdmin ? `<button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Download</a>`;
+                // Perbaikan Tombol Preview & Aksi (Admin/Client)
+                let btnAction = isAdmin ? 
+                    `<button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : 
+                    `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase inline-block">Download</a>`;
                 
                 return `<tr class="hover:bg-slate-50 transition-colors"><td class="p-6">
                         <div class="font-bold text-slate-700 uppercase italic text-sm">${d.name}</div>
-                        ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">Target UUID: ${d.user_id}</div>` : ''}
+                        ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">Client: ${d.client_email}</div>` : ''}
                         </td><td class="p-6 text-right space-x-3">
-                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg">Preview</button>
+                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50">Preview</button>
                         ${btnAction}</td></tr>`;
             }).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>`;
         }
 
+        // HISTORY: Menyimpan UUID dan Email dari Supabase
         async function loadHistoryReceivers() {
             const { data } = await _supabase.from('documents').select('user_id, client_email');
             const historyMap = new Map();
             
+            // Masukkan ke Map agar unik berdasarkan UUID
             data?.forEach(item => { 
-                if(item.user_id && item.client_email) historyMap.set(item.user_id, item.client_email); 
+                if(item.user_id && item.client_email) {
+                    historyMap.set(item.user_id, item.client_email); 
+                }
             });
 
             const select = document.getElementById('select-penerima-history');
-            select.innerHTML = '<option value="">-- Pilih UUID --</option>'; 
+            select.innerHTML = '<option value="">-- Pilih Client --</option>'; 
 
             historyMap.forEach((email, uuid) => {
                 const opt = document.createElement('option');
                 opt.value = uuid;
-                // Tetap tampilkan email di dropdown sebagai panduan admin
+                // Menampilkan Email (UUID) agar admin mudah mengenali
                 opt.textContent = `${email} (${uuid.substring(0,8)}...)`;
                 select.appendChild(opt);
             });
         }
 
-        // PERBAIKAN: Hanya masukkan UUID ke input teks, buang email-nya
+        // Fungsi Sinkronisasi: Masukkan UUID saja ke kolom target
         function syncManualUid(val) { 
-            if(val) {
-                document.getElementById('manual-uid').value = val; 
-            } else {
-                document.getElementById('manual-uid').value = "";
-            }
+            document.getElementById('manual-uid').value = val || ""; 
         }
 
         async function startUploadProcess() {
             const fileInput = document.getElementById('file-input');
             const targetUuid = document.getElementById('manual-uid').value; 
-            if(!fileInput.files[0] || !targetUuid) return alert("Lengkapi file dan UUID!");
+            if(!fileInput.files[0] || !targetUuid) return alert("Pilih file dan tentukan Target Client (bisa lewat History)!");
             
             const btn = document.getElementById('btn-upload'); 
             btn.innerText = "PROSES..."; 
@@ -400,8 +323,9 @@
                 await _supabase.storage.from('kse-files').upload(fileName, file);
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 
+                // Cari email dari dropdown history untuk disimpan kembali ke DB
                 const historySelect = document.getElementById('select-penerima-history');
-                let foundEmail = "Client UUID";
+                let foundEmail = "Client User";
                 for (let i = 0; i < historySelect.options.length; i++) {
                     if (historySelect.options[i].value === targetUuid) {
                         foundEmail = historySelect.options[i].text.split(' (')[0];
@@ -417,7 +341,7 @@
                     client_email: foundEmail 
                 }]);
                 
-                alert("Dokumen berhasil diunggah dan disimpan!");
+                alert("Berhasil!");
                 location.reload();
             } catch (err) {
                 alert("Error: " + err.message);
@@ -430,7 +354,8 @@
 
         function showSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + id).classList.add('active');
+            const target = document.getElementById('section-' + id);
+            if(target) target.classList.add('active');
             window.scrollTo(0,0);
         }
 
