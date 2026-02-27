@@ -266,7 +266,6 @@
                 
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    // Reset input manual jadi kosong
                     document.getElementById('manual-uid').value = "";
                     loadHistoryReceivers(); 
                 }
@@ -343,6 +342,8 @@
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => {
                 let btnAction = isAdmin ? `<button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Download</a>`;
+                
+                // Perbaikan Preview: Menggunakan d.url langsung secara eksplisit
                 return `<tr class="hover:bg-slate-50 transition-colors"><td class="p-6">
                         <div class="font-bold text-slate-700 uppercase italic text-sm">${d.name}</div>
                         ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">Target UUID: ${d.user_id}</div>` : ''}
@@ -356,18 +357,16 @@
             const { data } = await _supabase.from('documents').select('user_id, client_email');
             const historyMap = new Map();
             
-            // Simpan unik UUID dan Email
             data?.forEach(item => { 
                 if(item.user_id && item.client_email) historyMap.set(item.user_id, item.client_email); 
             });
 
             const select = document.getElementById('select-penerima-history');
-            select.innerHTML = '<option value="">-- Cari UUID --</option>'; // Reset dropdown
+            select.innerHTML = '<option value="">-- Cari UUID --</option>'; 
 
             historyMap.forEach((email, uuid) => {
                 const opt = document.createElement('option');
                 opt.value = uuid;
-                // Format history: Email (8 digit awal UUID...)
                 opt.textContent = `${email} (${uuid.substring(0,8)}...)`;
                 select.appendChild(opt);
             });
@@ -388,11 +387,9 @@
             const fileName = `${targetUuid}_${Date.now()}_${file.name}`;
             
             try {
-                // Proses Upload
                 await _supabase.storage.from('kse-files').upload(fileName, file);
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 
-                // Cari apakah UUID ini sudah punya email di history dropdown
                 const historySelect = document.getElementById('select-penerima-history');
                 let foundEmail = "Client UUID";
                 for (let i = 0; i < historySelect.options.length; i++) {
@@ -410,6 +407,8 @@
                     client_email: foundEmail 
                 }]);
                 
+                // Tambahan Notifikasi Sukses
+                alert("Dokumen berhasil diunggah dan disimpan!");
                 location.reload();
             } catch (err) {
                 alert("Error: " + err.message);
