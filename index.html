@@ -113,14 +113,14 @@
                         </select>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">3. Client (Pilih Nama)</label>
+                        <label class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest italic">3. Client (Pilih Nama)</label>
                         <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
                             <option value="">-- Cari Nama Client --</option>
                         </select>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">4. Target UUID</label>
-                        <input type="text" id="manual-uid" placeholder="UUID otomatis terisi..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200 outline-none focus:border-teal-500 font-bold">
+                        <input type="text" id="manual-uid" placeholder="UUID otomatis..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200 outline-none focus:border-teal-500 font-bold">
                     </div>
                     <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
                 </div>
@@ -205,7 +205,6 @@
     </main>
 
     <script>
-        // CONFIG
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -222,11 +221,12 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
+                // LOGIN ADMIN TETAP AWAL
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 document.getElementById('display-user-email').innerText = currentUser.email;
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    loadHistoryFromAuth(); 
+                    loadClientsFromSupabase(); 
                 }
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
@@ -235,9 +235,9 @@
             }
         }
 
-        async function loadHistoryFromAuth() {
-            // Mengambil history client dari tabel documents
-            const { data } = await _supabase.from('documents').select('user_id, client_email');
+        // PERBAIKAN: AMBIL DATA DARI TABEL DOCUMENTS UNTUK DROPDOWN CLIENT
+        async function loadClientsFromSupabase() {
+            const { data, error } = await _supabase.from('documents').select('user_id, client_email');
             const select = document.getElementById('select-penerima-auth');
             const uniqueMap = new Map();
             if(data) {
@@ -294,12 +294,12 @@
             try {
                 await _supabase.storage.from('kse-files').upload(fileName, file);
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
-                let email = sel.selectedIndex > 0 ? sel.options[sel.selectedIndex].text : "New Client";
+                let emailLabel = sel.selectedIndex > 0 ? sel.options[sel.selectedIndex].text : "Manual Client";
 
                 await _supabase.from('documents').insert([{ 
                     name: file.name, url: urlData.publicUrl, 
                     type: document.getElementById('doc-category').value, 
-                    user_id: uid, client_email: email
+                    user_id: uid, client_email: emailLabel
                 }]);
                 alert("Berhasil!"); location.reload();
             } catch (err) { alert(err.message); btn.innerText = "Upload"; btn.disabled = false; }
