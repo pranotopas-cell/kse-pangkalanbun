@@ -30,8 +30,15 @@
             <div class="text-center space-y-6 flex-1">
                 <img src="logo.png" class="w-64 mx-auto">
                 <h1 class="text-5xl font-extrabold text-[#064e3b]">PT.KHATULISTIWA SINAR ENERGI</h1>
-                <p class="text-2xl font-semibold text-emerald-600">Sinergi Mengalirkan Energi</p>
-                <p class="italic text-gray-500">"Energi Hebat, Mitra Sahabat, Harga Hemat"</p>
+                <div class="space-y-1">
+                    <p class="text-2xl font-semibold text-emerald-600">Sinergi Mengalirkan Energi</p>
+                    <p class="italic text-gray-500 text-sm">"Energi Hebat, Mitra Sahabat, Harga Hemat"</p>
+                </div>
+
+                <div id="login-harga-display" class="pt-4 max-w-xl mx-auto">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 border-t border-slate-200 pt-6">
+                        </div>
+                </div>
             </div>
             
             <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm border border-slate-100">
@@ -109,13 +116,13 @@
                         </select>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400">3. Target Email Client</label>
-                        <input type="text" id="manual-uid" placeholder="Ketik email..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">3. Target UUID Client</label>
+                        <input type="text" id="manual-uid" placeholder="Tempel UUID..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200">
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client</label>
                         <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
-                            <option value="">-- History --</option>
+                            <option value="">-- Cari UUID --</option>
                         </select>
                     </div>
                     <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
@@ -250,6 +257,7 @@
         let isAdmin = false;
 
         async function checkAuth() {
+            initHarga(); // Panggil harga agar muncul di login page dulu
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
@@ -261,7 +269,6 @@
                 }
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
-                initHarga();
                 showSection('profile');
             } else {
                 document.getElementById('page-login').classList.add('flex-active');
@@ -289,19 +296,37 @@
             dbFirebase.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
                     const data = doc.data().sekarang || {};
-                    const grid = document.getElementById('harga-grid'); 
-                    grid.innerHTML = "";
-                    const wilayahNama = { 1: "Jawa-Bali-Madura", 2: "Kalimantan", 3: "Sulawesi", 4: "Papua & Maluku" };
+                    const loginDisplay = document.querySelector('#login-harga-display .grid');
+                    const dashboardGrid = document.getElementById('harga-grid'); 
+                    
+                    const wilayahNama = { 1: "JAMALI", 2: "KALIMANTAN", 3: "SULAWESI", 4: "PAPUA" };
+                    
+                    if (loginDisplay) loginDisplay.innerHTML = "";
+                    if (dashboardGrid) dashboardGrid.innerHTML = "";
+
                     for(let i = 1; i <= 4; i++) {
                         const h = parseInt(data['wilayah' + i] || 0);
-                        const card = document.createElement("div");
-                        card.className = "bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-xl transform transition hover:scale-105";
-                        card.innerHTML = `
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${wilayahNama[i]}</span>
-                            <h3 id="harga${i}" class="text-3xl font-black text-[#064e3b] italic leading-none mt-4">Rp 0</h3>
-                            <p class="text-[10px] text-emerald-600 font-bold mt-4 uppercase">Update Terkini</p>`;
-                        grid.appendChild(card);
-                        animateValue(document.getElementById(`harga${i}`), 0, h);
+                        const hargaFormatted = "Rp " + h.toLocaleString('id-ID');
+
+                        // Update Halaman Login (Kecil & Rata)
+                        if (loginDisplay) {
+                            loginDisplay.innerHTML += `
+                                <div class="text-center p-2 border border-slate-100 rounded-lg bg-white/50">
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase">${wilayahNama[i]}</p>
+                                    <p class="text-xs font-black text-[#064e3b]">${hargaFormatted}</p>
+                                </div>`;
+                        }
+
+                        // Update Halaman Dashboard (Besar)
+                        if (dashboardGrid) {
+                            const card = document.createElement("div");
+                            card.className = "bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-xl transform transition hover:scale-105";
+                            card.innerHTML = `
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${wilayahNama[i]}</span>
+                                <h3 class="text-3xl font-black text-[#064e3b] italic leading-none mt-4">${hargaFormatted}</h3>
+                                <p class="text-[10px] text-emerald-600 font-bold mt-4 uppercase">Update Terkini</p>`;
+                            dashboardGrid.appendChild(card);
+                        }
                     }
                 }
             });
@@ -323,14 +348,14 @@
             showSection('documents');
             document.getElementById('doc-title').innerText = cat;
             let q = _supabase.from('documents').select('*').eq('type', cat).order('created_at', { ascending: false });
-            if(!isAdmin) q = q.eq('user_id', currentUser.email);
+            if(!isAdmin) q = q.eq('user_id', currentUser.id); 
             const { data } = await q;
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => {
                 let btnAction = isAdmin ? `<button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Download</a>`;
                 return `<tr class="hover:bg-slate-50 transition-colors"><td class="p-6">
                         <div class="font-bold text-slate-700 uppercase italic text-sm">${d.name}</div>
-                        ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">To: ${d.user_id}</div>` : ''}
+                        ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">Target UUID: ${d.user_id}</div>` : ''}
                         </td><td class="p-6 text-right space-x-3">
                         <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg">Preview</button>
                         ${btnAction}</td></tr>`;
@@ -338,47 +363,42 @@
         }
 
         async function loadHistoryReceivers() {
-            const { data } = await _supabase.from('documents').select('user_id');
-            const uniqueEmails = [...new Set(data?.map(d => d.user_id))];
+            const { data } = await _supabase.from('documents').select('user_id, client_email');
+            const historyMap = new Map();
+            data?.forEach(item => { if(item.user_id && item.client_email) historyMap.set(item.user_id, item.client_email); });
             const select = document.getElementById('select-penerima-history');
-            uniqueEmails.forEach(email => { if(email) select.innerHTML += `<option value="${email}">${email}</option>`; });
+            historyMap.forEach((email, uuid) => {
+                const opt = document.createElement('option');
+                opt.value = uuid;
+                opt.textContent = `${email} (${uuid.substring(0,8)}...)`;
+                select.appendChild(opt);
+            });
         }
 
         function syncManualUid(val) { if(val) document.getElementById('manual-uid').value = val; }
 
-        // --- FUNGSI UPLOAD YANG SUDAH DIGABUNG DENGAN PENAMAAN EMAIL ---
         async function startUploadProcess() {
             const fileInput = document.getElementById('file-input');
-            const target = document.getElementById('manual-uid').value; // Ini email client
-            if(!fileInput.files[0] || !target) return alert("Lengkapi data!");
-            
+            const targetUuid = document.getElementById('manual-uid').value; 
+            if(!fileInput.files[0] || !targetUuid) return alert("Lengkapi file dan UUID!");
             const btn = document.getElementById('btn-upload'); 
             btn.innerText = "PROSES..."; 
             btn.disabled = true;
-
             const file = fileInput.files[0];
-            
-            // Nama file di Storage menjadi: "email_waktu_namafile"
-            const fileName = `${target}_${Date.now()}_${file.name}`;
-
+            const fileName = `${targetUuid}_${Date.now()}_${file.name}`;
             try {
-                // 1. Upload file fisik ke Storage
                 await _supabase.storage.from('kse-files').upload(fileName, file);
-                
-                // 2. Ambil URL Publiknya
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
-                
-                // 3. Simpan catatan ke tabel Database
                 await _supabase.from('documents').insert([{ 
                     name: file.name, 
                     url: urlData.publicUrl, 
                     type: document.getElementById('doc-category').value, 
-                    user_id: target 
+                    user_id: targetUuid,
+                    client_email: targetUuid.includes('@') ? targetUuid : "Client UUID" 
                 }]);
-
                 location.reload();
             } catch (err) {
-                alert("Terjadi kesalahan: " + err.message);
+                alert("Error: " + err.message);
                 btn.innerText = "Upload";
                 btn.disabled = false;
             }
