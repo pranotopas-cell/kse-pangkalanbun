@@ -122,7 +122,7 @@
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client</label>
                         <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
-                            <option value="">-- Cari UUID --</option>
+                            <option value="">-- Pilih UUID --</option>
                         </select>
                     </div>
                     <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
@@ -265,11 +265,11 @@
                 document.getElementById('display-user-email').innerText = currentUser.email;
                 
                 if(isAdmin) {
-                    // RESET INPUT SETIAP LOGIN
+                    // RESET SEMUA INPUT ADMIN SAAT LOGIN
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    document.getElementById('manual-uid').value = ""; // Pastikan UUID kosong
-                    document.getElementById('file-input').value = ""; // Pastikan input file kosong
-                    document.getElementById('select-penerima-history').value = ""; // Reset dropdown
+                    document.getElementById('manual-uid').value = ""; 
+                    document.getElementById('file-input').value = ""; 
+                    document.getElementById('select-penerima-history').value = ""; 
                     loadHistoryReceivers(); 
                 }
                 
@@ -364,17 +364,25 @@
             });
 
             const select = document.getElementById('select-penerima-history');
-            select.innerHTML = '<option value="">-- Cari UUID --</option>'; 
+            select.innerHTML = '<option value="">-- Pilih UUID --</option>'; 
 
             historyMap.forEach((email, uuid) => {
                 const opt = document.createElement('option');
                 opt.value = uuid;
+                // Tetap tampilkan email di dropdown sebagai panduan admin
                 opt.textContent = `${email} (${uuid.substring(0,8)}...)`;
                 select.appendChild(opt);
             });
         }
 
-        function syncManualUid(val) { if(val) document.getElementById('manual-uid').value = val; }
+        // PERBAIKAN: Hanya masukkan UUID ke input teks, buang email-nya
+        function syncManualUid(val) { 
+            if(val) {
+                document.getElementById('manual-uid').value = val; 
+            } else {
+                document.getElementById('manual-uid').value = "";
+            }
+        }
 
         async function startUploadProcess() {
             const fileInput = document.getElementById('file-input');
