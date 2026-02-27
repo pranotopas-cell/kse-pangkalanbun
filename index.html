@@ -28,7 +28,7 @@
     <main id="page-login" class="page min-h-screen items-center justify-center p-6 bg-[#f8fafc]">
         <div class="container mx-auto flex flex-col md:flex-row items-center gap-16">
             <div class="text-center space-y-6 flex-1">
-                <img src="logo.png" class="w-64 mx-auto">
+                <img src="logo.png" class="w-64 mx-auto" alt="Logo KSE">
                 <h1 class="text-5xl font-extrabold text-[#064e3b]">PT.KHATULISTIWA SINAR ENERGI</h1>
                 <div class="space-y-1">
                     <p class="text-2xl font-semibold text-emerald-600">Sinergi Mengalirkan Energi</p>
@@ -36,8 +36,7 @@
                 </div>
 
                 <div id="login-harga-display" class="pt-4 max-w-xl mx-auto">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 border-t border-slate-200 pt-6">
-                        </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 border-t border-slate-200 pt-6"></div>
                 </div>
             </div>
             
@@ -47,7 +46,6 @@
                     <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold transition-all">
                     <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold transition-all">
                     <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-bold uppercase tracking-widest btn-hover shadow-lg">Login</button>
-                    
                     <div class="text-center pt-2">
                         <button onclick="handleForgotPassword()" class="text-xs font-bold text-slate-400 hover:text-emerald-600 transition-colors uppercase tracking-widest">Lupa Password?</button>
                     </div>
@@ -70,7 +68,7 @@
                         <button onclick="showSection('profile')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Profil Perusahaan</button>
                         <button onclick="showSection('visi-misi')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Visi & Misi Kami</button>
                         <button onclick="showSection('legalitas')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Legalitas & Izin</button>
-                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Data Armada </button>
+                        <button onclick="showSection('armada')" class="block w-full text-left px-6 py-4 hover:bg-teal-50 border-b border-slate-50">Data Armada </button>
                         <button onclick="showSection('kontak')" class="block w-full text-left px-6 py-4 hover:bg-teal-50">Hubungi Kami</button>
                     </div>
                 </div>
@@ -117,12 +115,12 @@
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase text-slate-400">3. Target UUID Client</label>
-                        <input type="text" id="manual-uid" placeholder="UUID akan muncul di sini..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200" readonly>
+                        <input type="text" id="manual-uid" placeholder="Isi UUID manual / History..." class="w-full p-3 bg-slate-50 rounded-xl text-xs border border-slate-200 outline-none focus:border-teal-500 font-semibold">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client (Supabase)</label>
-                        <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100">
-                            <option value="">-- Pilih Client --</option>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">4. History Client</label>
+                        <select id="select-penerima-history" onchange="syncManualUid(this.value)" class="w-full p-3 bg-teal-50 text-teal-700 rounded-xl font-bold text-xs border border-teal-100 cursor-pointer">
+                            <option value="">-- Pilih UUID --</option>
                         </select>
                     </div>
                     <button onclick="startUploadProcess()" id="btn-upload" class="bg-[#064e3b] text-white p-4 rounded-xl font-bold text-xs uppercase btn-hover shadow-lg">Upload</button>
@@ -152,13 +150,14 @@
             <section id="section-legalitas" class="section">
                 <div class="bg-white p-12 rounded-[3rem] shadow-xl max-w-4xl border-l-8 border-teal-600">
                     <h2 class="text-3xl font-bold text-[#064e3b] mb-8 uppercase italic border-b pb-4">Legalitas & Izin</h2>
+                    <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-3 font-bold uppercase text-sm italic">✓ Izin Mitra Penyalur Resmi</div>
                 </div>
             </section>
 
             <section id="section-armada" class="section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-teal-500">
-                        <span class="block text-4xl font-black text-[#064e3b]">5.000 L</span>
+                        <span class="block text-4xl font-black text-[#064e3b]">5.000 L - 20.000 L</span>
                     </div>
                 </div>
             </section>
@@ -166,6 +165,7 @@
             <section id="section-kontak" class="section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-8 rounded-[2.5rem] text-center shadow-lg border-b-8 border-emerald-500">
+                        <span class="text-xs font-bold text-slate-400 uppercase mb-4 block tracking-widest">WhatsApp</span>
                         <a href="https://wa.me/6281158841410" target="_blank" class="block text-2xl font-black text-[#064e3b]">0811-5884-1410</a>
                     </div>
                 </div>
@@ -191,6 +191,7 @@
     </main>
 
     <script>
+        // CONFIG
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -212,7 +213,7 @@
                 
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
-                    document.getElementById('manual-uid').value = ""; // Pastikan kosong saat login
+                    document.getElementById('manual-uid').value = ""; // Pastikan kosong di awal
                     loadHistoryReceivers(); 
                 }
                 
@@ -244,11 +245,11 @@
                         dashboardGrid.innerHTML = "";
                         for(let i = 1; i <= 4; i++) {
                             const h = parseInt(data['wilayah' + i] || 0);
-                            const card = document.createElement("div");
-                            card.className = "bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-lg";
-                            card.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase">${wilayahNama[i]}</span>
-                                              <h3 class="text-2xl font-black text-[#064e3b] mt-2">Rp ${h.toLocaleString('id-ID')}</h3>`;
-                            dashboardGrid.appendChild(card);
+                            dashboardGrid.innerHTML += `
+                                <div class="bg-white p-8 rounded-[2.5rem] border-b-8 border-emerald-500 text-center shadow-xl">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase">${wilayahNama[i]}</span>
+                                    <h3 class="text-2xl font-black text-[#064e3b] mt-2 italic">Rp ${h.toLocaleString('id-ID')}</h3>
+                                </div>`;
                         }
                     }
                 }
@@ -264,53 +265,49 @@
             const tbody = document.getElementById('file-table-body');
             
             tbody.innerHTML = data?.length ? data.map(d => {
-                // Perbaikan Tombol Preview & Aksi (Admin/Client)
                 let btnAction = isAdmin ? 
                     `<button onclick="deleteFile('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : 
-                    `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase inline-block">Download</a>`;
+                    `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Download</a>`;
                 
-                return `<tr class="hover:bg-slate-50 transition-colors"><td class="p-6">
-                        <div class="font-bold text-slate-700 uppercase italic text-sm">${d.name}</div>
-                        ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">Client: ${d.client_email}</div>` : ''}
-                        </td><td class="p-6 text-right space-x-3">
-                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50">Preview</button>
-                        ${btnAction}</td></tr>`;
+                return `<tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-6">
+                            <div class="font-bold text-slate-700 uppercase italic text-sm">${d.name}</div>
+                            ${isAdmin ? `<div class="text-[9px] text-teal-600 font-bold">UUID: ${d.user_id}</div>` : ''}
+                        </td>
+                        <td class="p-6 text-right space-x-3">
+                            <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg hover:bg-teal-50">Preview</button>
+                            ${btnAction}
+                        </td></tr>`;
             }).join('') : `<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>`;
         }
 
-        // HISTORY: Menyimpan UUID dan Email dari Supabase
+        // HISTORY: Ambil data unik UUID & Email dari tabel documents Supabase
         async function loadHistoryReceivers() {
             const { data } = await _supabase.from('documents').select('user_id, client_email');
             const historyMap = new Map();
-            
-            // Masukkan ke Map agar unik berdasarkan UUID
             data?.forEach(item => { 
-                if(item.user_id && item.client_email) {
-                    historyMap.set(item.user_id, item.client_email); 
-                }
+                if(item.user_id && item.client_email) historyMap.set(item.user_id, item.client_email); 
             });
 
             const select = document.getElementById('select-penerima-history');
-            select.innerHTML = '<option value="">-- Pilih Client --</option>'; 
-
+            select.innerHTML = '<option value="">-- Pilih UUID --</option>'; 
             historyMap.forEach((email, uuid) => {
                 const opt = document.createElement('option');
                 opt.value = uuid;
-                // Menampilkan Email (UUID) agar admin mudah mengenali
                 opt.textContent = `${email} (${uuid.substring(0,8)}...)`;
                 select.appendChild(opt);
             });
         }
 
-        // Fungsi Sinkronisasi: Masukkan UUID saja ke kolom target
+        // Sinkronkan pilihan dropdown ke input manual
         function syncManualUid(val) { 
-            document.getElementById('manual-uid').value = val || ""; 
+            if(val) document.getElementById('manual-uid').value = val; 
         }
 
         async function startUploadProcess() {
             const fileInput = document.getElementById('file-input');
-            const targetUuid = document.getElementById('manual-uid').value; 
-            if(!fileInput.files[0] || !targetUuid) return alert("Pilih file dan tentukan Target Client (bisa lewat History)!");
+            const targetUuid = document.getElementById('manual-uid').value.trim(); 
+            if(!fileInput.files[0] || !targetUuid) return alert("Pilih file dan isi Target UUID!");
             
             const btn = document.getElementById('btn-upload'); 
             btn.innerText = "PROSES..."; 
@@ -323,7 +320,7 @@
                 await _supabase.storage.from('kse-files').upload(fileName, file);
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 
-                // Cari email dari dropdown history untuk disimpan kembali ke DB
+                // Cari email dari history jika ada
                 const historySelect = document.getElementById('select-penerima-history');
                 let foundEmail = "Client User";
                 for (let i = 0; i < historySelect.options.length; i++) {
@@ -341,7 +338,7 @@
                     client_email: foundEmail 
                 }]);
                 
-                alert("Berhasil!");
+                alert("Upload Berhasil!");
                 location.reload();
             } catch (err) {
                 alert("Error: " + err.message);
@@ -350,13 +347,19 @@
             }
         }
 
-        async function deleteFile(id) { if(confirm("Hapus?")) { await _supabase.from('documents').delete().eq('id', id); location.reload(); } }
+        async function deleteFile(id) { if(confirm("Hapus Dokumen?")) { await _supabase.from('documents').delete().eq('id', id); location.reload(); } }
 
         function showSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('section-' + id);
-            if(target) target.classList.add('active');
+            document.getElementById('section-' + id).classList.add('active');
             window.scrollTo(0,0);
+        }
+
+        function handleForgotPassword() {
+            const email = document.getElementById('login-email').value;
+            if(!email) return alert("Ketik email Anda di kotak login dulu!");
+            _supabase.auth.resetPasswordForEmail(email);
+            alert("Cek email Anda untuk instruksi reset password.");
         }
 
         window.onload = checkAuth;
