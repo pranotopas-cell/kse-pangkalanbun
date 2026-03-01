@@ -33,7 +33,7 @@
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 22px; color: #000; letter-spacing: 1px; }
 
         .table-po { width: 100%; border-collapse: collapse; margin: 25px 0; border: 1px solid #000; }
-        .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 10px; }
+        .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; }
         .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
         .table-clean td { border: none !important; padding: 2px 0; }
 
@@ -41,8 +41,7 @@
         .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -2px; }
 
         .footer-kse { position: absolute; bottom: 15mm; width: calc(100% - 30mm); border-top: 1px solid #ccc; padding-top: 10px; }
-        .footer-content { display: flex; justify-content: space-between; align-items: flex-end; }
-
+        
         @media print {
             @page { size: A4; margin: 0; }
             .control-nav, .input-sidebar { display: none !important; }
@@ -56,7 +55,7 @@
 <div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2">
         <a href="index.html" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-house"></i> HOME</a>
-        <button class="btn btn-outline-secondary btn-sm" onclick="initAutoNumber()"><i class="bi bi-arrow-clockwise"></i> SYNC DATA</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="initAutoNumber()"><i class="bi bi-arrow-clockwise"></i> SYNC PO</button>
     </div>
     <div class="d-flex gap-2">
         <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
@@ -71,28 +70,27 @@
             <h6 class="fw-bold mb-3 text-success"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
             <div class="row g-2">
                 <div class="col-12 mb-2">
-                    <label class="fw-bold text-primary">Nomor PO (Auto-Romawi)</label>
+                    <label class="fw-bold text-primary">Nomor PO</label>
                     <input type="text" id="in_no" class="form-control form-control-sm fw-bold border-primary" oninput="updateView()">
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Tanggal</label>
                     <input type="date" id="in_tgl_raw" class="form-control form-control-sm" oninput="handleDateChange()">
-                    <input type="hidden" id="in_tgl">
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Customer</label>
                     <input list="list_cust" id="in_cust" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_cust">
                         <option value="PT. SINARINDO SUKSES SELALU">
-                        <option value="PT.TELADAN MAKMUR JAYA">
+                        <option value="PT. TELADAN MAKMUR JAYA">
                     </datalist>
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Alamat</label>
-                    <input list="list_addr" id="in_addr" class="form-control form-control-sm" oninput="updateView()">
+                    <textarea list="list_addr" id="in_addr" class="form-control form-control-sm" rows="2" oninput="updateView()"></textarea>
                     <datalist id="list_addr">
-                        <option value="Jl. Ahmad Yani Km 2,2 No,02 Pangkalan Bun Kalimantan tengah up: Bpk.Riky">
-                        <option value="Jl. Hksn No.27 alalak Utara, Banjarmasin Up : Ibu Amel">
+                        <option value="Jl. Hksn no 23, Alalak Utara, Banjarmasin - Up : Ibu Amel">
+                        <option value="Jl. Ahmad Yani Km 2,2 No 02 Pangkalan Bun, Kalimantan Tengah - Up : Bpk Riky">
                     </datalist>
                 </div>
                 <hr>
@@ -106,12 +104,26 @@
                 </div>
                 <div class="col-6 mb-2">
                     <label class="fw-bold text-success">Harga Jual (Net)</label>
-                    <input type="number" id="in_perltr" class="form-control form-control-sm" oninput="calculate()">
+                    <input type="number" id="in_perltr" class="form-control form-control-sm border-success" oninput="calculate()">
                 </div>
                 <div class="col-6 mb-2">
                     <label class="fw-bold">Qty (Ltr)</label>
                     <input type="number" id="in_qty" class="form-control form-control-sm" oninput="calculate()">
                 </div>
+                
+                <div class="col-4 mb-2">
+                    <label class="fw-bold small">PPN %</label>
+                    <input type="number" step="0.1" id="in_ppn_pct" class="form-control form-control-sm" value="11" oninput="calculate()">
+                </div>
+                <div class="col-4 mb-2">
+                    <label class="fw-bold small">PBBKB %</label>
+                    <input type="number" step="0.1" id="in_pbbkb_pct" class="form-control form-control-sm" value="7.5" oninput="calculate()">
+                </div>
+                <div class="col-4 mb-2">
+                    <label class="fw-bold small">PPH %</label>
+                    <input type="number" step="0.1" id="in_pph_pct" class="form-control form-control-sm" value="0.3" oninput="calculate()">
+                </div>
+
                 <div class="col-12 mb-3">
                     <label class="fw-bold">Sistem Pembayaran</label>
                     <input list="list_pay" id="in_pay" class="form-control form-control-sm" oninput="updateView()">
@@ -143,12 +155,12 @@
                     <div class="col-5">
                         <table class="table table-sm table-clean mb-0">
                             <tr>
-                                <td width="45%">TANGGAL / <span class="lang-en d-inline">Date</span></td>
+                                <td width="45%">TANGGAL</td>
                                 <td width="5%">:</td>
                                 <td id="out_tgl"></td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">NOMOR PO / <span class="lang-en d-inline">PO</span></td>
+                                <td class="fw-bold">NOMOR PO</td>
                                 <td>:</td>
                                 <td id="out_no" class="fw-bold"></td>
                             </tr>
@@ -159,19 +171,19 @@
                 <table class="table-po">
                     <thead>
                         <tr>
-                            <th>NAMA BARANG</th>
-                            <th>QUANTITY</th>
+                            <th width="25%">NAMA BARANG</th>
+                            <th width="10%">QTY (Ltr)</th>
                             <th>HARGA DASAR</th>
-                            <th>PPN 11%</th>
-                            <th>PBBKB 7.5%</th>
-                            <th>PPH 0.3%</th>
+                            <th id="th_ppn">PPN</th>
+                            <th id="th_pbbkb">PBBKB</th>
+                            <th id="th_pph">PPH</th>
                             <th>PER LTR</th>
-                            <th>TOTAL (IDR)</th>
+                            <th width="15%">TOTAL</th>
                         </tr>
                     </thead>
-                    <tbody id="po_body">
+                    <tbody>
                         <tr>
-                            <td class="fw-bold text-uppercase" id="out_barang"></td>
+                            <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 10px;"></td>
                             <td class="text-center" id="out_qty"></td>
                             <td class="text-center" id="out_harga"></td>
                             <td class="text-center" id="out_ppn"></td>
@@ -188,7 +200,7 @@
                 </table>
 
                 <div class="mt-4">
-                    <p>Sistem pembayaran : <b id="out_pay"></b></p>
+                    <p class="mb-1">Sistem pembayaran : <b id="out_pay"></b></p>
                     <p>Demikian kami sampaikan, atas kerjasamanya kami ucapkan terima kasih.</p>
                 </div>
 
@@ -197,7 +209,7 @@
                         <p class="mb-0 italic">regard,</p>
                         <p class="fw-bold mb-2">PT. KHATULISTIWA SINAR ENERGI</p>
                         <div style="height: 80px;">
-                            <img src="ttd.png" style="height: 70px;" onerror="this.style.display='none'">
+                            <img src="ttd.png" style="height: 75px;" onerror="this.style.display='none'">
                         </div>
                         <p class="fw-bold text-decoration-underline mb-0">SUPRANOTO</p>
                         <p>Direktur</p>
@@ -205,11 +217,11 @@
                 </div>
 
                 <div class="footer-kse">
-                    <div class="footer-content d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-end">
                         <img id="qr_footer" src="" width="45" height="45">
                         <div class="text-end">
                             <b style="color: var(--kse-dark);">PT. KHATULISTIWA SINAR ENERGI</b><br>
-                            <span style="font-size: 9px;">Mitra Penyalur dan Transportir BBM Industri</span>
+                            <span style="font-size: 8px;">Mitra Penyalur dan Transportir BBM Industri</span>
                         </div>
                     </div>
                 </div>
@@ -234,67 +246,64 @@
                 .select('*', { count: 'exact', head: true })
                 .eq('jenis', 'PURCHASE ORDER');
 
-            if (error) throw error;
-
             const nextNum = (count || 0) + 1;
-            const monthIdx = selectedDate.getMonth();
-            const year = selectedDate.getFullYear();
+            const m = selectedDate.getMonth();
+            const y = selectedDate.getFullYear();
             
-            // Generate Nomor dengan Romawi sesuai Bulan Terpilih
-            const newNo = `${nextNum.toString().padStart(3, '0')}/KSE-PO/${monthRomawi[monthIdx]}/${year}`;
+            const newNo = `${nextNum.toString().padStart(3, '0')}/KSE-PO/${monthRomawi[m]}/${y}`;
             document.getElementById('in_no').value = newNo;
             updateView();
-        } catch (err) { console.error("Sync Error:", err); }
+        } catch (err) { console.error(err); }
     }
 
-    // 2. HANDLE TANGGAL & UPDATE DISPLAY
+    // 2. HANDLE TANGGAL
     function handleDateChange() {
-        const dateVal = document.getElementById('in_tgl_raw').value;
-        if (!dateVal) return;
-
-        const d = new Date(dateVal);
-        const day = d.getDate().toString().padStart(2, '0');
-        const monthName = monthsIndo[d.getMonth()];
-        const year = d.getFullYear();
-
-        // Update format tanggal Indonesia
-        const formatted = `${day} ${monthName} ${year}`;
-        document.getElementById('in_tgl').value = formatted;
-        
-        // Update Nomor PO Romawi otomatis jika ganti bulan
+        const val = document.getElementById('in_tgl_raw').value;
+        if (!val) return;
+        const d = new Date(val);
+        const formatted = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
+        document.getElementById('out_tgl').innerText = formatted;
         initAutoNumber(d);
-        updateView();
     }
 
-    // 3. LOGIKA HITUNGAN
+    // 3. LOGIKA HITUNGAN DENGAN PAJAK VARIABEL
     function calculate() {
         const qty = parseFloat(document.getElementById('in_qty').value) || 0;
         const hargaNet = parseFloat(document.getElementById('in_perltr').value) || 0;
-        
-        const totalPajakPct = 0.188; // 11% + 7.5% + 0.3%
+        const p_ppn = parseFloat(document.getElementById('in_ppn_pct').value) || 0;
+        const p_pbbkb = parseFloat(document.getElementById('in_pbbkb_pct').value) || 0;
+        const p_pph = parseFloat(document.getElementById('in_pph_pct').value) || 0;
+
+        const totalPajakPct = (p_ppn + p_pbbkb + p_pph) / 100;
         const hargaDasar = hargaNet / (1 + totalPajakPct);
-        const ppn = hargaDasar * 0.11;
-        const pbbkb = hargaDasar * 0.075;
-        const pph = hargaDasar * 0.003;
+        
+        const v_ppn = hargaDasar * (p_ppn / 100);
+        const v_pbbkb = hargaDasar * (p_pbbkb / 100);
+        const v_pph = hargaDasar * (p_pph / 100);
         const total = qty * hargaNet;
 
         const f = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        
+        document.getElementById('th_ppn').innerText = `PPN ${p_ppn}%`;
+        document.getElementById('th_pbbkb').innerText = `PBBKB ${p_pbbkb}%`;
+        document.getElementById('th_pph').innerText = `PPH ${p_pph}%`;
+
         document.getElementById('out_qty').innerText = qty.toLocaleString('id-ID');
         document.getElementById('out_harga').innerText = hargaDasar.toLocaleString('id-ID', f);
-        document.getElementById('out_ppn').innerText = ppn.toLocaleString('id-ID', f);
-        document.getElementById('out_pbbkb').innerText = pbbkb.toLocaleString('id-ID', f);
-        document.getElementById('out_pph').innerText = pph.toLocaleString('id-ID', f);
+        document.getElementById('out_ppn').innerText = v_ppn.toLocaleString('id-ID', f);
+        document.getElementById('out_pbbkb').innerText = v_pbbkb.toLocaleString('id-ID', f);
+        document.getElementById('out_pph').innerText = v_pph.toLocaleString('id-ID', f);
         document.getElementById('out_perltr').innerText = hargaNet.toLocaleString('id-ID', f);
         
         const gTotal = Math.round(total).toLocaleString('id-ID');
         document.getElementById('out_total').innerText = gTotal;
         document.getElementById('out_grandtotal').innerText = gTotal;
         updateQRCode();
+        updateView();
     }
 
     function updateView() {
         document.getElementById('out_no').innerText = document.getElementById('in_no').value;
-        document.getElementById('out_tgl').innerText = document.getElementById('in_tgl').value;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
@@ -309,37 +318,38 @@
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
         btn.innerText = "SAVING..."; btn.disabled = true;
-        
-        const payload = {
-            jenis: "PURCHASE ORDER",
-            nomor: document.getElementById('in_no').value,
-            tanggal: document.getElementById('in_tgl_raw').value,
-            tujuan: document.getElementById('in_cust').value,
-            nominal: parseFloat(document.getElementById('out_grandtotal').innerText.replace(/\./g, '')),
-            client_email: "system@kse.co.id"
-        };
-
-        const { error } = await _supabase.from('eforms').insert([payload]);
-        if (error) alert("Gagal: " + error.message);
-        else { alert("Berhasil Simpan!"); initAutoNumber(new Date(document.getElementById('in_tgl_raw').value)); }
-        
+        try {
+            const payload = {
+                jenis: "PURCHASE ORDER",
+                nomor: document.getElementById('in_no').value,
+                tanggal: document.getElementById('in_tgl_raw').value,
+                tujuan: document.getElementById('in_cust').value,
+                nominal: parseFloat(document.getElementById('out_grandtotal').innerText.replace(/\./g, '')),
+                client_email: "system@kse.co.id"
+            };
+            const { error } = await _supabase.from('eforms').insert([payload]);
+            if (error) throw error;
+            alert("Berhasil Disimpan!");
+            initAutoNumber(new Date(document.getElementById('in_tgl_raw').value));
+        } catch (e) { alert(e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA';
         btn.disabled = false;
     }
 
     function downloadPDF() {
         const element = document.getElementById('main-doc');
-        const opt = { margin: 0, filename: `PO-${document.getElementById('in_no').value}.pdf`, jsPDF: { unit: 'mm', format: 'a4' } };
+        const opt = { margin: 0, filename: `PO-${document.getElementById('in_no').value}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } };
         html2pdf().set(opt).from(element).save();
     }
 
     window.onload = () => {
         const now = new Date();
-        // Set default date input
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        document.getElementById('in_cust').value = "PT. NAMA CUSTOMER";
+        // Defaults
+        document.getElementById('in_cust').value = "PT. SINARINDO SUKSES SELALU";
+        document.getElementById('in_addr').value = "Jl Ahmad Yani Km 2,2 No.02 Pangkalan Bun Kalimantan Tengah Up : Riky";
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_perltr').value = 15500;
         document.getElementById('in_qty').value = 5000;
@@ -350,4 +360,3 @@
 </script>
 </body>
 </html>
-
