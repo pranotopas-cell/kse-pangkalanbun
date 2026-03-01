@@ -35,10 +35,10 @@
         .table-po { width: 100%; border-collapse: collapse; margin: 25px 0; border: 1px solid #000; }
         .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; }
         .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
-        .table-clean td { border: none !important; padding: 2px 0; }
+        .table-clean td { border: none !important; padding: 2px 0; vertical-align: top; }
 
         .info-spacing { margin-bottom: 60px; }
-        .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -2px; }
+        .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
 
         .footer-kse { position: absolute; bottom: 15mm; width: calc(100% - 30mm); border-top: 1px solid #ccc; padding-top: 10px; }
         
@@ -89,8 +89,8 @@
                     <label class="fw-bold">Alamat</label>
                     <textarea list="list_addr" id="in_addr" class="form-control form-control-sm" rows="2" oninput="updateView()"></textarea>
                     <datalist id="list_addr">
-                        <option value="Jl. Hksn no 23, Alalak Utara, Banjarmasin - Up : Ibu Amel">
-                        <option value="Jl. Ahmad Yani Km 2,2 No 02 Pangkalan Bun, Kalimantan Tengah - Up : Bpk Riky">
+                        <option value="Jl. Ahmad Yani Km.2,2, No.02,Pangkaln Bun, Kalimantan Tengah  Up : Bpk.Riky">
+                         <option value="Jl. Hksn No.23 Alalak Utara , Banjarmasin Up : Ibu.Amel">
                     </datalist>
                 </div>
                 <hr>
@@ -155,12 +155,18 @@
                     <div class="col-5">
                         <table class="table table-sm table-clean mb-0">
                             <tr>
-                                <td width="45%">TANGGAL</td>
+                                <td width="45%">
+                                    TANGGAL
+                                    <span class="lang-en">Date</span>
+                                </td>
                                 <td width="5%">:</td>
                                 <td id="out_tgl"></td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">NOMOR PO</td>
+                                <td class="fw-bold">
+                                    NOMOR PO
+                                    <span class="lang-en">PO Number</span>
+                                </td>
                                 <td>:</td>
                                 <td id="out_no" class="fw-bold"></td>
                             </tr>
@@ -238,7 +244,6 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
 
-    // 1. AUTO NUMBER & ROMAWI UPDATE
     async function initAutoNumber(selectedDate = new Date()) {
         try {
             const { count, error } = await _supabase
@@ -256,7 +261,6 @@
         } catch (err) { console.error(err); }
     }
 
-    // 2. HANDLE TANGGAL
     function handleDateChange() {
         const val = document.getElementById('in_tgl_raw').value;
         if (!val) return;
@@ -266,7 +270,6 @@
         initAutoNumber(d);
     }
 
-    // 3. LOGIKA HITUNGAN DENGAN PAJAK VARIABEL
     function calculate() {
         const qty = parseFloat(document.getElementById('in_qty').value) || 0;
         const hargaNet = parseFloat(document.getElementById('in_perltr').value) || 0;
@@ -347,9 +350,8 @@
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        // Defaults
         document.getElementById('in_cust').value = "PT. SINARINDO SUKSES SELALU";
-        document.getElementById('in_addr').value = "Jl Ahmad Yani Km 2,2 No.02 Pangkalan Bun Kalimantan Tengah Up : Riky";
+        document.getElementById('in_addr').value = "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun, Kalimantan Tengah, Up : Bpk.Riky";
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_perltr').value = 15500;
         document.getElementById('in_qty').value = 5000;
