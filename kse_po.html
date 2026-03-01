@@ -27,17 +27,17 @@
             overflow: hidden; page-break-inside: avoid; break-inside: avoid;
         }
 
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 10px; margin-bottom: 70px; }
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 10px; margin-bottom: 50px; }
         .logo-img { height: 45px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 22px; color: #000; letter-spacing: 1px; }
 
-        .table-po { width: 100%; border-collapse: collapse; margin: 25px 0; border: 1px solid #000; }
+        .table-po { width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #000; }
         .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; }
         .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
         .table-clean td { border: none !important; padding: 2px 0; vertical-align: top; }
 
-        .info-spacing { margin-bottom: 60px; }
+        .info-spacing { margin-bottom: 20px; }
         .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
 
         .footer-kse { position: absolute; bottom: 15mm; width: calc(100% - 30mm); border-top: 1px solid #ccc; padding-top: 10px; }
@@ -87,11 +87,7 @@
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Alamat</label>
-                    <textarea list="list_addr" id="in_addr" class="form-control form-control-sm" rows="2" oninput="updateView()"></textarea>
-                    <datalist id="list_addr">
-                        <option value="Jl. Ahmad Yani Km.2,2, No.02,Pangkaln Bun, Kalimantan Tengah  Up : Bpk.Riky">
-                         <option value="Jl. Hksn No.23 Alalak Utara , Banjarmasin Up : Ibu.Amel">
-                    </datalist>
+                    <textarea id="in_addr" class="form-control form-control-sm" rows="2" oninput="updateView()"></textarea>
                 </div>
                 <hr>
                 <div class="col-12 mb-2">
@@ -150,7 +146,13 @@
                     <div class="col-7">
                         <p class="mb-1">Kepada yang kami hormati,</p>
                         <h6 class="fw-bold mb-0 text-uppercase" id="out_cust" style="font-size: 14px;"></h6>
-                        <p id="out_addr" class="mb-0 mt-1"></p>
+                        <p id="out_addr" class="mb-3 mt-1"></p>
+                        
+                        <div class="mt-3">
+                            <p class="mb-0">Dengan hormat,</p>
+                            <p class="mb-0">Bersama ini kami kirimkan Purchase Order dengan rincian sebagai berikut:</p>
+                            <span class="lang-en">With respect, herewith we send the Purchase Order with the following details:</span>
+                        </div>
                     </div>
                     <div class="col-5">
                         <table class="table table-sm table-clean mb-0">
@@ -207,7 +209,10 @@
 
                 <div class="mt-4">
                     <p class="mb-1">Sistem pembayaran : <b id="out_pay"></b></p>
-                    <p>Demikian kami sampaikan, atas kerjasamanya kami ucapkan terima kasih.</p>
+                    <span class="lang-en mb-2">Payment system</span>
+                    
+                    <p class="mb-0 mt-3">Demikian kami sampaikan, atas kerjasamanya kami ucapkan terima kasih.</p>
+                    <span class="lang-en">Thus we convey, for your cooperation we say thank you.</span>
                 </div>
 
                 <div class="row mt-5">
