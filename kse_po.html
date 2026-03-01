@@ -361,37 +361,12 @@
         btn.disabled = false;
     }
 
-    function downloadPDF() {
-    const element = document.getElementById('main-doc');
-    
-    // 1. Ambil nilai nomor dan tujuan untuk nama file
-    const noPO = document.getElementById('in_no').value || 'Tanpa-No';
-    const tujuan = document.getElementById('in_cust').value || 'Umum';
-    
-    // Bersihkan karakter yang dilarang pada nama file
-    const namaFile = `PO-${noPO}-${tujuan}`.replace(/[/\\?%*:|"<>.]/g, '-');
+     function downloadPDF() {
+        const element = document.getElementById('main-doc');
+        const opt = { margin: 0, filename: `PO-${document.getElementById('in_no').value}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } };
+        html2pdf().set(opt).from(element).save();
 
-    const opt = {
-        margin: 0.2, // Memberi sedikit jarak di pinggir kertas
-        filename: `${namaFile}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            logging: false 
-        },
-        // 2. Setting agar pas satu halaman
-        jsPDF: { 
-            unit: 'in', 
-            format: 'a4', // Gunakan standar A4
-            orientation: 'portrait' 
-        },
-        pagebreak: { mode: 'avoid-all' } // Menghindari pemotongan elemen di tengah
-    };
-
-    // Eksekusi download
-    html2pdf().set(opt).from(element).save();
-}
+   
     }
 
     window.onload = () => {
@@ -411,6 +386,7 @@
 </script>
 </body>
 </html>
+
 
 
 
