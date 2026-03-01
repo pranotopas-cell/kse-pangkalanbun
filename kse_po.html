@@ -146,12 +146,11 @@
                     <div class="col-7">
                         <p class="mb-1">Kepada yang kami hormati,</p>
                         <h6 class="fw-bold mb-0 text-uppercase" id="out_cust" style="font-size: 14px;"></h6>
-                        <p id="out_addr" class="mb-3 mt-1"></p>
+                        <p id="out_addr" class="mb-1 mt-1"></p>
                         
-                        <div class="mt-3">
+                        <div style="margin-top: 50px;">
                             <p class="mb-0">Dengan hormat,</p>
-                            <p class="mb-0">Bersama ini kami kirimkan Purchase Order dengan rincian sebagai berikut:</p>
-                            <span class="lang-en">With respect, herewith we send the Purchase Order with the following details:</span>
+                            <p class="mb-0">Bersama ini kami kirimkan Purchase Order dengan rincian sebagai berikut: <span class="lang-en d-inline">With respect, herewith we send the Purchase Order with the following details:</span></p>
                         </div>
                     </div>
                     <div class="col-5">
@@ -229,10 +228,12 @@
 
                 <div class="footer-kse">
                     <div class="d-flex justify-content-between align-items-end">
-                        <img id="qr_footer" src="" width="45" height="45">
+                        <img id="qr_footer" src="" width="55" height="55">
                         <div class="text-end">
-                            <b style="color: var(--kse-dark);">PT. KHATULISTIWA SINAR ENERGI</b><br>
-                            <span style="font-size: 8px;">Mitra Penyalur dan Transportir BBM Industri</span>
+                            <b style="color: var(--kse-dark); font-size: 10px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
+                            <span style="font-size: 8px;">Mitra Penyalur dan Transportir BBM Industri</span><br>
+                            <span style="font-size: 8px; color: #666;">Jl. Ahmad Yani Km.2,2 No.02 Pangkalan Bun, Kalimantan Tengah</span><br>
+                            <span style="font-size: 8px; color: #666;">Email: admin@kse.co.id | khatulistiwasinarenergi@gmail.com</span>
                         </div>
                     </div>
                 </div>
@@ -316,11 +317,17 @@
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
         document.getElementById('out_pay').innerText = document.getElementById('in_pay').value;
+        updateQRCode();
     }
 
     function updateQRCode() {
-        const data = `PO|${document.getElementById('in_no').value}|${document.getElementById('out_grandtotal').innerText}`;
-        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data)}`;
+        const noPo = document.getElementById('in_no').value;
+        const tgl = document.getElementById('out_tgl').innerText;
+        const tujuan = document.getElementById('in_cust').value;
+        const nominal = document.getElementById('out_grandtotal').innerText;
+        
+        const data = `PO NO: ${noPo}\nDATE: ${tgl}\nTO: ${tujuan}\nTOTAL: Rp ${nominal}`;
+        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data)}`;
     }
 
     async function saveToSupabase() {
