@@ -81,7 +81,7 @@
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Tanggal</label>
-                    <input type="date" id="in_tgl" class="form-control form-control-sm" oninput="saveAndUpdate()">
+                    <input type="text" id="in_tgl" class="form-control form-control-sm" oninput="saveAndUpdate()">
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Customer</label>
@@ -248,10 +248,8 @@
             const now = new Date();
             const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
             
-            // Format: 001/KSE-PO/III/2026
             const newNo = `${nextNum.toString().padStart(3, '0')}/KSE-PO/${monthRomawi[now.getMonth()]}/${now.getFullYear()}`;
             
-            // Set ke input (Masih bisa diedit user)
             document.getElementById('in_no').value = newNo;
             updateView();
             updateQRCode();
@@ -260,21 +258,45 @@
         }
     }
 
-    // 2. SIMPAN KE SUPABASE
+    // 2. SIMPAN KE SUPABASE DENGAN KONVERSI TANGGAL ISO (YYYY-MM-DD)
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
         const { data: { session } } = await _supabase.auth.getSession();
         
         if (!session) return alert("Silakan login di dashboard utama terlebih dahulu.");
 
-        const grandTotal = parseFloat(document.getElementById('out_grandtotal').innerText.replace(/\./g, ''));
+        const grandTotal = parseFloat(document.getElementById('out_grandtotal').innerText.replace(/\./g, '').replace(',', '.'));
         
+        // Logika Konversi Tanggal dari "02 MARET 2026" ke "2026-03-02"
+        const rawDate = document.getElementById('in_tgl').value; 
+        let formattedDate = new Date().toISOString().split('T')[0]; // Fallback ke hari ini
+
+        try {
+            const months = {
+                "JANUARI": "01", "FEBRUARI": "02", "MARET": "03", "APRIL": "04", 
+                "MEI": "05", "JUNI": "06", "JULI": "07", "AGUSTUS": "08", 
+                "SEPTEMBER": "09", "OKTOBER": "10", "NOVEMBER": "11", "DESEMBER": "12"
+            };
+            
+            const parts = rawDate.split(' ');
+            if(parts.length === 3) {
+                const day = parts[0].padStart(2, '0');
+                const month = months[parts[1].toUpperCase()];
+                const year = parts[2];
+                if(day && month && year) {
+                    formattedDate = `${year}-${month}-${day}`;
+                }
+            }
+        } catch (e) {
+            console.error("Gagal konversi tanggal:", e);
+        }
+
         btn.innerText = "MENYIMPAN..."; btn.disabled = true;
 
         const payload = {
             jenis: "PURCHASE ORDER",
             nomor: document.getElementById('in_no').value,
-            tanggal: document.getElementById('in_tgl').value,
+            tanggal: formattedDate, // Tersimpan sebagai ISO date
             tujuan: document.getElementById('in_cust').value,
             nominal: grandTotal,
             user_id: session.user.id,
@@ -285,7 +307,7 @@
             const { error } = await _supabase.from('eforms').insert([payload]);
             if (error) throw error;
             alert("Data Berhasil Disimpan ke Tabel E-Form!");
-            initAutoNumber(); // Refresh nomor untuk selanjutnya
+            initAutoNumber(); 
         } catch (err) {
             alert("Gagal Simpan: " + err.message);
         } finally {
@@ -307,7 +329,7 @@
         html2pdf().set(opt).from(element).save();
     }
 
-    // 4. LOGIKA HITUNGAN (TETAP)
+    // 4. LOGIKA HITUNGAN
     function calculate() {
         const qty = parseFloat(document.getElementById('in_qty').value) || 0;
         const hargaPerLtrInput = parseFloat(document.getElementById('in_perltr').value) || 0;
@@ -360,13 +382,11 @@
     function saveAndCalculate() { calculate(); }
     function saveAndUpdate() { updateView(); updateQRCode(); }
 
-    // INITIAL LOAD
     window.onload = () => {
         const now = new Date();
         const options = { day: '2-digit', month: 'LONG', year: 'numeric' };
         document.getElementById('in_tgl').value = now.toLocaleDateString('id-ID', options).toUpperCase();
         
-        // Data Default
         document.getElementById('in_cust').value = "PT. NAMA CUSTOMER";
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_perltr').value = 15500;
@@ -378,5 +398,4 @@
     };
 </script>
 </body>
-
 </html>
