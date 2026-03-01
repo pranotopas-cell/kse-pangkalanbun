@@ -13,7 +13,7 @@
 
     <style>
         :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
-        body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0; padding: 0; }
+        body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 13px; margin: 0; padding: 0; }
         
         .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
         .input-sidebar { background: #fff; height: calc(100vh - 60px); overflow-y: auto; padding: 20px; border-right: 1px solid #ddd; }
@@ -22,23 +22,23 @@
 
         .document-canvas { 
             background: white; width: 210mm; height: 297mm; margin: 0 auto; 
-            padding: 3mm 15mm 10mm 15mm; position: relative;
+            padding: 5mm 15mm 10mm 15mm; position: relative;
             box-shadow: 0 0 15px rgba(0,0,0,0.1); box-sizing: border-box;
             overflow: hidden; page-break-inside: avoid; break-inside: avoid;
         }
 
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 10px; margin-bottom: 50px; }
-        .logo-img { height: 45px; width: auto; object-fit: contain; }
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 10px; margin-bottom: 40px; }
+        .logo-img { height: 50px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1; }
-        .doc-identity h2 { font-weight: 800; margin: 0; font-size: 22px; color: #000; letter-spacing: 1px; }
+        .doc-identity h2 { font-weight: 800; margin: 0; font-size: 24px; color: #000; letter-spacing: 1px; }
 
         .table-po { width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #000; }
-        .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; }
-        .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
-        .table-clean td { border: none !important; padding: 2px 0; vertical-align: top; }
+        .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 10px; }
+        .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 12px; }
+        .table-clean td { border: none !important; padding: 3px 0; vertical-align: top; font-size: 13px; }
 
-        .info-spacing { margin-bottom: 20px; }
-        .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
+        .info-spacing { margin-bottom: 25px; }
+        .lang-en { font-style: italic; font-size: 10px; color: #666; display: block; margin-top: 1px; font-weight: normal; }
 
         .footer-kse { position: absolute; bottom: 15mm; width: calc(100% - 30mm); border-top: 1px solid #ccc; padding-top: 10px; }
         
@@ -135,7 +135,7 @@
         <div class="col-lg-9 p-0" id="pdf-area">
             <div class="document-canvas" id="main-doc">
                 <div class="header-section">
-                    <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/150x45?text=KSE+LOGO'">
+                    <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/180x50?text=KSE+LOGO'">
                     <div class="doc-identity">
                         <h2>PURCHASE ORDER</h2>
                         <span class="lang-en text-uppercase">Electronic Purchase Order System</span>
@@ -144,13 +144,14 @@
 
                 <div class="row info-spacing">
                     <div class="col-7">
-                        <p class="mb-1">Kepada yang kami hormati,</p>
-                        <h6 class="fw-bold mb-0 text-uppercase" id="out_cust" style="font-size: 14px;"></h6>
-                        <p id="out_addr" class="mb-1 mt-1"></p>
+                        <p class="mb-1" style="font-size: 14px;">Kepada yang kami hormati,</p>
+                        <h6 class="fw-bold mb-0 text-uppercase" id="out_cust" style="font-size: 15px;"></h6>
+                        <p id="out_addr" class="mb-1 mt-1" style="font-size: 13px;"></p>
                         
                         <div style="margin-top: 50px;">
-                            <p class="mb-0">Dengan hormat,</p>
-                            <p class="mb-0">Bersama ini kami kirimkan Purchase Order dengan rincian sebagai berikut: <span class="lang-en d-inline">With respect, herewith we send the Purchase Order with the following details:</span></p>
+                            <p class="mb-0" style="font-size: 14px;">Dengan hormat,</p>
+                            <p class="mb-0" style="font-size: 13px;">Bersama ini kami kirimkan Purchase Order dengan rincian sebagai berikut :</p>
+                            <span class="lang-en">With respect, herewith we send the Purchase Order with the following details :</span>
                         </div>
                     </div>
                     <div class="col-5">
@@ -161,7 +162,7 @@
                                     <span class="lang-en">Date</span>
                                 </td>
                                 <td width="5%">:</td>
-                                <td id="out_tgl"></td>
+                                <td id="out_tgl" class="fw-bold"></td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">
@@ -169,7 +170,7 @@
                                     <span class="lang-en">PO Number</span>
                                 </td>
                                 <td>:</td>
-                                <td id="out_no" class="fw-bold"></td>
+                                <td id="out_no" class="fw-bold text-primary"></td>
                             </tr>
                         </table>
                     </div>
@@ -179,7 +180,7 @@
                     <thead>
                         <tr>
                             <th width="25%">NAMA BARANG</th>
-                            <th width="10%">QTY (Ltr)</th>
+                            <th width="12%">QTY (Ltr)</th>
                             <th>HARGA DASAR</th>
                             <th id="th_ppn">PPN</th>
                             <th id="th_pbbkb">PBBKB</th>
@@ -190,7 +191,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 10px;"></td>
+                            <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 11px;"></td>
                             <td class="text-center" id="out_qty"></td>
                             <td class="text-center" id="out_harga"></td>
                             <td class="text-center" id="out_ppn"></td>
@@ -199,7 +200,7 @@
                             <td class="text-center fw-bold" id="out_perltr"></td>
                             <td class="text-end fw-bold">Rp <span id="out_total"></span></td>
                         </tr>
-                        <tr class="bg-light fw-bold">
+                        <tr class="bg-light fw-bold" style="font-size: 13px;">
                             <td colspan="7" class="text-center">GRAND TOTAL</td>
                             <td class="text-end">Rp <span id="out_grandtotal"></span></td>
                         </tr>
@@ -207,33 +208,40 @@
                 </table>
 
                 <div class="mt-4">
-                    <p class="mb-1">Sistem pembayaran : <b id="out_pay"></b></p>
+                    <p class="mb-1" style="font-size: 13px;">Sistem pembayaran : <b id="out_pay"></b></p>
                     <span class="lang-en mb-2">Payment system</span>
                     
-                    <p class="mb-0 mt-3">Demikian kami sampaikan, atas kerjasamanya kami ucapkan terima kasih.</p>
+                    <p class="mb-0 mt-4" style="font-size: 13px;">Demikian kami sampaikan, atas kerjasamanya kami ucapkan terima kasih.</p>
                     <span class="lang-en">Thus we convey, for your cooperation we say thank you.</span>
                 </div>
 
                 <div class="row mt-5">
                     <div class="col-6">
                         <p class="mb-0 italic">regard,</p>
-                        <p class="fw-bold mb-2">PT. KHATULISTIWA SINAR ENERGI</p>
-                        <div style="height: 80px;">
-                            <img src="ttd.png" style="height: 75px;" onerror="this.style.display='none'">
+                        <p class="fw-bold mb-2" style="font-size: 13px;">PT. KHATULISTIWA SINAR ENERGI</p>
+                        <div style="height: 90px; padding-top: 5px;">
+                            <img src="ttd.png" style="height: 80px;" onerror="this.style.display='none'">
                         </div>
-                        <p class="fw-bold text-decoration-underline mb-0">SUPRANOTO</p>
+                        <p class="fw-bold text-decoration-underline mb-0" style="font-size: 14px;">SUPRANOTO</p>
                         <p>Direktur</p>
                     </div>
                 </div>
 
                 <div class="footer-kse">
                     <div class="d-flex justify-content-between align-items-end">
-                        <img id="qr_footer" src="" width="55" height="55">
+                        <div class="d-flex align-items-center gap-3">
+                            <img id="qr_footer" src="" width="65" height="65" style="border: 1px solid #eee;">
+                            <div style="line-height: 1.2;">
+                                <b style="font-size: 10px; color: var(--kse-primary);">E-form by Kse system</b><br>
+                                <span id="qr_po_no" style="font-size: 9px; font-weight: bold;"></span><br>
+                                <span style="font-size: 8px; color: #666;">Scan QR ini untuk validasi PO</span>
+                            </div>
+                        </div>
                         <div class="text-end">
-                            <b style="color: var(--kse-dark); font-size: 10px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
-                            <span style="font-size: 8px;">Mitra Penyalur dan Transportir BBM Industri</span><br>
-                            <span style="font-size: 8px; color: #666;">Jl. Ahmad Yani Km.2,2 No.02 Pangkalan Bun, Kalimantan Tengah</span><br>
-                            <span style="font-size: 8px; color: #666;">Email: admin@kse.co.id | khatulistiwasinarenergi@gmail.com</span>
+                            <b style="color: var(--kse-dark); font-size: 11px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
+                            <span style="font-size: 9px; font-weight: bold; color: #333;">Mitra Penyalur dan Transportir BBM Industri</span><br>
+                            <span style="font-size: 8px; color: #555;">Jl. Ahmad Yani Km.2,2 No.02 Pangkalan Bun, Kalimantan Tengah</span><br>
+                            <span style="font-size: 8px; color: #555;">Email: admin@kse.co.id | khatulistiwasinarenergi@gmail.com</span>
                         </div>
                     </div>
                 </div>
@@ -312,7 +320,9 @@
     }
 
     function updateView() {
-        document.getElementById('out_no').innerText = document.getElementById('in_no').value;
+        const noPo = document.getElementById('in_no').value;
+        document.getElementById('out_no').innerText = noPo;
+        document.getElementById('qr_po_no').innerText = noPo;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
@@ -326,7 +336,7 @@
         const tujuan = document.getElementById('in_cust').value;
         const nominal = document.getElementById('out_grandtotal').innerText;
         
-        const data = `PO NO: ${noPo}\nDATE: ${tgl}\nTO: ${tujuan}\nTOTAL: Rp ${nominal}`;
+        const data = `VALID PO\nNo: ${noPo}\nDate: ${tgl}\nTo: ${tujuan}\nTotal: Rp ${nominal}\nPT. KHATULISTIWA SINAR ENERGI`;
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data)}`;
     }
 
