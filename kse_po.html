@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSE - Purchase Order System</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
+        body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0; padding: 0; }
+        
+        /* Layout UI */
+        .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
+        .input-sidebar { background: #fff; height: calc(100vh - 60px); overflow-y: auto; padding: 20px; border-right: 1px solid #ddd; }
+        
+        #pdf-area { background: #f4f7f6; padding: 20px 0; }
+
+        /* Document Canvas */
+        .document-canvas { 
+            background: white; width: 210mm; height: 297mm; margin: 0 auto; 
+            padding: 3mm 15mm 10mm 15mm; position: relative;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); box-sizing: border-box;
+            overflow: hidden; page-break-inside: avoid; break-inside: avoid;
+        }
+
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 10px; margin-bottom: 70px; }
+        .logo-img { height: 45px; width: auto; object-fit: contain; }
+        .doc-identity { text-align: right; line-height: 1; }
+        .doc-identity h2 { font-weight: 800; margin: 0; font-size: 22px; color: #000; letter-spacing: 1px; }
+
+        .table-po { width: 100%; border-collapse: collapse; margin: 25px 0; border: 1px solid #000; }
+        .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 10px; }
+        .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
+        .table-clean td { border: none !important; padding: 2px 0; }
+
+        .info-spacing { margin-bottom: 60px; }
+        .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -2px; }
+
+        .footer-kse { position: absolute; bottom: 15mm; width: calc(100% - 30mm); border-top: 1px solid #ccc; padding-top: 10px; }
+        .footer-content { display: flex; justify-content: space-between; align-items: flex-end; }
+        .footer-tagline { font-size: 10px; color: #444; display: block; letter-spacing: 0.5px; margin-top: 2px; }
+
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background: white; margin: 0; padding: 0; }
+            .control-nav, .input-sidebar { display: none !important; }
+            .col-lg-9 { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            #pdf-area { padding: 0 !important; background: white !important; }
+            .document-canvas { margin: 0 !important; box-shadow: none !important; padding: 15mm !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-2">
+        <a href="index.html" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-house"></i> HOME</a>
+        <button class="btn btn-outline-secondary btn-sm" onclick="initAutoNumber()"><i class="bi bi-arrow-clockwise"></i> CEK NOMOR SB</button>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
+        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb"><i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA</button>
+        <button class="btn btn-primary btn-sm fw-bold px-3" onclick="downloadPDF()"><i class="bi bi-download"></i> DOWNLOAD PDF</button>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 input-sidebar shadow-sm">
+            <h6 class="fw-bold mb-3 text-success"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
+            <div class="row g-2">
+                <div class="col-12 mb-2">
+                    <label class="fw-bold text-primary">Nomor PO (Bisa Diedit)</label>
+                    <input type="text" id="in_no" class="form-control form-control-sm fw-bold border-primary" oninput="saveAndUpdate()">
+                </div>
+                <div class="col-12 mb-2">
+                    <label class="fw-bold">Tanggal</label>
+                    <input type="text" id="in_tgl" class="form-control form-control-sm" oninput="saveAndUpdate()">
+                </div>
+                <div class="col-12 mb-2">
+                    <label class="fw-bold">Customer</label>
+                    <input type="text" id="in_cust" class="form-control form-control-sm" oninput="saveAndUpdate()">
+                </div>
+                <div class="col-12 mb-2">
+                    <label class="fw-bold">Alamat</label>
+                    <textarea id="in_addr" class="form-control form-control-sm" rows="2" oninput="saveAndUpdate()"></textarea>
+                </div>
+                <hr>
+                <div class="col-12 mb-2">
+                    <label class="fw-bold">Nama Barang</label>
+                    <input type="text" id="in_barang" class="form-control form-control-sm" oninput="saveAndUpdate()">
+                </div>
+                <div class="col-6 mb-2">
+                    <label class="fw-bold text-success">Harga Jual (Net)</label>
+                    <input type="number" id="in_perltr" class="form-control form-control-sm border-success" oninput="saveAndCalculate()">
+                </div>
+                <div class="col-6 mb-2">
+                    <label class="fw-bold">Quantity (Ltr)</label>
+                    <input type="number" id="in_qty" class="form-control form-control-sm" oninput="saveAndCalculate()">
+                </div>
+                <div class="col-4 mb-2">
+                    <label class="fw-bold">PPN %</label>
+                    <input type="number" id="in_ppn_pct" class="form-control form-control-sm" value="11" oninput="saveAndCalculate()">
+                </div>
+                <div class="col-4 mb-2">
+                    <label class="fw-bold">PBBKB %</label>
+                    <input type="number" id="in_pbbkb_pct" class="form-control form-control-sm" value="7.5" oninput="saveAndCalculate()">
+                </div>
+                <div class="col-4 mb-2">
+                    <label class="fw-bold">PPh %</label>
+                    <input type="number" id="in_pph_pct" class="form-control form-control-sm" value="0.3" oninput="saveAndCalculate()">
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="fw-bold">Sistem Pembayaran</label>
+                    <input type="text" id="in_pay" class="form-control form-control-sm" oninput="saveAndUpdate()">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 p-0" id="pdf-area">
+            <div class="document-canvas" id="main-doc">
+                <div class="header-section">
+                    <img src="header1.png" alt="Logo KSE" class="logo-img" onerror="this.src='https://via.placeholder.com/150x45?text=KSE+LOGO'">
+                    <div class="doc-identity">
+                        <h2>PURCHASE ORDER</h2>
+                        <span class="lang-en text-uppercase">Electronic Purchase Order System</span>
+                    </div>
+                </div>
+
+                <div class="row info-spacing">
+                    <div class="col-7">
+                        <p class="mb-1">Kepada yang kami hormati,</p>
+                        <h6 class="fw-bold mb-0 text-uppercase" id="out_cust" style="font-size: 14px; margin-top: 5px;"></h6>
+                        <p id="out_addr" class="mb-0 mt-1"></p>
+                    </div>
+                    <div class="col-5">
+                        <table class="table table-sm table-clean mb-0">
+                            <tr>
+                                <td width="40%">TANGGAL / <span class="lang-en d-inline">Date</span></td>
+                                <td width="5%">:</td>
+                                <td id="out_tgl"></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">NOMOR PO / <span class="lang-en d-inline">PO Number</span></td>
+                                <td>:</td>
+                                <td id="out_no" class="fw-bold"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <p class="mb-0 fw-bold">Dengan hormat,</p>
+                    <p class="mb-3">Bersama ini kami kirimkan purchase order dengan rincian sebagai berikut :</p>
+                </div>
+
+                <table class="table-po">
+                    <thead>
+                        <tr>
+                            <th width="28%">NAMA BARANG</th>
+                            <th>QUANTITY (Ltr)</th>
+                            <th>HARGA DASAR</th>
+                            <th id="th_ppn_label">PPN</th>
+                            <th id="th_pbbkb_label">PBBKB</th>
+                            <th id="th_pph_label">PPH</th>
+                            <th>PER LTR</th>
+                            <th width="18%">JUMLAH (IDR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-uppercase" id="out_barang"></td>
+                            <td class="text-center" id="out_qty"></td>
+                            <td class="text-center" id="out_harga"></td>
+                            <td class="text-center" id="out_ppn"></td>
+                            <td class="text-center" id="out_pbbkb"></td>
+                            <td class="text-center" id="out_pph"></td>
+                            <td class="text-center fw-bold" id="out_perltr"></td>
+                            <td class="text-end fw-bold">Rp <span id="out_total"></span></td>
+                        </tr>
+                        <tr class="bg-light fw-bold">
+                            <td colspan="7" class="text-center">JUMLAH TOTAL / GRAND TOTAL</td>
+                            <td class="text-end">Rp <span id="out_grandtotal"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4">
+                    <p class="mb-1">Sistem pembayaran : <b id="out_pay"></b></p>
+                    <p class="mt-2">Mohon di bantu untuk prosesnya, demikian terima kasih.</p>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-6">
+                        <p class="mb-0 italic">regard,</p>
+                        <p class="fw-bold mb-2">PT. KHATULISTIWA SINAR ENERGI</p>
+                        <div style="height: 90px; display: flex; align-items: center;">
+                            <img src="ttd.png" alt="Signature" style="height: 80px; width: auto; object-fit: contain;" onerror="this.style.display='none'">
+                        </div>
+                        <p class="fw-bold text-decoration-underline mb-0" style="font-size: 13px;">SUPRANOTO</p>
+                        <p class="small">Direktur</p>
+                    </div>
+                </div>
+
+                <div class="footer-kse">
+                    <div class="footer-content">
+                        <div class="d-flex align-items-center gap-2">
+                            <img id="qr_footer" src="" width="45" height="45">
+                            <div style="font-size: 9px; color: #666;">
+                                <b>Verified Digital E-Form</b><br>
+                                Dokumen divalidasi sistem KSE.
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <b style="font-size: 13px; color: var(--kse-dark);">PT. KHATULISTIWA SINAR ENERGI</b><br>
+                            <span style="font-size: 9px; color: #555;">Mitra Penyalur dan Transportir BBM Industri</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // CONFIG
+    const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
+    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
+    const _supabase = supabase.createClient(SB_URL, SB_KEY);
+
+    // 1. AUTO NUMBERING DARI SUPABASE
+    async function initAutoNumber() {
+        try {
+            const { count, error } = await _supabase
+                .from('eforms')
+                .select('*', { count: 'exact', head: true })
+                .eq('jenis', 'PURCHASE ORDER');
+
+            if (error) throw error;
+
+            const nextNum = (count || 0) + 1;
+            const now = new Date();
+            const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+            
+            // Format: 001/KSE-PO/III/2026
+            const newNo = `${nextNum.toString().padStart(3, '0')}/KSE-PO/${monthRomawi[now.getMonth()]}/${now.getFullYear()}`;
+            
+            // Set ke input (Masih bisa diedit user)
+            document.getElementById('in_no').value = newNo;
+            updateView();
+            updateQRCode();
+        } catch (err) {
+            console.error("Gagal generate nomor:", err.message);
+        }
+    }
+
+    // 2. SIMPAN KE SUPABASE
+    async function saveToSupabase() {
+        const btn = document.getElementById('btn-save-sb');
+        const { data: { session } } = await _supabase.auth.getSession();
+        
+        if (!session) return alert("Silakan login di dashboard utama terlebih dahulu.");
+
+        const grandTotal = parseFloat(document.getElementById('out_grandtotal').innerText.replace(/\./g, ''));
+        
+        btn.innerText = "MENYIMPAN..."; btn.disabled = true;
+
+        const payload = {
+            jenis: "PURCHASE ORDER",
+            nomor: document.getElementById('in_no').value,
+            tanggal: document.getElementById('in_tgl').value,
+            tujuan: document.getElementById('in_cust').value,
+            nominal: grandTotal,
+            user_id: session.user.id,
+            client_email: session.user.email
+        };
+
+        try {
+            const { error } = await _supabase.from('eforms').insert([payload]);
+            if (error) throw error;
+            alert("Data Berhasil Disimpan ke Tabel E-Form!");
+            initAutoNumber(); // Refresh nomor untuk selanjutnya
+        } catch (err) {
+            alert("Gagal Simpan: " + err.message);
+        } finally {
+            btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA';
+            btn.disabled = false;
+        }
+    }
+
+    // 3. DOWNLOAD PDF
+    function downloadPDF() {
+        const element = document.getElementById('main-doc');
+        const filename = `PO_${document.getElementById('in_no').value}.pdf`.replace(/\//g, '-');
+        const opt = {
+            margin: 0, filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // 4. LOGIKA HITUNGAN (TETAP)
+    function calculate() {
+        const qty = parseFloat(document.getElementById('in_qty').value) || 0;
+        const hargaPerLtrInput = parseFloat(document.getElementById('in_perltr').value) || 0;
+        const ppnPct = parseFloat(document.getElementById('in_ppn_pct').value) || 0;
+        const pbbkbPct = parseFloat(document.getElementById('in_pbbkb_pct').value) || 0;
+        const pphPct = parseFloat(document.getElementById('in_pph_pct').value) || 0;
+
+        const totalPajakPct = (ppnPct + pbbkbPct + pphPct) / 100;
+        const hargaDasar = hargaPerLtrInput / (1 + totalPajakPct);
+        const ppn = hargaDasar * (ppnPct / 100);
+        const pbbkb = hargaDasar * (pbbkbPct / 100);
+        const pph = hargaDasar * (pphPct / 100);
+        const total = qty * hargaPerLtrInput;
+
+        const opts = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        
+        document.getElementById('th_ppn_label').innerText = `PPN ${ppnPct}%`;
+        document.getElementById('th_pbbkb_label').innerText = `PBBKB ${pbbkbPct}%`;
+        document.getElementById('th_pph_label').innerText = `PPH ${pphPct}%`;
+
+        document.getElementById('out_qty').innerText = qty.toLocaleString('id-ID');
+        document.getElementById('out_harga').innerText = hargaDasar.toLocaleString('id-ID', opts);
+        document.getElementById('out_ppn').innerText = ppn.toLocaleString('id-ID', opts);
+        document.getElementById('out_pbbkb').innerText = pbbkb.toLocaleString('id-ID', opts);
+        document.getElementById('out_pph').innerText = pph.toLocaleString('id-ID', opts);
+        document.getElementById('out_perltr').innerText = hargaPerLtrInput.toLocaleString('id-ID', opts);
+        
+        const grandTotal = Math.round(total).toLocaleString('id-ID');
+        document.getElementById('out_total').innerText = grandTotal;
+        document.getElementById('out_grandtotal').innerText = grandTotal;
+        
+        updateView();
+        updateQRCode();
+    }
+
+    function updateView() {
+        document.getElementById('out_no').innerText = document.getElementById('in_no').value || "-";
+        document.getElementById('out_tgl').innerText = document.getElementById('in_tgl').value || "-";
+        document.getElementById('out_cust').innerText = document.getElementById('in_cust').value || "-";
+        document.getElementById('out_addr').innerText = document.getElementById('in_addr').value || "-";
+        document.getElementById('out_barang').innerText = document.getElementById('in_barang').value || "-";
+        document.getElementById('out_pay').innerText = document.getElementById('in_pay').value || "-";
+    }
+
+    function updateQRCode() {
+        const qrData = `VERIFIED-PO|${document.getElementById('in_no').value}|${document.getElementById('out_grandtotal').innerText}`;
+        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrData)}`;
+    }
+
+    function saveAndCalculate() { calculate(); }
+    function saveAndUpdate() { updateView(); updateQRCode(); }
+
+    // INITIAL LOAD
+    window.onload = () => {
+        const now = new Date();
+        const options = { day: '2-digit', month: 'LONG', year: 'numeric' };
+        document.getElementById('in_tgl').value = now.toLocaleDateString('id-ID', options).toUpperCase();
+        
+        // Data Default
+        document.getElementById('in_cust').value = "PT. NAMA CUSTOMER";
+        document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI (HSD)";
+        document.getElementById('in_perltr').value = 15500;
+        document.getElementById('in_qty').value = 5000;
+        document.getElementById('in_pay').value = "Cash Before Delivery (CBD)";
+        
+        initAutoNumber();
+        calculate();
+    };
+</script>
+</body>
+</html>
