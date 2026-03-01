@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE - Invoice System Manual</title>
+    <title>KSE - Invoice System Cloud</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { 
             --kse-primary: #1e4d1e; 
@@ -13,7 +14,6 @@
             -webkit-print-color-adjust: exact; 
             print-color-adjust: exact;
         }
-        /* Font diperbesar sedikit menjadi 12px sesuai permintaan */
         body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 12px; }
         
         .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
@@ -63,10 +63,8 @@
             padding-bottom: 5px;
         }
         
-        /* Jarak tanda tangan diperlebar */
         .signature-section { margin-top: 20px; text-align: left; width: fit-content; }
         .signature-space { height: 80px; } 
-        
         .payment-info { font-size: 11.5px; line-height: 1.4; }
 
         @media print {
@@ -82,11 +80,12 @@
 
 <div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2">
-        <button class="btn btn-outline-dark btn-sm" onclick="location.reload()"><i class="bi bi-arrow-clockwise"></i> RESET</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="location.href='index.html'"><i class="bi bi-house"></i> HOME</button>
+        <button class="btn btn-outline-dark btn-sm" onclick="syncInvoice()"><i class="bi bi-arrow-repeat"></i> SYNC INV</button>
         <button class="btn btn-dark btn-sm" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
-        <button class="btn btn-primary btn-sm" onclick="saveToLocal()"><i class="bi bi-floppy"></i> SIMPAN DATA</button>
+        <button class="btn btn-primary btn-sm" onclick="saveToSupabase()"><i class="bi bi-cloud-upload"></i> SIMPAN DATA</button>
     </div>
-    <button class="btn btn-success btn-sm fw-bold px-4" onclick="downloadPDF()"><i class="bi bi-file-pdf"></i> SIMPAN PDF</button>
+    <button class="btn btn-success btn-sm fw-bold px-4" onclick="downloadPDF()"><i class="bi bi-file-pdf"></i> DOWNLOAD PDF</button>
 </div>
 
 <div class="container-fluid">
@@ -99,20 +98,20 @@
             <h6 class="fw-bold mb-3 text-primary border-bottom pb-2 mt-3">META INVOICE</h6>
             <div class="row g-2">
                 <div class="col-12"><label class="small fw-bold">Tanggal</label><input type="text" id="in_tgl" class="form-control form-control-sm" oninput="updateView()"></div>
-                <div class="col-12"><label class="small fw-bold">No. Invoice</label><input type="text" id="in_no" class="form-control form-control-sm" oninput="updateView()"></div>
+                <div class="col-12"><label class="small fw-bold">No. Invoice (Auto)</label><input type="text" id="in_no" class="form-control form-control-sm" oninput="updateView()"></div>
                 <div class="col-12"><label class="small fw-bold">NPWP</label><input type="text" id="in_npwp" class="form-control form-control-sm" oninput="updateView()"></div>
                 <div class="col-12"><label class="small fw-bold">Tanggal PO</label><input type="text" id="in_po_tgl" class="form-control form-control-sm" oninput="updateView()"></div>
                 <div class="col-12"><label class="small fw-bold">Nomor PO</label><input type="text" id="in_po_no" class="form-control form-control-sm" oninput="updateView()"></div>
             </div>
 
-            <h6 class="fw-bold mb-3 text-danger border-bottom pb-2 mt-3">RINCIAN TABEL (MANUAL)</h6>
+            <h6 class="fw-bold mb-3 text-danger border-bottom pb-2 mt-3">RINCIAN TABEL</h6>
             <div class="row g-2">
                 <div class="col-12"><label class="small fw-bold">Nama Barang</label><input type="text" id="in_produk" class="form-control form-control-sm" oninput="updateView()"></div>
-                <div class="col-12"><label class="small fw-bold">Quantity (Text)</label><input type="text" id="in_qty_text" class="form-control form-control-sm" placeholder="Contoh: 10.000" oninput="updateView()"></div>
-                <div class="col-12"><label class="small fw-bold">Harga Jual /Ltr (Nett)</label><input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="Contoh: 8.950" oninput="updateView()"></div>
-                <div class="col-12"><label class="small fw-bold">Harga Sebelum Pajak (DPP/Unit)</label><input type="text" id="in_h_tax_text" class="form-control form-control-sm" placeholder="Contoh: 8.063,06" oninput="updateView()"></div>
-                <div class="col-12"><label class="small fw-bold">Sub Total (DPP Total)</label><input type="number" id="in_subtotal" class="form-control form-control-sm" placeholder="Angka murni" oninput="calculate()"></div>
-                <div class="col-12"><label class="small fw-bold">Penyesuaian (+/-)</label><input type="number" id="in_adjust" class="form-control form-control-sm" placeholder="Contoh: -1 atau 500" oninput="calculate()"></div>
+                <div class="col-12"><label class="small fw-bold">Quantity (Text)</label><input type="text" id="in_qty_text" class="form-control form-control-sm" oninput="updateView()"></div>
+                <div class="col-12"><label class="small fw-bold">Harga Jual /Ltr (Nett)</label><input type="text" id="in_h_nett_text" class="form-control form-control-sm" oninput="updateView()"></div>
+                <div class="col-12"><label class="small fw-bold">Harga Sebelum Pajak</label><input type="text" id="in_h_tax_text" class="form-control form-control-sm" oninput="updateView()"></div>
+                <div class="col-12"><label class="small fw-bold">Sub Total (DPP Total)</label><input type="number" id="in_subtotal" class="form-control form-control-sm" oninput="calculate()"></div>
+                <div class="col-12"><label class="small fw-bold">Penyesuaian (+/-)</label><input type="number" id="in_adjust" class="form-control form-control-sm" oninput="calculate()"></div>
             </div>
         </div>
 
@@ -199,9 +198,8 @@
                 <div class="payment-info">
                     <p class="mb-1 text-decoration-underline"><b>Pembayaran :</b></p>
                     <p class="mb-0">1. Cash / Tunai</p>
-                    <p class="mb-0">2. Transfer Bank Rakayat Indonesia ( BRI )  Rek An. <b>PT KHATULISTIWA SINAR ENERGI</b></p>
+                    <p class="mb-0">2. Transfer Bank Rakayat Indonesia ( BRI ) Rek An. <b>PT KHATULISTIWA SINAR ENERGI</b></p>
                     <p class="mb-0 ms-3">Nomor Rekening : <b>1806-01-001088-56-5</b></p>
-                    
                     <div class="signature-section">
                         <p class="mb-0 mt-3">Regard,</p>
                         <p class="mb-0"><b>PT. KHATULISTIWA SINAR ENERGI</b></p>
@@ -233,27 +231,79 @@
 </div>
 
 <script>
-    const fields = ['cust', 'addr', 'tgl', 'no', 'npwp', 'po_tgl', 'po_no', 'produk', 'qty_text', 'h_nett_text', 'h_tax_text', 'subtotal', 'adjust'];
+    // --- KONFIGURASI SUPABASE ---
+    const SUPABASE_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
+    const supabase = libsupabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function saveToLocal() {
-        let data = {};
-        fields.forEach(f => {
-            data[f] = document.getElementById('in_' + f).value;
-        });
-        localStorage.setItem('kse_invoice_last_data', JSON.stringify(data));
-        alert("Data Berhasil Disimpan di Browser Ini!");
+    let currentGrandTotal = 0;
+
+    // Helper: Angka Romawi untuk Bulan
+    function getRomanMonth(monthIdx) {
+        const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+        return roman[monthIdx];
     }
 
-    function loadFromLocal() {
-        const saved = localStorage.getItem('kse_invoice_last_data');
-        if (saved) {
-            const data = JSON.parse(saved);
-            fields.forEach(f => {
-                if(data[f] !== undefined) document.getElementById('in_' + f).value = data[f];
-            });
+    async function syncInvoice() {
+        try {
+            // Ambil data terakhir untuk generate nomor urut
+            const { data, error } = await supabase
+                .from('invoices')
+                .select('no_invoice')
+                .order('created_at', { ascending: false })
+                .limit(1);
+
+            let nextNumber = 1;
+            if (data && data.length > 0) {
+                const lastNo = data[0].no_invoice.split(' / ')[0];
+                nextNumber = parseInt(lastNo) + 1;
+            }
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const romanMonth = getRomanMonth(now.getMonth());
+            const paddedNum = nextNumber.toString().padStart(3, '0');
+            
+            const newInvoiceNo = `${paddedNum} / KSE-INVOICE / ${romanMonth} / ${year}`;
+            document.getElementById('in_no').value = newInvoiceNo;
+            
+            // Set Tanggal Default hari ini jika kosong
+            if(!document.getElementById('in_tgl').value) {
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                document.getElementById('in_tgl').value = now.toLocaleDateString('id-ID', options);
+            }
+
+            updateView();
+            alert("Sistem Sinkron: Nomor Invoice Berikutnya " + paddedNum);
+        } catch (err) {
+            console.error(err);
+            alert("Gagal Sinkronasi ke Cloud.");
         }
     }
 
+    async function saveToSupabase() {
+        const payload = {
+            tanggal: document.getElementById('in_tgl').value,
+            no_invoice: document.getElementById('in_no').value,
+            tujuan_inv: document.getElementById('in_cust').value,
+            nominal_inv: currentGrandTotal
+        };
+
+        if(!payload.tujuan_inv || !payload.no_invoice) {
+            alert("Harap lengkapi No Invoice dan Nama Customer!");
+            return;
+        }
+
+        const { data, error } = await supabase.from('invoices').insert([payload]);
+
+        if (error) {
+            alert("Gagal menyimpan ke Database: " + error.message);
+        } else {
+            alert("Data Berhasil Tersimpan di Cloud!");
+        }
+    }
+
+    // Fungsi Terbilang (Tetap)
     function terbilang(a) {
         if (a < 0) return "Minus " + terbilang(Math.abs(a));
         var bilangan = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
@@ -276,6 +326,7 @@
         const dppNilaiLain = Math.round(subTotal * 11 / 12);
         const ppn = Math.round(dppNilaiLain * 0.12);
         const grandTotal = subTotal + ppn + adjustment;
+        currentGrandTotal = grandTotal;
 
         document.getElementById('out_total_dpp').innerText = subTotal.toLocaleString('id-ID');
         document.getElementById('out_subtotal_display').innerText = subTotal.toLocaleString('id-ID');
@@ -331,24 +382,19 @@
     }
 
     window.onload = function() {
-        const saved = localStorage.getItem('kse_invoice_last_data');
-        if (saved) {
-            loadFromLocal();
-        } else {
-            document.getElementById('in_tgl').value = "12 Januari 2026";
-            document.getElementById('in_no').value = "001 / KSE-INVOICE / I / 2026";
-            document.getElementById('in_npwp').value = "1000000007734310";
-            document.getElementById('in_po_tgl').value = "10 Januari 2026";
-            document.getElementById('in_po_no').value = "PO/KMU/001/2026";
-            document.getElementById('in_cust').value = "PT. KARYA MANDIRI UTAMA";
-            document.getElementById('in_addr').value = "Jln. Karya Bahtera nusa NO. 236\nBanjarmasin";
-            document.getElementById('in_produk').value = "BBM Solar Industri";
-            document.getElementById('in_qty_text').value = "10.000";
-            document.getElementById('in_h_tax_text').value = "8.063,06";
-            document.getElementById('in_h_nett_text').value = "8.950";
-            document.getElementById('in_subtotal').value = 80630631; 
-            document.getElementById('in_adjust').value = 0;
-        }
+        // Set Default Data (Bisa diedit otomatis)
+        document.getElementById('in_tgl').value = ""; // Akan diisi sync
+        document.getElementById('in_npwp').value = "1000000007734310";
+        document.getElementById('in_cust').value = "PT. KARYA MANDIRI UTAMA";
+        document.getElementById('in_addr').value = "Jln. Karya Bahtera nusa NO. 236\nBanjarmasin";
+        document.getElementById('in_produk').value = "BBM Solar Industri";
+        document.getElementById('in_qty_text').value = "10.000";
+        document.getElementById('in_h_tax_text').value = "8.063,06";
+        document.getElementById('in_h_nett_text').value = "8.950";
+        document.getElementById('in_subtotal').value = 80630631; 
+        document.getElementById('in_adjust').value = 0;
+        
+        syncInvoice(); // Jalankan sync saat buka halaman
         calculate();
     };
 </script>
