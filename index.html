@@ -44,7 +44,7 @@
                 <div class="space-y-4">
                     <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold transition-all">
                     <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-teal-500 font-semibold transition-all">
-                    <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-bold uppercase tracking-widest btn-hover shadow-lg">Login</button>
+                    <button onclick="handleLogin()" id="btn-login-text" class="w-full kse-gradient text-white py-4 rounded-xl font-bold uppercase tracking-widest btn-hover shadow-lg">Login</button>
                     <div class="text-center pt-2">
                         <button onclick="handleForgotPassword()" class="text-xs font-bold text-slate-400 hover:text-emerald-600 transition-colors uppercase tracking-widest">Lupa Password?</button>
                     </div>
@@ -93,7 +93,7 @@
                 <button onclick="showSection('harga')" class="text-xs font-bold uppercase tracking-widest opacity-80 hover:opacity-100">Publish Pertamina</button>
                 
                 <div class="flex flex-col items-end border-l border-white/20 pl-6 space-y-1">
-                    <span id="display-user-email" class="text-[10px] font-bold text-emerald-300 tracking-tight lowercase truncate max-w-[150px]">user@email.com</span>
+                    <span id="display-user-email" class="text-[10px] font-bold text-emerald-300 tracking-tight lowercase truncate max-w-[150px]">sedang memuat...</span>
                     <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-md text-[9px] font-black transition-all uppercase tracking-tighter">sign out</button>
                 </div>
             </div>
@@ -234,7 +234,7 @@
     </main>
 
     <script>
-        // CONFIGURATIONS
+        // CONFIGURATIONS SUPABASE & FIREBASE
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -246,45 +246,81 @@
         let currentUser = null;
         let isAdmin = false;
 
+        // --- SISTEM AUTHENTICATION SEMPURNA ---
         async function checkAuth() {
             initHarga();
             const { data: { session } } = await _supabase.auth.getSession();
+            
             if (session) {
                 currentUser = session.user;
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
+                
                 document.getElementById('display-user-email').innerText = currentUser.email;
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     loadClientsFromSupabase(); 
                 }
+                
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
             } else {
                 document.getElementById('page-login').classList.add('flex-active');
-            }
-        }
-
-        async function loadClientsFromSupabase() {
-            const { data } = await _supabase.from('profiles').select('id, email');
-            const select = document.getElementById('select-penerima-auth');
-            if(data) {
-                select.innerHTML = '<option value="">-- Cari Nama Client --</option>';
-                data.forEach(item => {
-                    const opt = document.createElement('option');
-                    opt.value = item.id; opt.textContent = item.email;
-                    select.appendChild(opt);
-                });
+                document.getElementById('page-dashboard').classList.remove('flex-active');
             }
         }
 
         async function handleLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
+            const btn = document.getElementById('btn-login-text');
+            
+            if(!email || !pass) return alert("Email & Password Kosong!");
+            
+            btn.innerText = "MENYAMBUNG...";
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password: pass });
-            if (error) alert("Login Gagal!");
-            else {
+            
+            if (error) {
+                alert("Login Gagal: " + error.message);
+                btn.innerText = "LOGIN";
+            } else {
+                // Pastikan profile tersimpan
                 await _supabase.from('profiles').upsert({ id: data.user.id, email: data.user.email });
-                location.reload();
+                window.location.reload();
+            }
+        }
+
+        async function handleLogout() {
+            await _supabase.auth.signOut();
+            window.location.reload();
+        }
+
+        // --- SISTEM E-FORM (Fungsi Global untuk dipanggil dari file kse_po / invoice) ---
+        async function saveEFormData(tableName, formData) {
+            try {
+                if(!currentUser) throw new Error("Sesi login berakhir. Silahkan login kembali.");
+                const { error } = await _supabase.from(tableName).insert([{ 
+                    ...formData, 
+                    user_id: currentUser.id,
+                    created_at: new Date()
+                }]);
+                if (error) throw error;
+                alert("Data Berhasil Tersimpan!");
+            } catch (err) {
+                alert("Gagal Simpan: " + err.message);
+            }
+        }
+
+        // --- MANAJEMEN DATA & UI ---
+        async function loadClientsFromSupabase() {
+            const { data } = await _supabase.from('profiles').select('id, email');
+            const select = document.getElementById('select-penerima-auth');
+            if(data && select) {
+                select.innerHTML = '<option value="">-- Cari Nama Client --</option>';
+                data.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id; opt.textContent = item.email;
+                    select.appendChild(opt);
+                });
             }
         }
 
@@ -348,23 +384,23 @@
                     </td>
                     <td class="p-6 text-right space-x-2">
                         <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-bold uppercase text-teal-600 border border-teal-200 px-4 py-2 rounded-lg">Preview</button>
-                        ${isAdmin ? `<button onclick=\"deleteDoc('${d.id}')\" class=\"bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase\">Hapus</button>` : `<a href=\"${d.url}\" download class=\"bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase inline-block\">Download</a>`}
+                        ${isAdmin ? `<button onclick="deleteDoc('${d.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Hapus</button>` : `<a href="${d.url}" download class="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase inline-block">Download</a>`}
                     </td>
                 </tr>`).join('') : '<tr><td colspan="2" class="p-20 text-center text-slate-300 font-bold uppercase italic text-sm">Data Kosong</td></tr>';
         }
 
         async function deleteDoc(id) { if(confirm("Hapus?")) { await _supabase.from('documents').delete().eq('id', id); location.reload(); } }
+        
         function showSection(id) { 
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
             const target = document.getElementById('section-' + id);
             if(target) target.classList.add('active'); 
             window.scrollTo(0,0); 
         }
-        function handleLogout() { _supabase.auth.signOut(); location.reload(); }
+
         function handleForgotPassword() { const email = document.getElementById('login-email').value; if(!email) return alert("Isi email!"); _supabase.auth.resetPasswordForEmail(email); alert("Cek email!"); }
 
         window.onload = checkAuth;
     </script>
 </body>
-
 </html>
