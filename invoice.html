@@ -21,12 +21,12 @@
         #pdf-area { background: #f4f7f6; padding: 20px 0; }
         .document-canvas { 
             background: white; width: 210mm; min-height: 297mm; margin: 0 auto; 
-            padding: 15mm; position: relative;
+            padding: 3mm 15mm 5mm 15mm; position: relative;
             box-shadow: 0 0 15px rgba(0,0,0,0.1); box-sizing: border-box;
         }
 
         .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 25px; }
-        .logo-img { height: 60px; width: auto; }
+        .logo-img { height: 45px; width: auto; }
         .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 34px; color: var(--kse-primary); margin: 0; }
 
         /* TABEL LEBIH TEGAS */
@@ -247,8 +247,8 @@
                         <div class="d-flex align-items-center gap-2">
                             <img id="qr_footer" src="" width="55">
                             <div style="font-size: 8.5px; line-height: 1.2;">
-                                <b>E-Form Cloud Validated</b><br>
-                                Scan QR untuk validasi database.
+                                <b>Digital E-Form KSE System</b><br>
+                                Scan QR untuk validasi Invoice.
                             </div>
                         </div>
                         <div class="text-end" style="font-size: 9px; color: #444;">
@@ -302,7 +302,7 @@
             const nextNum = (count || 0) + 1;
             const m = selectedDate.getMonth();
             const y = selectedDate.getFullYear();
-            const newNo = `${nextNum.toString().padStart(3, '0')} / KSE-INVOICE / ${monthRomawi[m]} / ${y}`;
+            const newNo = `${nextNum.toString().padStart(3, '0')} / KSE-INV / ${monthRomawi[m]} / ${y}`;
             document.getElementById('in_no').value = newNo;
             syncAll();
         } catch (err) { console.error(err); }
@@ -411,4 +411,5 @@
 </script>
 </body>
 </html>
+
 
