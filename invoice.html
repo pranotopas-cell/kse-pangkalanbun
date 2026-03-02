@@ -275,15 +275,23 @@
         const cust = document.getElementById('in_cust').value;
         const addr = document.getElementById('in_addr');
         
-        if (cust === "CV. SAMI JAYA ") {
-            addr.value = "Jl. HM Arsyad No.05 Sampit, Kalimantan Tengah";
-        } else if (cust === "PT. PELAYARAN JASA SAMUDRA SHIPPING ") {
-            addr.value = "Jl. Gatot Subroto No.148, Pekanbaru - Indonesia";
-        } else if (cust === "PT. EXPLOITASI ENERGI INODNESIA, Tbk ") {
-            addr.value = "Jl. Rungun RT.10 Desa Sungai Kapitan Kec.Kumai Pangkalan Bun";
-        }
-        syncAll();
-    }
+     function autoFillCustomer() {
+  // Tambahkan .trim() agar spasi di depan/belakang input tidak jadi masalah
+  const cust = document.getElementById('in_cust').value.trim();
+  const addr = document.getElementById('in_addr');
+
+  if (cust === "CV. SAMI JAYA") {
+    addr.value = "Jl. HM Arsyad No.05 Sampit, Kalimantan Tengah";
+  } 
+  else if (cust === "PT. PELAYARAN JASA SAMUDRA SHIPPING") { // Hapus spasi di ujung
+    addr.value = "Jl. Gatot Subroto No.148, Pekanbaru - Indo";
+  } 
+  else if (cust === "PT. EXPLOITASI ENERGI INDONESIA, Tbk") { // Perbaiki typo INODNESIA
+    addr.value = "Jl. Rungun RT.10 Desa Sungai Kapitan Kec. Kumai Pangkalan Bun";
+  }
+  
+  syncAll();
+}
 
     function calculateFromBasic() {
         const qtyRaw = document.getElementById('in_qty_text').value.replace(/\./g, '').replace(',', '.');
@@ -417,17 +425,18 @@
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        document.getElementById('in_cust').value = "-";
-        document.getElementById('in_addr').value = "-";
+        document.getElementById('in_cust').value = "";
+        document.getElementById('in_addr').value = "";
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_qty_text').value = "5.000";
-        document.getElementById('in_h_nett_text').value = "-";
+        document.getElementById('in_h_nett_text').value = "";
         
         calculateFromBasic();
     };
 </script>
 </body>
 </html>
+
 
 
 
