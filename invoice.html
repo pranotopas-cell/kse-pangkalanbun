@@ -12,7 +12,7 @@
 
     <style>
         :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
-        /* FONT DI PERBESAR SEDIKIT (12px dari 11px) */
+        /* FONT DIPERBESAR SEDIKIT AGAR ENAK DIBACA */
         body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0; padding: 0; }
         
         .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
@@ -29,10 +29,10 @@
         .logo-img { height: 60px; width: auto; }
         .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 34px; color: var(--kse-primary); margin: 0; }
 
-        /* TABEL LEBIH JELAS */
+        /* TABEL LEBIH TEGAS */
         .table-main { width: 100%; border-collapse: collapse; margin-top: 5px; border: 1.5px solid #000; font-size: 11.5px; }
         .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 8px; border: 1px solid #000; text-align: center; text-transform: uppercase; font-size: 11px; }
-        .table-main td { border: 1px solid #000; padding: 8px; vertical-align: middle; }
+        .table-main td { border: 1px solid #000; padding: 8px 10px; vertical-align: middle; }
 
         .meta-table td { border: none !important; padding: 2px 0; font-size: 11.5px; }
         .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; }
@@ -40,7 +40,7 @@
         
         .signature-row { display: flex; justify-content: flex-start; margin-top: 25px; }
         .signature-box { text-align: left; width: 280px; }
-        .signature-space { height: 90px; margin: 5px 0; }
+        .signature-space { height: 100px; margin: 5px 0; } 
         
         .footer-kse { margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }
         
@@ -81,10 +81,18 @@
             </div>
 
             <div class="card p-2 mb-3 bg-light border-0">
-                <label class="fw-bold small">Customer (Pilih dari List)</label>
-                <input list="list_cust" id="in_cust" class="form-control form-control-sm mb-1" placeholder="Cari Nama PT..." onchange="autoFillCustomer()" oninput="syncAll()">
-                <textarea id="in_addr" class="form-control form-control-sm mb-1" rows="3" placeholder="Alamat Otomatis" oninput="syncAll()"></textarea>
-                <input type="text" id="in_npwp" class="form-control form-control-sm" placeholder="NPWP Otomatis" oninput="syncAll()">
+                <label class="fw-bold small">Customer</label>
+                <input list="list_cust" id="in_cust" class="form-control form-control-sm mb-1" placeholder="Pilih Customer" onchange="autoFillCustomer()" oninput="syncAll()">
+                <datalist id="list_cust">
+                    <option value="PT. SINARINDO SUKSES SELALU">
+                    <option value="PT. TELADAN MAKMUR JAYA">
+                </datalist>
+
+                <label class="fw-bold small mt-1">Alamat</label>
+                <textarea id="in_addr" class="form-control form-control-sm mb-1" rows="3" placeholder="Alamat" oninput="syncAll()"></textarea>
+                
+                <label class="fw-bold small">NPWP</label>
+                <input type="text" id="in_npwp" class="form-control form-control-sm" placeholder="NPWP" oninput="syncAll()">
             </div>
 
             <div class="row g-2 mb-3">
@@ -101,22 +109,22 @@
                 <div class="row g-2 mb-2">
                     <div class="col-6">
                         <label class="small fw-bold">Qty (Ltr)</label>
-                        <input type="text" id="in_qty_text" class="form-control form-control-sm" placeholder="10.000" oninput="syncAll()">
+                        <input type="text" id="in_qty_text" class="form-control form-control-sm" placeholder="5000" oninput="calculateFromBasic()">
                     </div>
                     <div class="col-6">
                         <label class="small fw-bold">Harga Jual/Ltr</label>
-                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="8.950" oninput="syncAll()">
+                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="15500" oninput="calculateFromBasic()">
                     </div>
                 </div>
 
                 <div class="row g-2 mb-2">
                     <div class="col-6">
                         <label class="small fw-bold">Harga DPP/Unit</label>
-                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm" placeholder="8.063,06" oninput="syncAll()">
+                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm" oninput="syncAll()">
                     </div>
                     <div class="col-6">
                         <label class="small fw-bold text-danger">DPP TOTAL</label>
-                        <input type="number" id="in_subtotal" class="form-control form-control-sm border-danger" placeholder="Subtotal" oninput="syncAll()">
+                        <input type="number" id="in_subtotal" class="form-control form-control-sm border-danger" oninput="syncAll()">
                     </div>
                 </div>
 
@@ -124,12 +132,6 @@
                 <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" oninput="syncAll()">
             </div>
             
-            <datalist id="list_cust">
-                <option value="PT. SINARINDO SUKSES SELALU">
-                <option value="PT. KARYA MANDIRI UTAMA">
-                <option value="PT. BERKAH ALAM JAYA">
-            </datalist>
-
             <datalist id="list_barang">
                 <option value="BBM SOLAR INDUSTRI (HSD)">
                 <option value="MFO (MARINE FUEL OIL)">
@@ -166,10 +168,10 @@
                 <table class="table-main">
                     <thead>
                         <tr>
-                            <th width="40%">NAMA BARANG<br><span style="font-size: 8px; font-weight: normal;">DESCRIPTION</span></th>
-                            <th width="12%">QUANTITY<br><span style="font-size: 8px; font-weight: normal;">QTY</span></th>
-                            <th width="20%">HARGA DPP/UNIT<br><span style="font-size: 8px; font-weight: normal;">UNIT PRICE</span></th>
-                            <th width="28%">HARGA TOTAL<br><span style="font-size: 8px; font-weight: normal;">TOTAL AMOUNT</span></th>
+                            <th width="40%">NAMA BARANG / <span style="font-size: 8.5px;">DESCRIPTION</span></th>
+                            <th width="12%">QUANTITY / <span style="font-size: 8.5px;">QTY</span></th>
+                            <th width="20%">HARGA DPP/UNIT / <span style="font-size: 8.5px;">UNIT PRICE</span></th>
+                            <th width="28%">HARGA TOTAL / <span style="font-size: 8.5px;">TOTAL AMOUNT</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -189,7 +191,7 @@
                             <td colspan="3" class="p-0">
                                 <table class="w-100 border-0" style="margin: 0;">
                                     <tr>
-                                        <td class="border-0 p-2" width="200">Harga Jual per liter (Nett) <br><small class="text-muted italic" style="font-size: 9px;">Selling Price per liter (Nett)</small></td>
+                                        <td class="border-0 p-2" width="220">Harga Jual per liter (Nett)<br><i class="text-muted" style="font-size: 9px;">Selling Price per liter (Nett)</i></td>
                                         <td class="border-0 p-2" width="30">Rp</td>
                                         <td class="border-0 p-2 text-end fw-bold" id="out_h_nett_val">0</td>
                                     </tr>
@@ -218,12 +220,11 @@
 
                 <div class="terbilang-box">
                     <b>Terbilang : </b> <span id="out_terbilang"></span>
-                    <br><small class="text-muted" style="font-size: 10px;" id="out_terbilang_en"></small>
                 </div>
 
                 <div class="row">
-                    <div class="col-7">
-                        <p class="mb-1 text-decoration-underline fw-bold" style="font-size: 11px;">Pembayaran / <span class="text-muted">Payment :</span></p>
+                    <div class="col-8">
+                        <p class="mb-1 text-decoration-underline fw-bold" style="font-size: 11px;">Pembayaran / <span class="text-muted">Payment:</span></p>
                         <p class="mb-0">1. Cash / Tunai</p>
                         <p class="mb-0">2. Transfer Bank Rakyat Indonesia ( BRI )</p>
                         <p class="mb-0 ms-3">Account Name : <b>PT KHATULISTIWA SINAR ENERGI</b></p>
@@ -247,8 +248,7 @@
                             <img id="qr_footer" src="" width="55">
                             <div style="font-size: 8.5px; line-height: 1.2;">
                                 <b>E-Form Cloud Validated</b><br>
-                                Scan QR untuk validasi database.<br>
-                                <span class="text-muted">Scan QR to validate database.</span>
+                                Scan QR untuk validasi database.
                             </div>
                         </div>
                         <div class="text-end" style="font-size: 9px; color: #444;">
@@ -263,37 +263,38 @@
 </div>
 
 <script>
-    // DATABASE CUSTOMER LOKAL UNTUK AUTOFILL
-    const customerDB = {
-        "PT. SINARINDO SUKSES SELALU": {
-            alamat: "Jl. Jend. Sudirman No. 123, Jakarta Selatan",
-            npwp: "01.234.567.8-012.000"
-        },
-        "PT. KARYA MANDIRI UTAMA": {
-            alamat: "Kawasan Industri Kendal Blok A2, Jawa Tengah",
-            npwp: "02.888.999.1-500.000"
-        },
-        "PT. BERKAH ALAM JAYA": {
-            alamat: "Jl. Ahmad Yani No. 45, Pangkalan Bun, Kalteng",
-            npwp: "03.111.222.3-700.000"
-        }
-    };
-
-    function autoFillCustomer() {
-        const name = document.getElementById('in_cust').value;
-        if(customerDB[name]) {
-            document.getElementById('in_addr').value = customerDB[name].alamat;
-            document.getElementById('in_npwp').value = customerDB[name].npwp;
-            syncAll();
-        }
-    }
-
     const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    // AUTOFILL DATABASE
+    function autoFillCustomer() {
+        const cust = document.getElementById('in_cust').value;
+        const addr = document.getElementById('in_addr');
+        
+        if (cust === "PT. SINARINDO SUKSES SELALU") {
+            addr.value = "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun, Kalimantan Tengah  Up : Bpk.Riky";
+        } else if (cust === "PT. TELADAN MAKMUR JAYA") {
+            addr.value = "Jl. Hksn No.23 Alalak Utara , Banjarmasin Up : Ibu.Amel";
+        }
+        syncAll();
+    }
+
+    // HITUNG OTOMATIS DARI HARGA NETT
+    function calculateFromBasic() {
+        const qty = parseFloat(document.getElementById('in_qty_text').value.replace(/\./g, '')) || 0;
+        const hNett = parseFloat(document.getElementById('in_h_nett_text').value.replace(/\./g, '')) || 0;
+        
+        const subtotal = qty * hNett;
+        const hTax = hNett / 1.11; // Contoh asumsi DPP
+
+        document.getElementById('in_subtotal').value = subtotal;
+        document.getElementById('in_h_tax_text').value = hTax.toLocaleString('id-ID', {maximumFractionDigits: 2});
+        syncAll();
+    }
 
     async function initAutoNumber(selectedDate = new Date()) {
         try {
@@ -397,7 +398,15 @@
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
-        syncAll();
+        
+        // DATA DEFAULT SESUAI PERMINTAAN
+        document.getElementById('in_cust').value = "PT. SINARINDO SUKSES SELALU";
+        document.getElementById('in_addr').value = "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun, Kalimantan Tengah, Up : Bpk.Riky";
+        document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
+        document.getElementById('in_qty_text').value = "5.000";
+        document.getElementById('in_h_nett_text').value = "15.500";
+        
+        calculateFromBasic();
     };
 </script>
 </body>
