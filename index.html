@@ -318,7 +318,7 @@
             dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
                     const data = doc.data().sekarang || {};
-                    const wName = { 1: "JAMALI", 2: "KALBAR", 3: "SULAWESI", 4: "PAPUA" };
+                    const wName = { 1: "Jawa,Madura ,Bali", 2: "Kalimantan", 3: "Sulawesi ,NTB ", 4: "Maluku ,Papua, NTT " };
                     [document.getElementById('harga-grid'), document.getElementById('login-harga-grid')].forEach(grid => {
                         if(grid) {
                             grid.innerHTML = "";
@@ -334,7 +334,7 @@
                                     grid.innerHTML += `
                                         <div class="bg-white p-6 rounded-xl border-b-4 border-emerald-500 text-center shadow-sm">
                                             <span class="text-[10px] font-bold text-slate-400 uppercase">${wName[i]}</span>
-                                            <h3 class="text-xl font-black text-[#064e3b]">Rp ${val.toLocaleString('id-ID')}</h3>
+                                            <h3 class="text-2xl font-black text-[#064e3b]">Rp ${val.toLocaleString('id-ID')}</h3>
                                         </div>`;
                                 }
                             }
@@ -398,6 +398,7 @@
     </script>
 </body>
 </html>
+
 
 
 
