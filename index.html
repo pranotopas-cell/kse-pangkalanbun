@@ -170,7 +170,7 @@
                             <div><label class="text-emerald-500 text-[10px] font-bold block mb-2">Headquarters</label><p class="text-slate-300 font-bold">Jl. H.M Rafi'i RT.24, Pangkalan Bun, Kalteng.</p></div>
                             <div><label class="text-emerald-500 text-[10px] font-bold block mb-2 text-xs uppercase">Email Support</label><p class="text-white font-black break-all uppercase">pt.khatulistiwa.sinar.energi@gmail.com</p></div>
                         </div>
-                        <div class="space-y-6">
+                        <div class="space-y-6 text-center md:text-left">
                             <div><label class="text-emerald-500 text-[10px] font-bold block mb-2 uppercase">WA Business</label><a href="https://wa.me/6281158841410" class="text-3xl font-black text-white">0811-5884-1410</a></div>
                         </div>
                     </div>
@@ -232,13 +232,18 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
+                // LOGIKA: Hanya email admin yang mengaktifkan menu E-Form
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 document.getElementById('display-user-email').innerText = currentUser.email;
-                document.getElementById('menu-eform').classList.remove('hidden');
+                
                 if(isAdmin) { 
                     document.getElementById('admin-panel').classList.remove('hidden'); 
+                    document.getElementById('menu-eform').classList.remove('hidden'); // Menu E-Form AKTIF untuk Admin
                     loadClientsFromSupabase(); 
+                } else {
+                    document.getElementById('menu-eform').classList.add('hidden'); // Menu E-Form HIDDEN untuk User
                 }
+                
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
             } else {
@@ -295,6 +300,7 @@
         async function loadReleaseDocs() {
             showSection('release');
             let q = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
+            // Walaupun menu disembunyikan, kita tetap jaga logika filter data agar aman
             if(!isAdmin) q = q.eq('user_id', currentUser.id);
             const { data, error } = await q;
             const tbody = document.getElementById('release-table-body');
@@ -305,7 +311,7 @@
                 return `
                     <tr class="hover:bg-white/5 group">
                         <td class="p-4 text-slate-400 font-mono">${tgl}</td>
-                        <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || 'N/A'}</td>
+                        <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || 'FORM'}</td>
                         <td class="p-4 font-black text-white tracking-wider">${d.nomor || d.doc_number || '-'}</td>
                         <td class="p-4 uppercase">${d.tujuan || d.client_name || 'GENERAL'}</td>
                         <td class="p-4 text-right font-black text-yellow-500 group-hover:text-white">${nom}</td>
