@@ -36,10 +36,10 @@
         .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -2px; }
         .terbilang-box { border: 1.5px solid #000; border-top: none; padding: 10px; font-style: italic; background: #fafafa; margin-bottom: 25px; font-size: 13px; }
         
-        /* Signature Section Styling */
-        .signature-container { margin-top: 30px; display: flex; justify-content: flex-end; }
+        /* Signature Layout */
+        .signature-row { display: flex; justify-content: flex-end; margin-top: 30px; }
         .signature-box { text-align: center; width: 250px; }
-        .signature-space { height: 80px; margin: 5px 0; }
+        .signature-space { height: 75px; margin: 10px 0; }
         
         .footer-kse { margin-top: 40px; border-top: 1px solid #eee; padding-top: 15px; }
         
@@ -55,23 +55,23 @@
 <div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2">
         <a href="index.html" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-house"></i> HOME</a>
-        <button class="btn btn-outline-secondary btn-sm" onclick="initAutoNumber()"><i class="bi bi-arrow-clockwise"></i> SYNC INV</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="initAutoNumber()"><i class="bi bi-arrow-clockwise"></i> REFRESH NO INV</button>
     </div>
     <div class="d-flex gap-2">
         <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
-        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb"><i class="bi bi-cloud-arrow-up"></i> SIMPAN</button>
-        <button class="btn btn-primary btn-sm fw-bold px-3" onclick="downloadPDF()"><i class="bi bi-download"></i> PDF</button>
+        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb"><i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA</button>
+        <button class="btn btn-primary btn-sm fw-bold px-3" onclick="downloadPDF()"><i class="bi bi-download"></i> DOWNLOAD PDF</button>
     </div>
 </div>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-3 input-sidebar">
-            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> INPUT INVOICE</h6>
+            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> INPUT PANEL</h6>
             
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="fw-bold small">Nomor Invoice</label>
-                <input type="text" id="in_no" class="form-control form-control-sm" oninput="updateView()">
+                <input type="text" id="in_no" class="form-control form-control-sm" oninput="syncAll()">
             </div>
 
             <div class="mb-3">
@@ -80,48 +80,47 @@
             </div>
 
             <div class="card p-2 mb-3 bg-light">
-                <label class="fw-bold small">Customer & Alamat</label>
-                <input list="list_cust" id="in_cust" class="form-control form-control-sm mb-1" placeholder="Nama Customer" oninput="updateView()">
-                <textarea id="in_addr" class="form-control form-control-sm mb-1" rows="2" placeholder="Alamat" oninput="updateView()"></textarea>
-                <input type="text" id="in_npwp" class="form-control form-control-sm" placeholder="NPWP" oninput="updateView()">
+                <label class="fw-bold small">Customer</label>
+                <input list="list_cust" id="in_cust" class="form-control form-control-sm mb-1" placeholder="Nama Perusahaan" oninput="syncAll()">
+                <textarea id="in_addr" class="form-control form-control-sm mb-1" rows="2" placeholder="Alamat" oninput="syncAll()"></textarea>
+                <input type="text" id="in_npwp" class="form-control form-control-sm" placeholder="NPWP" oninput="syncAll()">
             </div>
 
             <div class="row g-2 mb-3">
-                <div class="col-6"><label class="small fw-bold">No. PO</label><input type="text" id="in_po_no" class="form-control form-control-sm" oninput="updateView()"></div>
-                <div class="col-6"><label class="small fw-bold">Tgl PO</label><input type="text" id="in_po_tgl" class="form-control form-control-sm" oninput="updateView()"></div>
+                <div class="col-6"><label class="small fw-bold">No. PO</label><input type="text" id="in_po_no" class="form-control form-control-sm" oninput="syncAll()"></div>
+                <div class="col-6"><label class="small fw-bold">Tgl PO</label><input type="text" id="in_po_tgl" class="form-control form-control-sm" oninput="syncAll()"></div>
             </div>
 
             <div class="card p-2 mb-3 border-success">
-                <label class="fw-bold small text-success">Detail Barang</label>
-                <input list="list_barang" id="in_produk" class="form-control form-control-sm mb-2" placeholder="Nama Barang" oninput="updateView()">
+                <label class="fw-bold small text-success text-center">ITEM DATA (MANUAL)</label>
+                <hr class="my-1">
+                <label class="small fw-bold">Nama Barang</label>
+                <input list="list_barang" id="in_produk" class="form-control form-control-sm mb-2" oninput="syncAll()">
                 
                 <div class="row g-2 mb-2">
                     <div class="col-6">
                         <label class="small fw-bold">Qty (Ltr)</label>
-                        <input type="text" id="in_qty_text" class="form-control form-control-sm" placeholder="10.000" oninput="updateView()">
+                        <input type="text" id="in_qty_text" class="form-control form-control-sm" placeholder="10.000" oninput="syncAll()">
                     </div>
                     <div class="col-6">
                         <label class="small fw-bold">Harga Jual/Ltr</label>
-                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="8.950" oninput="updateView()">
+                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="8.950" oninput="syncAll()">
                     </div>
                 </div>
 
-                <div class="row g-2">
+                <div class="row g-2 mb-2">
                     <div class="col-6">
-                        <label class="small fw-bold">DPP/Unit</label>
-                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm" placeholder="8.063,06" oninput="updateView()">
+                        <label class="small fw-bold">Harga DPP/Unit</label>
+                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm" placeholder="8.063,06" oninput="syncAll()">
                     </div>
                     <div class="col-6">
-                        <label class="small fw-bold">Subtotal (DPP x Qty)</label>
-                        <input type="number" id="in_subtotal" class="form-control form-control-sm" oninput="calculate()">
+                        <label class="small fw-bold text-danger">DPP TOTAL</label>
+                        <input type="number" id="in_subtotal" class="form-control form-control-sm border-danger" placeholder="Subtotal" oninput="syncAll()">
                     </div>
                 </div>
-            </div>
 
-            <div class="card p-2 bg-light border-primary">
-                <label class="fw-bold small text-primary">Penyesuaian (Adjustment)</label>
-                <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" oninput="calculate()">
-                <small class="text-muted" style="font-size: 10px;">Gunakan angka negatif (-) untuk diskon</small>
+                <label class="small fw-bold">Penyesuaian (+/-)</label>
+                <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" oninput="syncAll()">
             </div>
             
             <datalist id="list_cust">
@@ -131,6 +130,7 @@
             <datalist id="list_barang">
                 <option value="BBM SOLAR INDUSTRI (HSD)">
                 <option value="MFO (MARINE FUEL OIL)">
+                <option value="MINYAK TANAH INDUSTRI">
             </datalist>
         </div>
 
@@ -171,7 +171,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-center fw-bold" id="out_produk" style="height: 60px; vertical-align: top; padding-top: 15px;"></td>
+                            <td class="text-center fw-bold" id="out_produk" style="height: 60px;"></td>
                             <td class="text-center" id="out_qty_val"></td>
                             <td class="text-center" id="out_h_tax_val"></td>
                             <td class="p-0">
@@ -226,7 +226,7 @@
                     </div>
                 </div>
 
-                <div class="signature-container">
+                <div class="signature-row">
                     <div class="signature-box">
                         <p class="mb-0">Pangkalan Bun, <span id="out_tgl_ttd"></span></p>
                         <p class="fw-bold mb-0">PT. KHATULISTIWA SINAR ENERGI</p>
@@ -265,6 +265,7 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
+    // 1. Ambil Nomor Otomatis
     async function initAutoNumber(selectedDate = new Date()) {
         try {
             const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'INVOICE');
@@ -273,10 +274,11 @@
             const y = selectedDate.getFullYear();
             const newNo = `${nextNum.toString().padStart(3, '0')} / KSE-INVOICE / ${monthRomawi[m]} / ${y}`;
             document.getElementById('in_no').value = newNo;
-            updateView();
+            syncAll();
         } catch (err) { console.error(err); }
     }
 
+    // 2. Handle Tanggal
     function handleDateChange() {
         const val = document.getElementById('in_tgl_raw').value;
         if (!val) return;
@@ -284,14 +286,29 @@
         const formatted = `${d.getDate()} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
         document.getElementById('out_tgl').innerText = formatted;
         document.getElementById('out_tgl_ttd').innerText = formatted;
-        updateView();
+        initAutoNumber(d);
     }
 
-    function calculate() {
+    // 3. Fungsi Utama SINKRONISASI
+    function syncAll() {
+        // Teks Biasa
+        document.getElementById('out_no').innerText = document.getElementById('in_no').value;
+        document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
+        document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
+        document.getElementById('out_npwp').innerText = document.getElementById('in_npwp').value;
+        document.getElementById('out_po_no').innerText = document.getElementById('in_po_no').value;
+        document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
+        document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
+        
+        // Angka Manual
+        document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value;
+        document.getElementById('out_h_nett_val').innerText = document.getElementById('in_h_nett_text').value;
+        document.getElementById('out_h_tax_val').innerText = document.getElementById('in_h_tax_text').value;
+
+        // Kalkulasi Pajak & Total Berdasarkan Subtotal Manual
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // Rumus Pajak Indonesia: PPN 12% dari DPP Nilai Lain
         const dppLain = Math.round(sub * 11 / 12);
         const ppn = Math.round(dppLain * 0.12);
         const grand = sub + ppn + adj;
@@ -304,29 +321,12 @@
         document.getElementById('out_grand_val').innerText = grand.toLocaleString('id-ID');
         
         document.getElementById('out_terbilang').innerText = grand > 0 ? terbilang(grand) + " Rupiah" : "-";
-        updateQRCode();
-    }
-
-    function updateView() {
-        // Mapping Input ke Output
-        document.getElementById('out_no').innerText = document.getElementById('in_no').value;
-        document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
-        document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
-        document.getElementById('out_npwp').innerText = document.getElementById('in_npwp').value;
-        document.getElementById('out_po_no').innerText = document.getElementById('in_po_no').value;
-        document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
-        document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         
-        document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value;
-        document.getElementById('out_h_nett_val').innerText = document.getElementById('in_h_nett_text').value;
-        document.getElementById('out_h_tax_val').innerText = document.getElementById('in_h_tax_text').value;
-
-        calculate();
+        updateQRCode(grand.toLocaleString('id-ID'));
     }
 
-    function updateQRCode() {
+    function updateQRCode(total) {
         const no = document.getElementById('in_no').value;
-        const total = document.getElementById('out_grand_val').innerText;
         const data = `KSE-INV|${no}|${total}`;
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data)}`;
     }
@@ -347,7 +347,7 @@
             if (error) throw error;
             alert("Berhasil Disimpan di Cloud!");
         } catch (e) { alert("Error: " + e.message); }
-        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN';
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA';
         btn.disabled = false;
     }
 
@@ -356,7 +356,7 @@
         const opt = { 
             margin: 0, 
             filename: `INV-${document.getElementById('in_no').value}.pdf`, 
-            html2canvas: { scale: 2, useCORS: true }, 
+            html2canvas: { scale: 2 }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
         html2pdf().set(opt).from(element).save();
@@ -381,7 +381,7 @@
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        // Data Default
+        // Data Contoh Awal
         document.getElementById('in_cust').value = "PT. KARYA MANDIRI UTAMA";
         document.getElementById('in_addr').value = "Jln. Karya Bahtera nusa NO. 236\nBanjarmasin";
         document.getElementById('in_npwp').value = "10.000.000.7-734.310";
@@ -393,7 +393,7 @@
         document.getElementById('in_h_tax_text').value = "8.063,06";
         document.getElementById('in_subtotal').value = 80630631;
         
-        updateView();
+        syncAll();
     };
 </script>
 </body>
