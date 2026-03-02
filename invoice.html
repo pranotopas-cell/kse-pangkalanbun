@@ -304,7 +304,7 @@
             const nextNum = (count || 0) + 1;
             const m = selectedDate.getMonth();
             const y = selectedDate.getFullYear();
-            const newNo = `${nextNum.toString().padStart(3, '0')} / KSE-INV / ${monthRomawi[m]} / ${y}`;
+            const newNo = `${nextNum.toString().padStart(3, '0')} / INV-KSE / ${monthRomawi[m]} / ${y}`;
             document.getElementById('in_no').value = newNo;
             syncAll();
         } catch (err) { console.error(err); }
@@ -426,6 +426,7 @@
 </script>
 </body>
 </html>
+
 
 
 
