@@ -37,7 +37,7 @@
                 </div>
                 <h2 class="font-extrabold text-white text-2xl uppercase tracking-tighter text-center">KHATULISTIWA SINAR ENERGI</h2>
                 <div class="h-1 w-20 kse-gradient mx-auto mt-2 rounded-full"></div>
-                <p class="text-emerald-400 text-[10px] font-bold tracking-[0.3em] mt-3 uppercase text-center">Digital Repository System</p>
+                <p class="text-emerald-400 text-[10px] font-bold tracking-[0.3em] mt-3 uppercase text-center">Digital Integrated Repository System</p>
             </div>
             
             <div class="space-y-4">
@@ -68,12 +68,12 @@
         <nav class="bg-slate-950/80 backdrop-blur-md text-white px-4 md:px-8 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-white/5 shadow-2xl">
             <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('profile')">
                 <img src="logo.png" class="h-8 rounded bg-white p-1">
-                <h1 class="text-lg font-black tracking-tighter nav-text-hide uppercase">KSE <span class="text-emerald-500">DIGITAL</span></h1>
+                <h1 class="text-lg font-black tracking-tighter nav-text-hide uppercase">KSE <span class="text-emerald-500">.SMARTDOCS</span></h1>
             </div>
             
             <div class="flex items-center space-x-4 md:space-x-8">
                 <div class="dropdown">
-                    <button class="text-[11px] font-bold uppercase tracking-widest text-slate-300 py-2">Profile ▼</button>
+                    <button class="text-[11px] font-bold uppercase tracking-widest text-slate-300 py-2">KSE Profile ▼</button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
                             <button onclick="showSection('profile')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-emerald-600 text-[10px] font-bold border-b border-white/5 uppercase">Profil Perusahaan</button>
@@ -86,7 +86,7 @@
                 </div>
 
                 <div id="menu-eform" class="dropdown hidden">
-                    <button class="text-[11px] font-bold uppercase tracking-widest text-yellow-500 py-2">E-Form ▼</button>
+                    <button class="text-[11px] font-bold uppercase tracking-widest text-yellow-500 py-2">KSE E-Form ▼</button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
                             <a href="kse_po.html" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-yellow-600 text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="text-[11px] font-bold uppercase tracking-widest text-cyan-400 py-2">E-Doc ▼</button>
+                    <button class="text-[11px] font-bold uppercase tracking-widest text-cyan-400 py-2">KSE E-Doc ▼</button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
                             <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 text-[10px] font-bold border-b border-white/5 uppercase">Purchase Order</button>
@@ -108,10 +108,10 @@
                     </div>
                 </div>
                 
-                <button onclick="showSection('harga')" class="text-[11px] font-bold uppercase tracking-widest text-emerald-400 nav-text-hide">Price Update</button>
+                <button onclick="showSection('harga')" class="text-[11px] font-bold uppercase tracking-widest text-emerald-400 nav-text-hide">PUBLISH PERTAMINA</button>
                 
                 <div class="flex flex-col items-end border-l border-white/10 pl-4">
-                    <span id="display-user-email" class="text-[10px] font-bold text-emerald-400 tracking-tight lowercase truncate max-w-[100px]">...</span>
+                    <span id="display-user-email" class="text-[11px] font-bold text-emerald-400 tracking-tight lowercase truncate max-w-[100px]">...</span>
                     <button onclick="handleLogout()" class="text-[12px] font-black text-red-500 uppercase mt-0.5">Logout</button>
                 </div>
             </div>
@@ -121,7 +121,7 @@
             <div id="admin-panel" class="hidden mb-10 glass-card p-6 border-emerald-500/20">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-2 h-6 kse-gradient rounded-full"></div>
-                    <h3 class="font-black uppercase text-white tracking-tight text-lg">Control Tower Upload</h3>
+                    <h3 class="font-black uppercase text-white tracking-tight text-lg">DOCS UPLOAD SYSTEM</h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <input type="file" id="file-input" class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-slate-400">
@@ -174,7 +174,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div class="glass-card p-8 border-b-4 border-emerald-500"><span class="text-[10px] text-slate-500 uppercase italic">Light Carrier</span><span class="block text-4xl font-black text-white mt-2">5.000 L</span></div>
                     <div class="glass-card p-8 border-b-4 border-emerald-500"><span class="text-[10px] text-slate-500 uppercase italic">Medium Carrier</span><span class="block text-4xl font-black text-white mt-2">8.000 L</span></div>
-                    <div class="glass-card p-8 border-b-4 border-emerald-500"><span class="text-[10px] text-slate-500 uppercase italic">Heavy Carrier</span><span class="block text-4xl font-black text-white mt-2">20.000 L</span></div>
+                    <div class="glass-card p-8 border-b-4 border-emerald-500"><span class="text-[10px] text-slate-500 uppercase italic">Heavy Carrier</span><span class="block text-4xl font-black text-white mt-2">10.000 L</span></div>
                 </div>
             </section>
 
@@ -183,8 +183,8 @@
                     <h2 class="text-3xl font-black text-emerald-500 mb-12 uppercase text-center tracking-widest">Connect With Us</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div class="space-y-6 text-center md:text-left">
-                            <div><label class="text-emerald-500 text-[10px] font-bold block mb-2">Headquarters</label><p class="text-slate-300 font-bold">Jl. H.M Rafi'i RT.24, Pangkalan Bun, Kalteng.</p></div>
-                            <div><label class="text-emerald-500 text-[10px] font-bold block mb-2 text-xs uppercase">Email Support</label><p class="text-white font-black break-all uppercase">pt.khatulistiwa.sinar.energi@gmail.com</p></div>
+                            <div><label class="text-emerald-500 text-[10px] font-bold block mb-2">Headquarters</label><p class="text-slate-300 font-bold">Jl. H.M Rafi'i RT.24, Pangkalan Bun, Kalimantan Tengah.</p></div>
+                            <div><label class="text-emerald-500 text-[10px] font-bold block mb-2 text-xs uppercase">Email Support</label><p class="text-white font-black break-all">pt.khatulistiwa.sinar.energi@gmail.com</p></div>
                         </div>
                         <div class="space-y-6 text-center md:text-left">
                             <div><label class="text-emerald-500 text-[10px] font-bold block mb-2 uppercase">WA Business</label><a href="https://wa.me/6281158841410" class="text-3xl font-black text-white">0811-5884-1410</a></div>
@@ -386,3 +386,4 @@
     </script>
 </body>
 </html>
+
