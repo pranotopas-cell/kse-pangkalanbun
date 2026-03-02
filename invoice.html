@@ -12,7 +12,6 @@
 
     <style>
         :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
-        /* FONT DIPERBESAR SEDIKIT AGAR ENAK DIBACA */
         body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0; padding: 0; }
         
         .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
@@ -21,15 +20,15 @@
         #pdf-area { background: #f4f7f6; padding: 20px 0; }
         .document-canvas { 
             background: white; width: 210mm; min-height: 297mm; margin: 0 auto; 
-            padding: 3mm 15mm 5mm 15mm; position: relative;
+            padding: 5mm 15mm 5mm 15mm; position: relative;
             box-shadow: 0 0 15px rgba(0,0,0,0.1); box-sizing: border-box;
+            display: flex; flex-direction: column; /* Ditambahkan untuk kontrol layout */
         }
 
         .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 25px; }
         .logo-img { height: 45px; width: auto; }
         .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 34px; color: var(--kse-primary); margin: 0; }
 
-        /* TABEL LEBIH TEGAS */
         .table-main { width: 100%; border-collapse: collapse; margin-top: 5px; border: 1.5px solid #000; font-size: 11.5px; }
         .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 8px; border: 1px solid #000; text-align: center; text-transform: uppercase; font-size: 11px; }
         .table-main td { border: 1px solid #000; padding: 8px 10px; vertical-align: middle; }
@@ -42,7 +41,8 @@
         .signature-box { text-align: left; width: 280px; }
         .signature-space { height: 100px; margin: 5px 0; } 
         
-        .footer-kse { margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }
+        /* JARAK ANTARA TANDA TANGAN DAN FOOTER DIPERLEBAR */
+        .footer-kse { margin-top: auto; padding-top: 80px; padding-bottom: 10px; border-top: 1px solid #eee; }
         
         @media print {
             .control-nav, .input-sidebar { display: none !important; }
@@ -245,10 +245,11 @@
                 <div class="footer-kse">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2">
-                            <img id="qr_footer" src="" width="55">
+                            <img id="qr_footer" src="" width="65" style="border: 1px solid #eee; padding: 2px;">
                             <div style="font-size: 8.5px; line-height: 1.2;">
                                 <b>Digital E-Form KSE System</b><br>
-                                Scan QR untuk validasi Invoice.
+                                Scan QR untuk validasi Invoice.<br>
+                                <span id="qr_timestamp" style="color: #888; font-size: 7px;"></span>
                             </div>
                         </div>
                         <div class="text-end" style="font-size: 9px; color: #444;">
@@ -270,26 +271,27 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    // AUTOFILL DATABASE
     function autoFillCustomer() {
         const cust = document.getElementById('in_cust').value;
         const addr = document.getElementById('in_addr');
         
-        if (cust === "PT. SINARINDO SUKSES SELALU") {
-            addr.value = "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun, Kalimantan Tengah  Up : Bpk.Riky";
-        } else if (cust === "PT. TELADAN MAKMUR JAYA") {
-            addr.value = "Jl. Hksn No.23 Alalak Utara , Banjarmasin Up : Ibu.Amel";
+        if (cust === "cv. SAMI JAYA") {
+            addr.value = "Jl. HM Arsyad No.05 Sampit, Kalimantan Tengah";
+        } else if (cust === "PT. PELAYARAN JASA SAMUDRA SHIPPING ") {
+            addr.value = "Jl. Gatot Subroto No.148, Pekanbaru - Indonesia";
         }
         syncAll();
     }
 
-    // HITUNG OTOMATIS DARI HARGA NETT
     function calculateFromBasic() {
-        const qty = parseFloat(document.getElementById('in_qty_text').value.replace(/\./g, '')) || 0;
-        const hNett = parseFloat(document.getElementById('in_h_nett_text').value.replace(/\./g, '')) || 0;
+        const qtyRaw = document.getElementById('in_qty_text').value.replace(/\./g, '').replace(',', '.');
+        const hNettRaw = document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.');
+        
+        const qty = parseFloat(qtyRaw) || 0;
+        const hNett = parseFloat(hNettRaw) || 0;
         
         const subtotal = qty * hNett;
-        const hTax = hNett / 1.11; // Contoh asumsi DPP
+        const hTax = hNett / 1.12; // Menyesuaikan PPN 12%
 
         document.getElementById('in_subtotal').value = subtotal;
         document.getElementById('in_h_tax_text').value = hTax.toLocaleString('id-ID', {maximumFractionDigits: 2});
@@ -321,7 +323,6 @@
         document.getElementById('out_no').innerText = document.getElementById('in_no').value;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
-        document.getElementById('out_npwp').innerText = document.getElementById('in_npwp').value;
         document.getElementById('out_po_no').innerText = document.getElementById('in_po_no').value;
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
@@ -331,6 +332,8 @@
 
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
+        
+        // Rumus Pajak Sesuai Struktur Sebelumnya
         const dppLain = Math.round(sub * 11 / 12);
         const ppn = Math.round(dppLain * 0.12);
         const grand = sub + ppn + adj;
@@ -342,13 +345,26 @@
         document.getElementById('out_adjust_val').innerText = adj.toLocaleString('id-ID');
         document.getElementById('out_grand_val').innerText = grand.toLocaleString('id-ID');
         document.getElementById('out_terbilang').innerText = grand > 0 ? terbilang(grand) + " Rupiah" : "-";
-        updateQRCode(grand.toLocaleString('id-ID'));
+        
+        // Panggil Update QR Otomatis
+        updateQRCode(grand);
     }
 
-    function updateQRCode(total) {
-        const no = document.getElementById('in_no').value;
-        const data = `KSE-INV|${no}|${total}`;
-        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data)}`;
+    // PERBAIKAN: Fungsi Update QR Otomatis
+    function updateQRCode(grandTotal) {
+        const noInv = document.getElementById('in_no').value;
+        const customer = document.getElementById('in_cust').value;
+        const totalFormatted = grandTotal.toLocaleString('id-ID');
+        
+        // Data yang dikodekan ke QR
+        const qrContent = `KSE-INV|NO:${noInv}|CUST:${customer}|TOTAL:Rp${totalFormatted}`;
+        
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrContent)}`;
+        document.getElementById('qr_footer').src = qrUrl;
+        
+        // Tambahkan timestamp di bawah keterangan QR
+        const now = new Date();
+        document.getElementById('qr_timestamp').innerText = `Generated: ${now.toLocaleString('id-ID')}`;
     }
 
     async function saveToSupabase() {
@@ -399,9 +415,8 @@
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        // DATA DEFAULT SESUAI PERMINTAAN
-        document.getElementById('in_cust').value = "PT. SINARINDO SUKSES SELALU";
-        document.getElementById('in_addr').value = "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun, Kalimantan Tengah,";
+        document.getElementById('in_cust').value = "CV. SAMI JAYA";
+        document.getElementById('in_addr').value = "Jl. HM Arsyad No.05 sampit, Kalimantan Tengah,";
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_qty_text').value = "5.000";
         document.getElementById('in_h_nett_text').value = "15.500";
@@ -411,6 +426,3 @@
 </script>
 </body>
 </html>
-
-
-
