@@ -255,7 +255,7 @@
             const m = selectedDate.getMonth();
             const y = selectedDate.getFullYear();
             
-            const newNo = `${nextNum.toString().padStart(3, '0')}/KSE-PO/${monthRomawi[m]}/${y}`;
+            const newNo = `${nextNum.toString().padStart(3, '0')}/PO-KSE/${monthRomawi[m]}/${y}`;
             document.getElementById('in_no').value = newNo;
             updateView();
         } catch (err) { console.error(err); }
@@ -361,4 +361,5 @@
     };
 </script>
 </body>
+
 </html>
