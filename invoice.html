@@ -81,11 +81,14 @@
 
             <div class="card p-2 mb-3 bg-light border-0">
                 <label class="fw-bold small">Customer</label>
-                <input list="list_cust" id="in_cust" class="form-control" oninput="autoFillCustomer()">
+                <input list="list_cust" id="in_cust" class="form-control form-control-sm" oninput="autoFillCustomer()">
                 <datalist id="list_cust">
                     <option value="CV. SAMI JAYA">
                     <option value="PT. PELAYARAN JASA SAMUDRA SHIPPING">
                     <option value="PT. EXPLOITASI ENERGI INDONESIA, Tbk">
+                    <option value="PT. NEW CUST">
+                    <option value="PT. NAMA BARU">
+                    <option value="PT. JAYA ABADI">
                 </datalist>
 
                 <label class="fw-bold small mt-1">Alamat</label>
@@ -271,32 +274,27 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-   // FUNGSI AUTO FILL CUSTOMER - DIPERBAIKI
-function autoFillCustomer() {
-    // 1. Ambil nilai dari input customer
-    const custValue = document.getElementById('in_cust').value;
-    const addr = document.getElementById('in_addr');
+    // FUNGSI AUTO FILL CUSTOMER - DIPERBAIKI
+    function autoFillCustomer() {
+        const custValue = document.getElementById('in_cust').value;
+        const addrField = document.getElementById('in_addr');
 
-    const daftarAlamat = {
-        "CV. SAMI JAYA": "Jl. HM Arsyad No.05 Sa",
-        "PT. PELAYARAN JASA SA": "Jl. Gatot Subroto No.1",
-        "PT. EXPLOITASI ENERGI": "Jl. Rungun RT.10 Desa",
-        "PT. NEW CUST": "Jl. Pangkalan Bun",
-        "PT. NAMA BARU": "Jl. Alamat Baru No. 123", 
-        "PT. JAYA ABADI": "Jl. Merdeka No. 45"        
-    };
+        const daftarAlamat = {
+            "CV. SAMI JAYA": "Jl. HM Arsyad No.05 Sampit",
+            "PT. PELAYARAN JASA SAMUDRA SHIPPING": "Jl. Gatot Subroto No.15 Pangkalan Bun",
+            "PT. EXPLOITASI ENERGI INDONESIA, Tbk": "Jl. Rungun RT.10 Desa Pasir Panjang",
+            "PT. NEW CUST": "Jl. Pangkalan Bun",
+            "PT. NAMA BARU": "Jl. Alamat Baru No. 123", 
+            "PT. JAYA ABADI": "Jl. Merdeka No. 45"        
+        };
 
-    // 2. Isi alamat jika nama customer ada di daftar
-    if (daftarAlamat[custValue]) {
-        addr.value = daftarAlamat[custValue];
-    } 
+        if (daftarAlamat[custValue]) {
+            addrField.value = daftarAlamat[custValue];
+        } 
 
-    // 3. Jalankan syncAll jika fungsinya tersedia (Typo Fixed: "function")
-    if (typeof syncAll === "function") {
         syncAll();
     }
-}
-    // FUNGSI NOMOR OTOMATIS SUPABASE - DIPERBAIKI
+
     async function initAutoNumber(selectedDate = new Date()) {
         try {
             const { count, error } = await _supabase
@@ -441,7 +439,3 @@ function autoFillCustomer() {
 </script>
 </body>
 </html>
-
-
-
-
