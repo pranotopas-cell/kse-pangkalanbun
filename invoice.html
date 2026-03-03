@@ -271,9 +271,9 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    // FUNGSI AUTO FILL CUSTOMER - DIPERBAIKI
-    function autoFillCustomer() {
-    // 1. Ambil nilai (teks) dari input customer
+   // FUNGSI AUTO FILL CUSTOMER - DIPERBAIKI
+function autoFillCustomer() {
+    // 1. Ambil nilai dari input customer
     const custValue = document.getElementById('in_cust').value;
     const addr = document.getElementById('in_addr');
 
@@ -286,13 +286,16 @@
         "PT. JAYA ABADI": "Jl. Merdeka No. 45"        
     };
 
+    // 2. Isi alamat jika nama customer ada di daftar
     if (daftarAlamat[custValue]) {
         addr.value = daftarAlamat[custValue];
     } 
-    if (typeof syncAll === "funtion") {syncAll();
-    }
- }  
 
+    // 3. Jalankan syncAll jika fungsinya tersedia (Typo Fixed: "function")
+    if (typeof syncAll === "function") {
+        syncAll();
+    }
+}
     // FUNGSI NOMOR OTOMATIS SUPABASE - DIPERBAIKI
     async function initAutoNumber(selectedDate = new Date()) {
         try {
@@ -438,6 +441,7 @@
 </script>
 </body>
 </html>
+
 
 
 
