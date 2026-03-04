@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE_e-Documents</title>
+    <title>KSE_e-Documents </title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -121,7 +121,7 @@
             <div id="admin-panel" class="hidden mb-10 glass-card p-6 border-emerald-500/20">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-2 h-6 kse-gradient rounded-full"></div>
-                    <h3 class="font-black uppercase text-white tracking-tight text-lg">DOCS UPLOAD SYSTEM</h3>
+                    <h3 class="font-black uppercase text-white tracking-tight text-lg">DOCS  UPLOAD  SYSTEM</h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <input type="file" id="file-input" class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-slate-400">
@@ -218,11 +218,10 @@
                             <thead class="bg-white/5 text-slate-400 uppercase font-black">
                                 <tr>
                                     <th class="p-4 border-b border-white/5">Tanggal</th>
-                                    <th class="p-4 border-b border-white/5">No Dokumen</th>
+                                    <th class="p-4 border-b border-white/5">Jenis Dokumen</th>
+                                    <th class="p-4 border-b border-white/5">Nomor</th>
                                     <th class="p-4 border-b border-white/5">Tujuan</th>
-                                    <th class="p-4 border-b border-white/5">Nopol</th>
-                                    <th class="p-4 border-b border-white/5">Nama Sopir</th>
-                                    <th class="p-4 border-b border-white/5 text-right">Qty (L)</th>
+                                    <th class="p-4 border-b border-white/5 text-right">Nominal</th>
                                 </tr>
                             </thead>
                             <tbody id="release-table-body" class="divide-y divide-white/5 text-slate-300"></tbody>
@@ -234,7 +233,6 @@
     </main>
 
     <script>
-        // CONFIGURATION
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -243,10 +241,8 @@
         firebase.initializeApp(fbConfig);
         const dbF = firebase.firestore();
 
-        let currentUser = null; 
-        let isAdmin = false;
+        let currentUser = null; let isAdmin = false;
 
-        // UI HELPERS
         function togglePasswordVisibility() {
             const passInput = document.getElementById('login-pass');
             const icon = document.getElementById('eye-icon');
@@ -259,14 +255,14 @@
             }
         }
 
-        function showSection(id) { 
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
-            const target = document.getElementById('section-' + id); 
-            if(target) target.classList.add('active'); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        async function handleForgotPassword() {
+            const email = document.getElementById('login-email').value;
+            if(!email) return alert("System Prompt: Silakan masukkan Email terlebih dahulu.");
+            const { error } = await _supabase.auth.resetPasswordForEmail(email);
+            if(error) alert("System Error: " + error.message);
+            else alert("System Notification: Link reset password telah dikirim ke email Anda.");
         }
 
-        // AUTH LOGIC
         async function checkAuth() {
             initHarga();
             const { data: { session } } = await _supabase.auth.getSession();
@@ -274,7 +270,6 @@
                 currentUser = session.user;
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 document.getElementById('display-user-email').innerText = currentUser.email;
-                
                 if(isAdmin) { 
                     document.getElementById('admin-panel').classList.remove('hidden'); 
                     document.getElementById('menu-eform').classList.remove('hidden'); 
@@ -282,7 +277,6 @@
                 } else {
                     document.getElementById('menu-eform').classList.add('hidden');
                 }
-                
                 document.getElementById('page-login').classList.remove('active', 'flex-active');
                 document.getElementById('page-dashboard').classList.add('flex-active');
             } else {
@@ -301,15 +295,6 @@
 
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
 
-        async function handleForgotPassword() {
-            const email = document.getElementById('login-email').value;
-            if(!email) return alert("System Prompt: Silakan masukkan Email terlebih dahulu.");
-            const { error } = await _supabase.auth.resetPasswordForEmail(email);
-            if(error) alert("System Error: " + error.message);
-            else alert("System Notification: Link reset password telah dikirim ke email Anda.");
-        }
-
-        // PRICE LOGIC (FIREBASE)
         function initHarga() {
             dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
@@ -331,7 +316,6 @@
             });
         }
 
-        // DATA LOADING LOGIC (SUPABASE)
         async function loadDocuments(cat) {
             showSection('documents');
             document.getElementById('doc-title').innerText = `DATA_NODE: ${cat}`;
@@ -346,79 +330,57 @@
                 </tr>`).join('') : '<tr><td colspan="2" class="p-10 text-center text-slate-600 font-black italic">NO_DATA_FOUND</td></tr>';
         }
 
-        // Updated E-Form Release Data Loading
         async function loadReleaseDocs() {
             showSection('release');
-            const tbody = document.getElementById('release-table-body');
-            tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-slate-500 animate-pulse font-black italic">LOADING_DATA...</td></tr>';
-
             let q = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             if(!isAdmin) q = q.eq('user_id', currentUser.id);
-            
             const { data, error } = await q;
-
-            if (error) { 
-                tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; 
-                return; 
-            }
-
+            const tbody = document.getElementById('release-table-body');
+            if (error) { tbody.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; return; }
             tbody.innerHTML = data?.length ? data.map(d => {
-                const tgl = d.created_at ? new Date(d.created_at).toLocaleDateString('id-ID') : '-';
-                const qtyVal = new Intl.NumberFormat('id-ID').format(d.qty || 0);
-                
+                const tgl = new Date(d.created_at).toLocaleDateString('id-ID');
+                const nom = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(d.nominal || 0);
                 return `
-                    <tr class="hover:bg-white/5 group transition-colors">
+                    <tr class="hover:bg-white/5 group">
                         <td class="p-4 text-slate-400 font-mono">${tgl}</td>
+                        <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || 'FORM'}</td>
                         <td class="p-4 font-black text-white tracking-wider">${d.nomor || d.doc_number || '-'}</td>
-                        <td class="p-4 uppercase font-bold text-emerald-400">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
-                        <td class="p-4 font-bold text-slate-300 uppercase">${d.nopol || '-'}</td>
-                        <td class="p-4 uppercase text-slate-400">${d.nama_sopir || d.driver_name || '-'}</td>
-                        <td class="p-4 text-right font-black text-yellow-500 group-hover:text-white">${qtyVal} L</td>
+                        <td class="p-4 uppercase">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
+                        <td class="p-4 text-right font-black text-yellow-500 group-hover:text-white">${nom}</td>
                     </tr>`;
-            }).join('') : '<tr><td colspan="6" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
+            }).join('') : '<tr><td colspan="5" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
         }
 
         async function loadClientsFromSupabase() {
             const { data } = await _supabase.from('profiles').select('id, email');
             const select = document.getElementById('select-penerima-auth');
-            if(data && select) {
-                // Reset select except first option
-                select.innerHTML = '<option value="">-- Select Client --</option>';
-                data.forEach(item => {
-                    const opt = document.createElement('option'); 
-                    opt.value = item.id; 
-                    opt.textContent = item.email;
-                    select.appendChild(opt);
-                });
-            }
+            if(data && select) data.forEach(item => {
+                const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email;
+                select.appendChild(opt);
+            });
         }
 
         async function startUploadProcess() {
             const fIn = document.getElementById('file-input');
             const uid = document.getElementById('manual-uid').value.trim();
             if(!fIn.files[0] || !uid) return alert("System Alert: Payload incomplete.");
-            
             const file = fIn.files[0];
             const fileName = `${uid}/${Date.now()}_${file.name}`;
             const { error: storageErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
-            
             if(!storageErr) {
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
-                await _supabase.from('documents').insert([{ 
-                    name: file.name, 
-                    url: urlData.publicUrl, 
-                    type: document.getElementById('doc-category').value, 
-                    user_id: uid, 
-                    client_email: "Client" 
-                }]);
-                alert("Upload Successful."); 
-                location.reload();
-            } else {
-                alert("Upload Failed: " + storageErr.message);
+                await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: document.getElementById('doc-category').value, user_id: uid, client_email: "Client" }]);
+                alert("Upload Successful."); location.reload();
             }
         }
 
-        // INIT
+        function showSection(id) { 
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
+            const target = document.getElementById('section-' + id); 
+            if(target) target.classList.add('active'); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
+
         window.onload = checkAuth;
     </script>
 </body>
