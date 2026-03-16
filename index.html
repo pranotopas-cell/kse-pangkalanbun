@@ -83,7 +83,7 @@
             </div>
 
             <div id="auth-buttons">
-                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-transform active:scale-95">SILAHKAN LOGIN</button>
+                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">SILAHKAN LOGIN</button>
                 <div id="user-info" class="hidden flex items-center gap-4 border-l border-white/10 pl-4">
                     <span id="display-user-email" class="text-[11px] font-bold text-emerald-400 lowercase truncate max-w-[100px]">...</span>
                     <button onclick="handleLogout()" class="text-[11px] font-black text-red-500 uppercase">Logout</button>
@@ -95,21 +95,11 @@
     <main class="container mx-auto px-4 py-8">
         
         <div class="mb-10">
-            <div class="flex items-center gap-2 mb-4">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <h3 class="text-[10px] font-black uppercase tracking-widest text-emerald-500">Pertamina Publish Price - HSD Industrial</h3>
-            </div>
             <div id="harga-grid-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
 
         <div id="admin-panel" class="hidden mb-10 glass-card p-6 border-emerald-500/20">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-2 h-6 kse-gradient rounded-full"></div>
-                <h3 class="font-black uppercase text-white tracking-tight text-lg">Repository Management</h3>
-            </div>
+            <h3 class="font-black uppercase text-white mb-6 text-sm">Admin Repository</h3>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                 <input type="file" id="file-input" class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-slate-400">
                 <select id="doc-category" class="w-full p-2 bg-slate-900 rounded-lg text-[10px] text-emerald-400">
@@ -122,35 +112,74 @@
                     <option value="">-- Pilih Client --</option>
                 </select>
                 <input type="text" id="manual-uid" placeholder="UUID..." class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-emerald-300">
-                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase">Upload Archive</button>
+                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase tracking-widest">Upload</button>
             </div>
         </div>
 
         <section id="section-profile" class="section active-section">
-            <div class="glass-card p-8 md:p-12 border-emerald-500/10 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-10 opacity-5">
-                    <img src="logo.png" class="w-64">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Profile</h2>
+                <div class="space-y-6 text-slate-300 leading-relaxed text-sm">
+                    <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas strategis yang bergerak di sektor penyediaan dan distribusi energi terintegrasi. Kami berdedikasi untuk memberikan solusi energi yang efisien, transparan, dan berkelanjutan melalui platform digital mutakhir <span class="text-emerald-400 font-bold">.SMARTDocs</span>.</p>
+                    <p>Fokus kami meliputi distribusi High Speed Diesel (HSD) industri dengan standar kualitas tertinggi, didukung oleh sistem monitoring real-time untuk memastikan akurasi harga dan ketepatan pengiriman ke seluruh mitra industri kami.</p>
                 </div>
-                <h2 class="text-4xl font-extrabold text-emerald-500 mb-8 uppercase tracking-tighter italic">Corporate Profile</h2>
-                <div class="space-y-6 text-slate-300 leading-relaxed text-sm md:text-base italic">
-                    <p class="border-l-4 border-emerald-500 pl-6">
-                        <strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas strategis yang bergerak di sektor penyediaan dan distribusi energi terintegrasi. Berkedudukan sebagai mitra terpercaya bagi berbagai sektor industri di Indonesia, kami berdedikasi untuk memberikan solusi energi yang tidak hanya efisien tetapi juga berkelanjutan.
-                    </p>
-                    <p>
-                        Seiring dengan percepatan transformasi digital global, KSE mengadopsi teknologi mutakhir melalui platform <span class="text-emerald-400 font-bold">.SMARTDocs</span>. Inovasi ini dirancang untuk memastikan transparansi, akurasi, dan keamanan dalam manajemen dokumen teknis serta administratif. Kami memahami bahwa dalam industri energi, ketepatan data adalah fondasi dari kepercayaan operasional.
-                    </p>
-                    <p>
-                        Fokus utama kami meliputi distribusi High Speed Diesel (HSD) industri dan manajemen logistik energi nasional. Dengan dukungan jaringan yang luas dan kepatuhan ketat terhadap regulasi pemerintah, kami memastikan setiap tetes energi yang kami distribusikan memenuhi standar kualitas tertinggi serta tepat waktu.
-                    </p>
-                    <div class="grid md:grid-cols-2 gap-8 mt-10">
-                        <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                            <h4 class="text-emerald-500 font-black uppercase mb-3 text-xs">Komitmen Operasional</h4>
-                            <p class="text-xs leading-loose">Menjamin ketersediaan pasokan energi industri secara konsisten melalui sistem monitoring harga real-time dan manajemen armada yang terintegrasi secara digital.</p>
+            </div>
+        </section>
+
+        <section id="section-visi-misi" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Visi & Misi</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <h3 class="text-white font-black mb-4 uppercase text-xs tracking-widest">Visi</h3>
+                        <p class="text-slate-400 text-xs leading-loose">Menjadi perusahaan distribusi energi terdepan di Indonesia yang mengedepankan integritas data, teknologi digital, dan pelayanan prima untuk mendukung ketahanan energi nasional.</p>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <h3 class="text-white font-black mb-4 uppercase text-xs tracking-widest">Misi</h3>
+                        <ul class="text-slate-400 text-xs space-y-3 leading-relaxed">
+                            <li>• Menyediakan pasokan bahan bakar industri yang berkelanjutan dan kompetitif.</li>
+                            <li>• Mengintegrasikan teknologi cloud dalam setiap alur manajemen dokumen operasional.</li>
+                            <li>• Membangun kemitraan strategis yang berbasis transparansi dan kepercayaan mutlak.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-legalitas" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Legalitas Perusahaan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 border border-white/5 rounded-xl text-center">
+                        <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">NIB</span>
+                        <span class="text-[11px] text-white font-mono tracking-widest">1234567890123</span>
+                    </div>
+                    <div class="p-4 border border-white/5 rounded-xl text-center">
+                        <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">NPWP</span>
+                        <span class="text-[11px] text-white font-mono tracking-widest">01.234.567.8-901.000</span>
+                    </div>
+                    <div class="p-4 border border-white/5 rounded-xl text-center">
+                        <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Izin Niaga</span>
+                        <span class="text-[11px] text-white font-mono tracking-widest">SK-MIGAS/KSE/2026</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-kontak" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Hubungi Kami</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="space-y-4">
+                        <p class="text-xs text-slate-400 leading-loose">Untuk pertanyaan terkait kerjasama distribusi atau kendala sistem dokumentasi, silakan hubungi pusat operasional kami:</p>
+                        <div class="text-sm font-bold text-white">
+                            <p class="mb-1 tracking-tighter">0815-8841-410</p>
+                            <p class="text-emerald-500 lowercase text-xs">pt.khatulistiwa.sinar.energi@gmail.com</p>
                         </div>
-                        <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                            <h4 class="text-emerald-500 font-black uppercase mb-3 text-xs">Integritas Dokumen</h4>
-                            <p class="text-xs leading-loose">Implementasi E-Document Repository memastikan seluruh mitra kami memiliki akses instan, aman, dan terverifikasi terhadap seluruh arsip transaksi dan legalitas perusahaan.</p>
-                        </div>
+                    </div>
+                    <div class="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/20">
+                        <p class="text-[10px] font-black uppercase text-emerald-500 mb-2">Kantor Pusat</p>
+                        <p class="text-xs text-slate-300 leading-relaxed uppercase font-bold">PT Khatulistiwa Sinar Energi<br>Kawasan Industri Terpadu<br>Indonesia</p>
                     </div>
                 </div>
             </div>
@@ -194,13 +223,12 @@
     </main>
 
     <div id="login-overlay">
-        <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 relative text-center">
+        <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 text-center">
             <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-slate-500">✕</button>
-            <img src="logo.png" class="w-16 mx-auto mb-4 p-2 bg-white rounded-xl">
-            <h2 class="font-black text-white text-xl uppercase mb-8 tracking-tighter">Verified Access</h2>
+            <h2 class="font-black text-white text-xl uppercase mb-8">Access</h2>
             <div class="space-y-4">
-                <input type="email" id="login-email" placeholder="Email Address" class="w-full p-4 bg-white/5 rounded-xl border border-white/10 outline-none text-white text-xs">
-                <input type="password" id="login-pass" placeholder="Security Token" class="w-full p-4 bg-white/5 rounded-xl border border-white/10 outline-none text-white text-xs">
+                <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
+                <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
                 <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify</button>
             </div>
         </div>
@@ -235,17 +263,16 @@
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
-
             const { data } = await query;
             const tbody = document.getElementById('release-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
-                <tr class="hover:bg-white/5 transition-colors">
+                <tr class="hover:bg-white/5">
                     <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString()}</td>
                     <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || 'FORM'}</td>
                     <td class="p-4 text-white font-bold">${d.nomor || '-'}</td>
                     <td class="p-4 text-slate-300 font-bold uppercase">${d.vendor_name || d.customer_name || d.penerima || '-'}</td> 
                     <td class="p-4 text-right text-yellow-500 font-black">Rp ${d.nominal?.toLocaleString('id-ID')}</td>
-                </tr>`).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase">NO_RECORDS_FOUND</td></tr>';
+                </tr>`).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase italic">NO_RECORDS</td></tr>';
         }
 
         async function loadDocuments(cat) {
@@ -258,7 +285,7 @@
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
                     <td class="p-5 font-bold text-white uppercase text-[10px]">${d.name}</td>
-                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white transition-all">VIEW</button></td>
+                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white">VIEW</button></td>
                 </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 font-bold uppercase italic">NO_DATA</td></tr>';
         }
 
