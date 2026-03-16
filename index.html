@@ -83,7 +83,7 @@
             </div>
 
             <div id="auth-buttons">
-                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-transform active:scale-95">Authenticate</button>
+                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-transform active:scale-95">SILAHKAN LOGIN</button>
                 <div id="user-info" class="hidden flex items-center gap-4 border-l border-white/10 pl-4">
                     <span id="display-user-email" class="text-[11px] font-bold text-emerald-400 lowercase truncate max-w-[100px]">...</span>
                     <button onclick="handleLogout()" class="text-[11px] font-black text-red-500 uppercase">Logout</button>
@@ -158,7 +158,7 @@
                                 <th class="p-4">Tanggal</th>
                                 <th class="p-4">Jenis Dokumen</th>
                                 <th class="p-4">Nomor Dokumen</th>
-                                <th class="p-4">Tujuan (PO/INV)</th> <th class="p-4 text-right">Nominal</th>
+                                <th class="p-4">Tujuan</th> <th class="p-4 text-right">Nominal</th>
                             </tr>
                         </thead>
                         <tbody id="release-table-body" class="divide-y divide-white/5"></tbody>
@@ -173,11 +173,11 @@
         <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 relative text-center">
             <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-slate-500">✕</button>
             <img src="logo.png" class="w-16 mx-auto mb-4 p-2 bg-white rounded-xl">
-            <h2 class="font-black text-white text-xl uppercase mb-8 tracking-tighter">Gateway Access</h2>
+            <h2 class="font-black text-white text-xl uppercase mb-8 tracking-tighter">ACCESS</h2>
             <div class="space-y-4">
                 <input type="email" id="login-email" placeholder="Email Address" class="w-full p-4 bg-white/5 rounded-xl border border-white/10 outline-none text-white text-xs">
                 <input type="password" id="login-pass" placeholder="Security Token" class="w-full p-4 bg-white/5 rounded-xl border border-white/10 outline-none text-white text-xs">
-                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify Identity</button>
+                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify</button>
             </div>
         </div>
     </div>
