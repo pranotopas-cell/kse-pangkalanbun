@@ -42,6 +42,9 @@
 
         .footer-kse { position: absolute; bottom: 15mm; width: calc(100% - 30mm); border-top: 1px solid #ccc; padding-top: 10px; }
         
+        /* Style Tambahan Terbilang */
+        .terbilang-box { border: 1px solid #000; border-top: none; padding: 8px; background-color: #fcfcfc; font-style: italic; }
+        
         @media print {
             @page { size: A4; margin: 0; }
             .control-nav, .input-sidebar { display: none !important; }
@@ -170,36 +173,41 @@
                     </div>
                 </div>
 
-                <table class="table-po">
-                    <thead>
-                        <tr>
-                            <th width="25%">NAMA BARANG</th>
-                            <th width="10%">QTY (Ltr)</th>
-                            <th>HARGA DASAR</th>
-                            <th id="th_ppn">PPN</th>
-                            <th id="th_pbbkb">PBBKB</th>
-                            <th id="th_pph">PPH</th>
-                            <th>PER LTR</th>
-                            <th width="15%">TOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 10px;"></td>
-                            <td class="text-center" id="out_qty"></td>
-                            <td class="text-center" id="out_harga"></td>
-                            <td class="text-center" id="out_ppn"></td>
-                            <td class="text-center" id="out_pbbkb"></td>
-                            <td class="text-center" id="out_pph"></td>
-                            <td class="text-center fw-bold" id="out_perltr"></td>
-                            <td class="text-end fw-bold">Rp <span id="out_total"></span></td>
-                        </tr>
-                        <tr class="bg-light fw-bold">
-                            <td colspan="7" class="text-center">GRAND TOTAL</td>
-                            <td class="text-end">Rp <span id="out_grandtotal"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="margin: 25px 0;">
+                    <table class="table-po" style="margin: 0;">
+                        <thead>
+                            <tr>
+                                <th width="25%">NAMA BARANG</th>
+                                <th width="10%">QTY (Ltr)</th>
+                                <th>HARGA DASAR</th>
+                                <th id="th_ppn">PPN</th>
+                                <th id="th_pbbkb">PBBKB</th>
+                                <th id="th_pph">PPH</th>
+                                <th>PER LTR</th>
+                                <th width="15%">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 10px;"></td>
+                                <td class="text-center" id="out_qty"></td>
+                                <td class="text-center" id="out_harga"></td>
+                                <td class="text-center" id="out_ppn"></td>
+                                <td class="text-center" id="out_pbbkb"></td>
+                                <td class="text-center" id="out_pph"></td>
+                                <td class="text-center fw-bold" id="out_perltr"></td>
+                                <td class="text-end fw-bold">Rp <span id="out_total"></span></td>
+                            </tr>
+                            <tr class="bg-light fw-bold" style="border-bottom: 1px solid #000;">
+                                <td colspan="7" class="text-center">GRAND TOTAL</td>
+                                <td class="text-end">Rp <span id="out_grandtotal"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="terbilang-box">
+                        <b>Terbilang:</b> # <span id="out_terbilang"></span> Rupiah #
+                    </div>
+                </div>
 
                 <div class="mt-4">
                     <p class="mb-1">Sistem pembayaran : <b id="out_pay"></b></p>
@@ -243,6 +251,23 @@
 
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
+
+    // Fungsi Konversi Terbilang
+    function terbilang(angka) {
+        angka = Math.floor(Math.abs(angka));
+        var huruf = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+        var temp = "";
+        if (angka < 12) { temp = " " + huruf[angka]; }
+        else if (angka < 20) { temp = terbilang(angka - 10) + " Belas"; }
+        else if (angka < 100) { temp = terbilang(Math.floor(angka / 10)) + " Puluh" + terbilang(angka % 10); }
+        else if (angka < 200) { temp = " Seratus" + terbilang(angka - 100); }
+        else if (angka < 1000) { temp = terbilang(Math.floor(angka / 100)) + " Ratus" + terbilang(angka % 100); }
+        else if (angka < 2000) { temp = " Seribu" + terbilang(angka - 1000); }
+        else if (angka < 1000000) { temp = terbilang(Math.floor(angka / 1000)) + " Ribu" + terbilang(angka % 1000); }
+        else if (angka < 1000000000) { temp = terbilang(Math.floor(angka / 1000000)) + " Juta" + terbilang(angka % 1000000); }
+        else if (angka < 1000000000000) { temp = terbilang(Math.floor(angka / 1000000000)) + " Milyar" + terbilang(angka % 1000000000); }
+        return temp;
+    }
 
     async function initAutoNumber(selectedDate = new Date()) {
         try {
@@ -298,9 +323,13 @@
         document.getElementById('out_pph').innerText = v_pph.toLocaleString('id-ID', f);
         document.getElementById('out_perltr').innerText = hargaNet.toLocaleString('id-ID', f);
         
-        const gTotalStr = Math.round(total).toLocaleString('id-ID');
+        const gTotalVal = Math.round(total);
+        const gTotalStr = gTotalVal.toLocaleString('id-ID');
         document.getElementById('out_total').innerText = gTotalStr;
         document.getElementById('out_grandtotal').innerText = gTotalStr;
+        
+        // Update Terbilang
+        document.getElementById('out_terbilang').innerText = terbilang(gTotalVal).toUpperCase();
         
         updateView();
     }
