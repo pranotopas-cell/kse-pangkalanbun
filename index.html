@@ -122,14 +122,37 @@
                     <option value="">-- Pilih Client --</option>
                 </select>
                 <input type="text" id="manual-uid" placeholder="UUID..." class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-emerald-300">
-                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase">Upload</button>
+                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase">Upload Archive</button>
             </div>
         </div>
 
         <section id="section-profile" class="section active-section">
-            <div class="glass-card p-10 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-emerald-500 mb-6 uppercase tracking-tighter">Profil Perusahaan</h2>
-                <p class="text-slate-300 text-sm leading-relaxed max-w-4xl border-l-4 border-emerald-500 pl-6"><strong>PT Khatulistiwa Sinar Energi (KSE)</strong> berfokus pada keunggulan distribusi energi dan manajemen dokumen digital yang akurat.</p>
+            <div class="glass-card p-8 md:p-12 border-emerald-500/10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-10 opacity-5">
+                    <img src="logo.png" class="w-64">
+                </div>
+                <h2 class="text-4xl font-extrabold text-emerald-500 mb-8 uppercase tracking-tighter italic">Corporate Profile</h2>
+                <div class="space-y-6 text-slate-300 leading-relaxed text-sm md:text-base italic">
+                    <p class="border-l-4 border-emerald-500 pl-6">
+                        <strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas strategis yang bergerak di sektor penyediaan dan distribusi energi terintegrasi. Berkedudukan sebagai mitra terpercaya bagi berbagai sektor industri di Indonesia, kami berdedikasi untuk memberikan solusi energi yang tidak hanya efisien tetapi juga berkelanjutan.
+                    </p>
+                    <p>
+                        Seiring dengan percepatan transformasi digital global, KSE mengadopsi teknologi mutakhir melalui platform <span class="text-emerald-400 font-bold">.SMARTDocs</span>. Inovasi ini dirancang untuk memastikan transparansi, akurasi, dan keamanan dalam manajemen dokumen teknis serta administratif. Kami memahami bahwa dalam industri energi, ketepatan data adalah fondasi dari kepercayaan operasional.
+                    </p>
+                    <p>
+                        Fokus utama kami meliputi distribusi High Speed Diesel (HSD) industri dan manajemen logistik energi nasional. Dengan dukungan jaringan yang luas dan kepatuhan ketat terhadap regulasi pemerintah, kami memastikan setiap tetes energi yang kami distribusikan memenuhi standar kualitas tertinggi serta tepat waktu.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-8 mt-10">
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                            <h4 class="text-emerald-500 font-black uppercase mb-3 text-xs">Komitmen Operasional</h4>
+                            <p class="text-xs leading-loose">Menjamin ketersediaan pasokan energi industri secara konsisten melalui sistem monitoring harga real-time dan manajemen armada yang terintegrasi secara digital.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                            <h4 class="text-emerald-500 font-black uppercase mb-3 text-xs">Integritas Dokumen</h4>
+                            <p class="text-xs leading-loose">Implementasi E-Document Repository memastikan seluruh mitra kami memiliki akses instan, aman, dan terverifikasi terhadap seluruh arsip transaksi dan legalitas perusahaan.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -139,7 +162,7 @@
                     <h3 id="doc-title" class="font-black uppercase text-emerald-400 text-xs italic">REPOSITORY_NODE</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left italic">
+                    <table class="w-full text-left italic text-[11px]">
                         <tbody id="file-table-body" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
@@ -158,7 +181,8 @@
                                 <th class="p-4">Tanggal</th>
                                 <th class="p-4">Jenis Dokumen</th>
                                 <th class="p-4">Nomor Dokumen</th>
-                                <th class="p-4">Tujuan</th> <th class="p-4 text-right">Nominal</th>
+                                <th class="p-4">Tujuan</th> 
+                                <th class="p-4 text-right">Nominal</th>
                             </tr>
                         </thead>
                         <tbody id="release-table-body" class="divide-y divide-white/5"></tbody>
@@ -173,7 +197,7 @@
         <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 relative text-center">
             <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-slate-500">✕</button>
             <img src="logo.png" class="w-16 mx-auto mb-4 p-2 bg-white rounded-xl">
-            <h2 class="font-black text-white text-xl uppercase mb-8 tracking-tighter">ACCESS</h2>
+            <h2 class="font-black text-white text-xl uppercase mb-8 tracking-tighter">Verified Access</h2>
             <div class="space-y-4">
                 <input type="email" id="login-email" placeholder="Email Address" class="w-full p-4 bg-white/5 rounded-xl border border-white/10 outline-none text-white text-xs">
                 <input type="password" id="login-pass" placeholder="Security Token" class="w-full p-4 bg-white/5 rounded-xl border border-white/10 outline-none text-white text-xs">
@@ -183,7 +207,6 @@
     </div>
 
     <script>
-        // CONFIG
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -208,7 +231,6 @@
             }
         }
 
-        // FUNGSI UTAMA: LOAD DOKUMEN RILIS DENGAN KOLOM TUJUAN
         async function loadReleaseDocs() {
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
@@ -260,14 +282,14 @@
         async function startUploadProcess() {
             const fIn = document.getElementById('file-input');
             const uid = document.getElementById('manual-uid').value.trim();
-            if(!fIn.files[0] || !uid) return alert("Payload incomplete.");
+            if(!fIn.files[0] || !uid) return alert("System Payload Error.");
             const file = fIn.files[0];
             const fileName = `${uid}/${Date.now()}_${file.name}`;
             const { error: storageErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
             if(!storageErr) {
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: document.getElementById('doc-category').value, user_id: uid, created_at: new Date() }]);
-                alert("Archive Success."); location.reload();
+                alert("Archive Synced."); location.reload();
             }
         }
 
@@ -285,7 +307,7 @@
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
-            if (error) alert("Identity mismatch."); else window.location.reload();
+            if (error) alert("Access Denied."); else window.location.reload();
         }
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
         function showSection(id) { 
