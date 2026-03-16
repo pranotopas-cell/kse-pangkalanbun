@@ -87,11 +87,7 @@
                 </div>
                 <div class="col-12 mb-2">
                     <label class="fw-bold">Alamat</label>
-                    <textarea list="list_addr" id="in_addr" class="form-control form-control-sm" rows="2" oninput="updateView()"></textarea>
-                    <datalist id="list_addr">
-                        <option value="Jl. Ahmad Yani Km.2,2, No.02,Pangkaln Bun, Kalimantan Tengah  Up : Bpk.Riky">
-                         <option value="Jl. Hksn No.23 Alalak Utara , Banjarmasin Up : Ibu.Amel">
-                    </datalist>
+                    <textarea id="in_addr" class="form-control form-control-sm" rows="2" oninput="updateView()"></textarea>
                 </div>
                 <hr>
                 <div class="col-12 mb-2">
@@ -224,7 +220,7 @@
 
                <div class="footer-kse d-flex justify-content-between align-items-end">
                     <div class="d-flex align-items-center gap-2">
-                        <img id="qr_code" width="60" height="60">
+                        <img id="qr_footer" width="60" height="60">
                         <div style="font-size: 8px; color: #666;">
                             <b>KSE DIGITAL VERIFIED</b><br>Scan untuk validasi dokumen PO ini.
                         </div>
@@ -233,8 +229,6 @@
                         <b>PT. KHATULISTIWA SINAR ENERGI</b><br>
                         Mitra Penyalur dan Transportir BBM Industri<br>
                         Jl. H.M. Rafi'i rt.24 Pangkalan Bun, Kalimantan Tengah
-
-                        </div>
                     </div>
                 </div>
             </div>
@@ -304,23 +298,28 @@
         document.getElementById('out_pph').innerText = v_pph.toLocaleString('id-ID', f);
         document.getElementById('out_perltr').innerText = hargaNet.toLocaleString('id-ID', f);
         
-        const gTotal = Math.round(total).toLocaleString('id-ID');
-        document.getElementById('out_total').innerText = gTotal;
-        document.getElementById('out_grandtotal').innerText = gTotal;
-        updateQRCode();
+        const gTotalStr = Math.round(total).toLocaleString('id-ID');
+        document.getElementById('out_total').innerText = gTotalStr;
+        document.getElementById('out_grandtotal').innerText = gTotalStr;
+        
         updateView();
     }
 
     function updateView() {
-        document.getElementById('out_no').innerText = document.getElementById('in_no').value;
+        const noPo = document.getElementById('in_no').value;
+        const gTotal = document.getElementById('out_grandtotal').innerText;
+
+        document.getElementById('out_no').innerText = noPo;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
         document.getElementById('out_pay').innerText = document.getElementById('in_pay').value;
+
+        updateQRCode(noPo, gTotal);
     }
 
-    function updateQRCode() {
-        const data = `PO|${document.getElementById('in_no').value}|${document.getElementById('out_grandtotal').innerText}`;
+    function updateQRCode(no, total) {
+        const data = `PO|${no}|${total}|PT.KSE`;
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data)}`;
     }
 
@@ -367,5 +366,4 @@
     };
 </script>
 </body>
-
 </html>
