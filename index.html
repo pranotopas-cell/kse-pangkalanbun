@@ -54,11 +54,12 @@
                 <button onclick="showSection('profile')" class="hover:text-emerald-500">Profile</button>
                 <button onclick="showSection('visi-misi')" class="hover:text-emerald-500">Visi & Misi</button>
                 <button onclick="showSection('legalitas')" class="hover:text-emerald-500">Legalitas</button>
+                <button onclick="showSection('armada')" class="hover:text-emerald-500">Armada</button>
                 <button onclick="showSection('kontak')" class="hover:text-emerald-500">Kontak</button>
             </div>
 
             <div id="protected-nav" class="hidden flex items-center space-x-6">
-                <div class="dropdown">
+                <div id="nav-eform" class="dropdown hidden">
                     <button class="text-[11px] font-black uppercase tracking-widest text-yellow-500 flex items-center gap-1">KSE E-FORM <small>▼</small></button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
@@ -118,10 +119,10 @@
 
         <section id="section-profile" class="section active-section">
             <div class="glass-card p-10 border-emerald-500/10 italic">
-                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Profile</h2>
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Overview</h2>
                 <div class="space-y-6 text-slate-300 leading-relaxed text-sm">
-                    <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas strategis yang bergerak di sektor penyediaan dan distribusi energi terintegrasi. Kami berdedikasi untuk memberikan solusi energi yang efisien, transparan, dan berkelanjutan melalui platform digital mutakhir <span class="text-emerald-400 font-bold">.SMARTDocs</span>.</p>
-                    <p>Fokus kami meliputi distribusi High Speed Diesel (HSD) industri dengan standar kualitas tertinggi, didukung oleh sistem monitoring real-time untuk memastikan akurasi harga dan ketepatan pengiriman ke seluruh mitra industri kami.</p>
+                    <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> hadir sebagai mitra strategis dalam industri distribusi bahan bakar minyak (HSD) berkualitas tinggi di Indonesia. Dengan komitmen pada efisiensi rantai pasok, kami mengintegrasikan infrastruktur fisik yang handal dengan ekosistem digital untuk menjamin transparansi di setiap transaksi.</p>
+                    <p>Kami melayani berbagai sektor industri mulai dari pertambangan, manufaktur, hingga konstruksi dengan sistem pengiriman yang presisi. Melalui platform <span class="text-emerald-400 font-bold">.SMARTDocs</span>, seluruh mitra dapat mengakses data operasional secara real-time, memastikan alur kerja yang tak terputus dan akuntabel.</p>
                 </div>
             </div>
         </section>
@@ -131,15 +132,16 @@
                 <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Visi & Misi</h2>
                 <div class="grid md:grid-cols-2 gap-10">
                     <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
-                        <h3 class="text-white font-black mb-4 uppercase text-xs tracking-widest">Visi</h3>
-                        <p class="text-slate-400 text-xs leading-loose">Menjadi perusahaan distribusi energi terdepan di Indonesia yang mengedepankan integritas data, teknologi digital, dan pelayanan prima untuk mendukung ketahanan energi nasional.</p>
+                        <h3 class="text-white font-black mb-4 uppercase text-xs tracking-widest">Visi Utama</h3>
+                        <p class="text-slate-400 text-xs leading-loose">Menjadi pemimpin pasar distribusi energi nasional yang unggul dalam teknologi digital, memberikan nilai tambah maksimal bagi seluruh pemangku kepentingan melalui integritas dan inovasi berkelanjutan.</p>
                     </div>
                     <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
-                        <h3 class="text-white font-black mb-4 uppercase text-xs tracking-widest">Misi</h3>
+                        <h3 class="text-white font-black mb-4 uppercase text-xs tracking-widest">Misi Strategis</h3>
                         <ul class="text-slate-400 text-xs space-y-3 leading-relaxed">
-                            <li>• Menyediakan pasokan bahan bakar industri yang berkelanjutan dan kompetitif.</li>
-                            <li>• Mengintegrasikan teknologi cloud dalam setiap alur manajemen dokumen operasional.</li>
-                            <li>• Membangun kemitraan strategis yang berbasis transparansi dan kepercayaan mutlak.</li>
+                            <li>• Menjamin ketersediaan HSD industri dengan standar spesifikasi internasional secara tepat waktu.</li>
+                            <li>• Mengembangkan sistem manajemen dokumen berbasis cloud untuk meminimalisir kesalahan operasional.</li>
+                            <li>• Meningkatkan kompetensi SDM dan armada melalui teknologi monitoring real-time.</li>
+                            <li>• Menjalankan bisnis yang patuh terhadap regulasi lingkungan dan hukum energi Indonesia.</li>
                         </ul>
                     </div>
                 </div>
@@ -148,19 +150,51 @@
 
         <section id="section-legalitas" class="section">
             <div class="glass-card p-10 border-emerald-500/10 italic">
-                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Legalitas Perusahaan</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-4 border border-white/5 rounded-xl text-center">
-                        <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">NIB</span>
-                        <span class="text-[11px] text-white font-mono tracking-widest">1234567890123</span>
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Kepatuhan & Perizinan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-4 tracking-widest">Identitas Perusahaan</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-[9px] text-slate-500 uppercase">NIB</span>
+                                <span class="text-[10px] text-white font-mono">1234567890123</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-[9px] text-slate-500 uppercase">NPWP</span>
+                                <span class="text-[10px] text-white font-mono">01.234.567.8-901.000</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-[9px] text-slate-500 uppercase">Izin Niaga Umum</span>
+                                <span class="text-[10px] text-white font-mono">SK-MIGAS/KSE/2026</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-4 border border-white/5 rounded-xl text-center">
-                        <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">NPWP</span>
-                        <span class="text-[11px] text-white font-mono tracking-widest">01.234.567.8-901.000</span>
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-4 tracking-widest">Standar Mutu</h4>
+                        <p class="text-xs text-slate-400 leading-loose uppercase">Produk HSD yang kami distribusikan memenuhi spesifikasi standar Dirjen Migas (MOPS + Alpha), menjamin performa mesin industri tetap optimal di segala kondisi medan operasional.</p>
                     </div>
-                    <div class="p-4 border border-white/5 rounded-xl text-center">
-                        <span class="block text-[8px] text-slate-500 uppercase font-bold mb-1">Izin Niaga</span>
-                        <span class="text-[11px] text-white font-mono tracking-widest">SK-MIGAS/KSE/2026</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-armada" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Infrastruktur & Armada</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <div class="text-white font-black text-2xl mb-2">10+</div>
+                        <div class="text-[10px] text-emerald-500 uppercase font-black">Transport Tanker</div>
+                        <p class="text-[9px] text-slate-500 mt-2 uppercase">Kapasitas 5KL, 8KL, & 16KL</p>
+                    </div>
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <div class="text-white font-black text-2xl mb-2">GPS</div>
+                        <div class="text-[10px] text-emerald-500 uppercase font-black">Live Monitoring</div>
+                        <p class="text-[9px] text-slate-500 mt-2 uppercase">Terintegrasi Fleet Tracking</p>
+                    </div>
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/5 text-center">
+                        <div class="text-white font-black text-2xl mb-2">24/7</div>
+                        <div class="text-[10px] text-emerald-500 uppercase font-black">Supply Chain</div>
+                        <p class="text-[9px] text-slate-500 mt-2 uppercase">Distribusi Tanpa Henti</p>
                     </div>
                 </div>
             </div>
@@ -168,18 +202,30 @@
 
         <section id="section-kontak" class="section">
             <div class="glass-card p-10 border-emerald-500/10 italic">
-                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Hubungi Kami</h2>
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Informasi Kontak</h2>
                 <div class="grid md:grid-cols-2 gap-10">
-                    <div class="space-y-4">
-                        <p class="text-xs text-slate-400 leading-loose">Untuk pertanyaan terkait kerjasama distribusi atau kendala sistem dokumentasi, silakan hubungi pusat operasional kami:</p>
-                        <div class="text-sm font-bold text-white">
-                            <p class="mb-1 tracking-tighter">0815-8841-410</p>
-                            <p class="text-emerald-500 lowercase text-xs">pt.khatulistiwa.sinar.energi@gmail.com</p>
+                    <div class="space-y-6">
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                            <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-4 tracking-widest">Layanan Pelanggan</h4>
+                            <div class="text-sm font-bold text-white space-y-1">
+                                <p class="text-xl tracking-tighter">0815-8841-410</p>
+                                <p class="text-emerald-500 lowercase text-xs">pt.khatulistiwa.sinar.energi@gmail.com</p>
+                            </div>
                         </div>
+                        <p class="text-xs text-slate-500 leading-loose px-4 uppercase">Jam Operasional Kantor:<br>Senin - Sabtu (08.00 - 17.00 WIB)<br>Layanan Darurat Supply: 24 Jam</p>
                     </div>
-                    <div class="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/20">
-                        <p class="text-[10px] font-black uppercase text-emerald-500 mb-2">Kantor Pusat</p>
-                        <p class="text-xs text-slate-300 leading-relaxed uppercase font-bold">PT Khatulistiwa Sinar Energi<br>Kawasan Industri Terpadu<br>Indonesia</p>
+                    <div class="bg-emerald-500/5 p-8 rounded-2xl border border-emerald-500/20">
+                        <p class="text-[10px] font-black uppercase text-emerald-500 mb-4">Head Office</p>
+                        <p class="text-xs text-slate-300 leading-relaxed uppercase font-bold">
+                            PT Khatulistiwa Sinar Energi<br>
+                            Kawasan Industri Terpadu<br>
+                            Sektor Energi & Logistik<br>
+                            Kalimantan - Indonesia
+                        </p>
+                        <div class="mt-8 pt-8 border-t border-emerald-500/20">
+                            <p class="text-[9px] text-emerald-500 uppercase font-black">Digital Access Point</p>
+                            <p class="text-[10px] text-slate-500 font-mono">NODE_LOCATION: ID_KSE_CENTRAL</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,12 +296,23 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
+                // Logic: Admin identified by email
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
+                
                 document.getElementById('btn-show-login').classList.add('hidden');
                 document.getElementById('user-info').classList.remove('hidden');
                 document.getElementById('protected-nav').classList.remove('hidden');
                 document.getElementById('display-user-email').innerText = currentUser.email;
-                if(isAdmin) { document.getElementById('admin-panel').classList.remove('hidden'); loadClients(); }
+
+                // VISIBILITY LOGIC: E-FORM only for Admin
+                if(isAdmin) {
+                    document.getElementById('nav-eform').classList.remove('hidden');
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                    loadClients();
+                } else {
+                    document.getElementById('nav-eform').classList.add('hidden');
+                    document.getElementById('admin-panel').classList.add('hidden');
+                }
             }
         }
 
@@ -337,6 +394,7 @@
             if (error) alert("Access Denied."); else window.location.reload();
         }
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
+        
         function showSection(id) { 
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section')); 
             const target = document.getElementById('section-' + id);
