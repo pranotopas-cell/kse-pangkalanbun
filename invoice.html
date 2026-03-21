@@ -126,7 +126,7 @@
                         <input type="text" id="in_h_tax_text" class="form-control form-control-sm" oninput="syncAll()">
                     </div>
                     <div class="col-6">
-                        <label class="small fw-bold text-danger">DPP TOTAL</label>
+                        <label class="small fw-bold text-danger">SUBTOTAL (DPP TOTAL)</label>
                         <input type="number" id="in_subtotal" class="form-control form-control-sm border-danger" step="0.01" oninput="syncAll()">
                     </div>
                 </div>
@@ -274,7 +274,6 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    // Helper formatting desimal 2 angka belakang koma
     function formatIDR(val) {
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
@@ -337,7 +336,6 @@
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         
-        // Formating Qty (jika ribuan pakai titik)
         const qtyVal = document.getElementById('in_qty_text').value;
         document.getElementById('out_qty_val').innerText = qtyVal + " Ltr";
 
@@ -349,7 +347,9 @@
         
         const dppLain = sub * (11 / 12);
         const ppn = dppLain * 0.12;
-        const grand = sub + ppn + adj;
+        
+        // UPDATE LOGIKA: Grand Total = DPP Nilai Lain + PPN + Adjust
+        const grand = dppLain + ppn + adj;
 
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
         document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
@@ -358,8 +358,7 @@
         document.getElementById('out_adjust_val').innerText = formatIDR(adj);
         document.getElementById('out_grand_val').innerText = formatIDR(grand);
         
-        // Terbilang menggunakan angka pembulatan terdekat untuk kalimat
-        document.getElementById('out_terbilang').innerText = grand > 0 ? terbilang(Math.round(grand)) + " Rupiah" : "-";
+        document.getElementById('out_terbilang').innerText = grand != 0 ? terbilang(Math.round(grand)) + " Rupiah" : "-";
         
         updateQRCode(grand);
     }
