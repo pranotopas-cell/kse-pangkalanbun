@@ -305,7 +305,7 @@
         
         const dppLain = sub * (11 / 12);
         const ppn = dppLain * 0.12;
-        const grand = dppLain + ppn + adj;
+        const grand = subtotal + ppn + adj;
 
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
         document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
