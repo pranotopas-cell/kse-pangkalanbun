@@ -103,8 +103,8 @@
                 </div>
                 <div class="row g-2 mb-2">
                     <div class="col-6">
-                        <label class="small fw-bold">Harga DPP/Unit</label>
-                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm" readonly>
+                        <label class="small fw-bold text-primary">Harga DPP/Unit</label>
+                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm border-primary" oninput="calculateFromDPPUnit()">
                     </div>
                     <div class="col-6">
                         <label class="small fw-bold text-danger">DPP TOTAL</label>
@@ -182,7 +182,7 @@
                                 <table class="w-100" style="font-size: 12px; border-collapse: collapse;">
                                     <tr><td class="p-2 border-bottom border-end" width="55%">Sub Total</td><td class="p-2 border-bottom text-end fw-bold" id="out_subtotal_display">0,00</td></tr>
                                     <tr><td class="p-2 border-bottom border-end"><i>DPP Nilai Lain</i></td><td class="p-2 border-bottom text-end" id="out_dpp_val">0,00</td></tr>
-                                    <tr><td class="p-2 border-bottom border-end"><i>PPN </i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0,00</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end"><i>PPN 12%</i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0,00</td></tr>
                                     <tr><td class="p-2 border-end"><i>Penyesuaian</i></td><td class="p-2 text-end" id="out_adjust_val">0,00</td></tr>
                                 </table>
                             </td>
@@ -219,7 +219,7 @@
                         <p class="fw-bold mb-0">PT. KHATULISTIWA SINAR ENERGI</p>
                         <div class="signature-space"></div> 
                         <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 15px;">SUPRANOTO</p>
-                        <p class="mb-0 small">Direktur / <span class="text-muted"></span></p>
+                        <p class="mb-0 small">Direktur / <span class="text-muted">Director</span></p>
                     </div>
                 </div>
 
@@ -252,19 +252,36 @@
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // Fungsi Pembulatan 2 angka belakang koma (Angka ke-3 >= 5 bulatkan ke atas)
+    function roundPrice(num) {
+        return Math.round(num * 100) / 100;
+    }
+
     function calculateFromBasic() {
         const qtyRaw = document.getElementById('in_qty_text').value.replace(/\./g, '').replace(',', '.');
         const hNettRaw = document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.');
         const qty = parseFloat(qtyRaw) || 0;
         const hNett = parseFloat(hNettRaw) || 0;
         
-        // 1. Harga DPP/Unit = Harga Per Liter / 111%
-        const hTax = hNett / 1.11; 
+        // 1. Harga DPP/Unit = Harga Jual / 111% dengan pembulatan 2 desimal
+        const hTax = roundPrice(hNett / 1.11); 
         
         // 2. Harga Total = Qty x Harga DPP/Unit
         const subtotal = qty * hTax;
 
-        document.getElementById('in_h_tax_text').value = formatIDR(hTax);
+        document.getElementById('in_h_tax_text').value = hTax.toFixed(2).replace('.', ',');
+        document.getElementById('in_subtotal').value = subtotal.toFixed(2);
+        syncAll();
+    }
+
+    // Fungsi baru agar DPP Unit bisa diedit manual
+    function calculateFromDPPUnit() {
+        const qtyRaw = document.getElementById('in_qty_text').value.replace(/\./g, '').replace(',', '.');
+        const dppUnitRaw = document.getElementById('in_h_tax_text').value.replace(/\./g, '').replace(',', '.');
+        const qty = parseFloat(qtyRaw) || 0;
+        const dppUnit = parseFloat(dppUnitRaw) || 0;
+
+        const subtotal = qty * dppUnit;
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         syncAll();
     }
@@ -278,19 +295,16 @@
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value + " Ltr";
         document.getElementById('out_h_nett_val').innerText = formatIDR(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.') || 0);
-        document.getElementById('out_h_tax_val').innerText = document.getElementById('in_h_tax_text').value;
+        
+        // Ambil nilai DPP Unit dari input panel
+        const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(',', '.')) || 0;
+        document.getElementById('out_h_tax_val').innerText = formatIDR(dppUnitVal);
 
-        // 3. Sub Total = Harga Total
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // 4. Harga DPP Nilai Lain = Sub Total x 11 / 12
         const dppLain = sub * (11 / 12);
-        
-        // 5. PPN = 12% dari DPP Nilai Lain
         const ppn = dppLain * 0.12;
-        
-        // 6. Grand Total = DPP Nilai Lain + PPN + Penyesuaian
         const grand = dppLain + ppn + adj;
 
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
@@ -303,7 +317,6 @@
         updateQRCode(grand);
     }
 
-    // Fungsi bantu lainnya (Save, PDF, Numbering) tetap sama
     function autoFillCustomer() {
         const custValue = document.getElementById('in_cust').value;
         const addrField = document.getElementById('in_addr');
