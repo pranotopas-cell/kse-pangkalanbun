@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -196,11 +197,19 @@
 
             const { data, error } = await query;
             const tbody = document.getElementById('release-table-body');
-            if(error) { tbody.innerHTML = '<tr><td class="p-10 text-center text-red-500 font-black uppercase">ERR_SYNC</td></tr>'; return; }
+            
+            if(error) { 
+                tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-500 font-black uppercase">ERR_SYNC</td></tr>'; 
+                return; 
+            }
 
             tbody.innerHTML = data?.length ? data.map(d => {
                 const valJenis = (d.jenis || d.jenis_form || '-').toUpperCase();
                 const pdfLink = d.pdf_url || d.url; 
+                
+                // --- PERBAIKAN LOGIK TUJUAN (MENYATUKAN BERBAGAI NAMA KOLOM SUPABASE) ---
+                const valTujuan = d.tujuan || d.customer_name || d.vendor_name || d.penerima || '-';
+
                 const btnPdf = pdfLink ? 
                     `<button onclick="window.open('${pdfLink}', '_blank')" class="bg-emerald-500 text-white px-3 py-1.5 rounded text-[9px] font-black uppercase hover:bg-emerald-400 transition-all">VIEW PDF</button>` : 
                     `<span class="text-slate-600 text-[9px]">NO_FILE</span>`;
@@ -210,7 +219,7 @@
                     <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
                     <td class="p-4 uppercase font-bold text-emerald-400">${valJenis}</td>
                     <td class="p-4 text-white font-bold">${d.nomor_urut || d.nomor || d.no_invoice || '-'}</td>
-                    <td class="p-4 text-slate-300 font-bold uppercase">${d.customer_name || d.vendor_name || d.penerima || '-'}</td> 
+                    <td class="p-4 text-slate-300 font-bold uppercase">${valTujuan}</td> 
                     <td class="p-4 text-right text-yellow-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
                     <td class="p-4 text-center">${btnPdf}</td>
                 </tr>`;
@@ -249,17 +258,21 @@
         }
 
         function toggleLoginModal(show) { document.getElementById('login-overlay').style.display = show ? 'flex' : 'none'; }
+        
         async function handleLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
             if (error) alert("Gagal Login."); else window.location.reload();
         }
+        
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
+        
         function showSection(id) { 
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section')); 
             if(document.getElementById('section-' + id)) document.getElementById('section-' + id).classList.add('active-section');
         }
+        
         window.onload = checkAuth;
     </script>
 </body>
