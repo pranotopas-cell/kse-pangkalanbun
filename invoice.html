@@ -182,7 +182,7 @@
                                 <table class="w-100" style="font-size: 12px; border-collapse: collapse;">
                                     <tr><td class="p-2 border-bottom border-end" width="55%">Sub Total</td><td class="p-2 border-bottom text-end fw-bold" id="out_subtotal_display">0,00</td></tr>
                                     <tr><td class="p-2 border-bottom border-end"><i>DPP Nilai Lain</i></td><td class="p-2 border-bottom text-end" id="out_dpp_val">0,00</td></tr>
-                                    <tr><td class="p-2 border-bottom border-end"><i>PPN 12%</i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0,00</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end"><i>PPN </i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0,00</td></tr>
                                     <tr><td class="p-2 border-end"><i>Penyesuaian</i></td><td class="p-2 text-end" id="out_adjust_val">0,00</td></tr>
                                 </table>
                             </td>
@@ -219,7 +219,7 @@
                         <p class="fw-bold mb-0">PT. KHATULISTIWA SINAR ENERGI</p>
                         <div class="signature-space"></div> 
                         <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 15px;">SUPRANOTO</p>
-                        <p class="mb-0 small">Direktur / <span class="text-muted">Director</span></p>
+                        <p class="mb-0 small">Direktur / <span class="text-muted"></span></p>
                     </div>
                 </div>
 
@@ -258,8 +258,8 @@
         const qty = parseFloat(qtyRaw) || 0;
         const hNett = parseFloat(hNettRaw) || 0;
         
-        // 1. Harga DPP/Unit = Harga Per Liter x 111%
-        const hTax = hNett * 1.11; 
+        // 1. Harga DPP/Unit = Harga Per Liter / 111%
+        const hTax = hNett / 1.11; 
         
         // 2. Harga Total = Qty x Harga DPP/Unit
         const subtotal = qty * hTax;
