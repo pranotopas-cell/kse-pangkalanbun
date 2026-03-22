@@ -316,7 +316,6 @@
 
         async function loadReleaseDocs() {
             showSection('release');
-            // LOGIKA: Ambil dari supabase tabel eforms
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
             
@@ -324,19 +323,24 @@
             const tbody = document.getElementById('release-table-body');
             
             if(error) {
-                console.error(error);
                 tbody.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-500 uppercase font-black">FETCH_ERROR</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = data?.length ? data.map(d => `
+            tbody.innerHTML = data?.length ? data.map(d => {
+                // UPDATE LOGIKA: Cek kolom jenis/jenis_form, jika ada INVOICE/PURCHASE ORDER, tampilkan "FORM"
+                const rawJenis = (d.jenis || d.jenis_form || '').toUpperCase();
+                const displayJenis = (rawJenis.includes('INVOICE') || rawJenis.includes('PURCHASE ORDER')) ? 'FORM' : (rawJenis || 'FORM');
+
+                return `
                 <tr class="hover:bg-white/5">
                     <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_form || d.type || 'FORM'}</td>
+                    <td class="p-4 uppercase font-bold text-emerald-400">${displayJenis}</td>
                     <td class="p-4 text-white font-bold">${d.nomor_urut || d.nomor || '-'}</td>
                     <td class="p-4 text-slate-300 font-bold uppercase">${d.vendor_name || d.customer_name || d.penerima || '-'}</td> 
                     <td class="p-4 text-right text-yellow-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
-                </tr>`).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase font-black">NO_RECORDS</td></tr>';
+                </tr>`;
+            }).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase font-black">NO_RECORDS</td></tr>';
         }
 
         async function loadDocuments(cat) {
