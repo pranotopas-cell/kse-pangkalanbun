@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE_SMARTDocs</title>
+    <title>KSE_SMARTDocs_Integrated_System</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
         .text-header { letter-spacing: 0.1em; }
         .text-body-large { font-size: 0.95rem; line-height: 1.7; }
 
-        /* Style tambahan untuk icon mata */
+        /* Icon Mata Toggle Password */
         .password-container { position: relative; }
         .toggle-password { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; }
         .toggle-password:hover { color: #10b981; }
@@ -37,63 +37,63 @@
 </head>
 <body class="bg-hitech">
 
-    <nav class="bg-slate-950/90 backdrop-blur-xl text-white px-6 md:px-12 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-white/10">
-    <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('profile')">
-        <img src="header1.png" alt="Logo" class="h-10 md:h-12 object-contain">
+    <nav class="bg-slate-950/90 backdrop-blur-xl text-white px-6 md:px-12 py-3 flex justify-between items-center sticky top-0 z-[100] border-b border-white/10">
         
-        <div class="flex flex-col justify-center">
-            <h1 class="text-lg md:text-xl font-black tracking-tighter uppercase leading-none">
-                KHATULISTIWA <span class="text-emerald-500">SINAR ENERGI</span>
-            </h1>
-            <p class="text-[9px] tracking-[0.3em] text-slate-400 font-bold uppercase">
-                SMARTDocs System
-            </p>
+        <div class="flex items-center gap-4 cursor-pointer group" onclick="showSection('profile')">
+            <img src="header1.png" alt="KSE Logo" class="h-10 md:h-12 w-auto object-contain transition-transform group-hover:scale-105">
+            <div class="flex flex-col border-l border-white/20 pl-4">
+                <h1 class="text-[14px] md:text-[16px] font-black tracking-tighter uppercase leading-tight">
+                    KHATULISTIWA <span class="text-emerald-500">SINAR ENERGI</span>
+                </h1>
+                <p class="text-[8px] md:text-[9px] tracking-[0.4em] text-slate-400 font-extrabold uppercase leading-none mt-0.5">
+                    SMARTDocs <span class="text-white/30 text-[7px]">SYSTEM</span>
+                </p>
+            </div>
         </div>
-    </div>
-    
-    <div class="flex items-center space-x-8">
-        </div>
-</nav>
-        
-        <div class="flex items-center space-x-8">
-            <div id="public-nav" class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+
+        <div class="flex items-center gap-6 md:gap-10">
+            <div id="public-nav" class="hidden lg:flex items-center space-x-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                 <button onclick="showSection('profile')" class="hover:text-white transition-colors">Profile</button>
-                <button onclick="showSection('visi-misi')" class="hover:text-white transition-colors">Visi & Misi</button>
-                <button onclick="showSection('armada')" class="hover:text-white transition-colors">Armada</button>
-                <button onclick="showSection('kontak')" class="hover:text-white transition-colors">Kontak</button>
+                <button onclick="showSection('visi-misi')" class="hover:text-white transition-colors">Vision</button>
+                <button onclick="showSection('armada')" class="hover:text-white transition-colors">Fleet</button>
+                <button onclick="showSection('kontak')" class="hover:text-white transition-colors">Contact</button>
             </div>
 
-            <div id="protected-nav" class="hidden flex items-center space-x-8">
+            <div id="protected-nav" class="hidden flex items-center gap-6 border-x border-white/10 px-6">
                 <div id="nav-eform" class="dropdown hidden">
-                    <button class="text-[12px] font-black uppercase tracking-[0.15em] text-yellow-500 flex items-center gap-1 hover:brightness-125">KSE E-Form <small class="text-[8px]">▼</small></button>
+                    <button class="text-[11px] font-black uppercase tracking-[0.15em] text-yellow-500 flex items-center gap-2 hover:brightness-125">
+                        <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></span> E-FORM
+                    </button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <a href="penawaran.html" class="block px-6 py-4 text-white hover:bg-emerald-600 text-[11px] font-black border-b border-white/5 uppercase italic tracking-wider">BUAT PENAWARAN</a>
-                            <a href="kse_po.html" class="block px-6 py-4 text-slate-200 hover:bg-yellow-600 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
-                            <a href="invoice.html" class="block px-6 py-4 text-slate-200 hover:bg-yellow-600 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">INVOICE</a>
-                            <button onclick="loadReleaseDocs()" class="block w-full text-left px-6 py-4 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[11px] font-black uppercase tracking-widest">E-FORM HISTORY</button>
+                            <a href="penawaran.html" class="block px-6 py-4 text-white hover:bg-emerald-600 text-[10px] font-black border-b border-white/5 uppercase italic tracking-wider">BUAT PENAWARAN</a>
+                            <a href="kse_po.html" class="block px-6 py-4 text-slate-200 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
+                            <a href="invoice.html" class="block px-6 py-4 text-slate-200 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</a>
+                            <button onclick="loadReleaseDocs()" class="block w-full text-left px-6 py-4 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[10px] font-black uppercase tracking-widest">TRANSACTION HISTORY</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="dropdown">
-                    <button class="text-[12px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-1 hover:text-emerald-400">KSE E-Docs <small class="text-[8px]">▼</small></button>
+                    <button class="text-[11px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-2 hover:text-emerald-400">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> E-ARCHIVE
+                    </button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold border-b border-white/5 uppercase">SURAT JALAN</button>
-                            <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</button>
-                            <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold border-b border-white/5 uppercase">INVOICE</button>
-                            <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold uppercase">FAKTUR PAJAK</button>
+                            <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[10px] font-bold border-b border-white/5 uppercase">SURAT JALAN</button>
+                            <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</button>
+                            <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</button>
+                            <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[10px] font-bold uppercase">FAKTUR PAJAK</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div id="auth-buttons">
-                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-7 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">Login</button>
-                <div id="user-info" class="hidden flex items-center gap-6 border-l border-white/20 pl-6">
-                    <span id="display-user-email" class="text-[12px] font-bold text-emerald-400 lowercase tracking-tight">...</span>
-                    <button onclick="handleLogout()" class="text-[12px] font-black text-red-500 uppercase hover:text-red-400">Logout</button>
+                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">Verify Access</button>
+                <div id="user-info" class="hidden flex items-center gap-4">
+                    <span id="display-user-email" class="text-[10px] font-bold text-emerald-400 lowercase">...</span>
+                    <button onclick="handleLogout()" class="text-red-500 hover:text-red-400"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></button>
                 </div>
             </div>
         </div>
@@ -108,75 +108,57 @@
             <div class="glass-card p-12 border-emerald-500/10 italic">
                 <h2 class="text-5xl font-black text-white mb-10 uppercase tracking-tighter text-header">Corporate Profile</h2>
                 <div class="space-y-8 text-slate-300 text-body-large">
-                    <p class="border-l-4 border-emerald-500 pl-8"><strong class="text-white text-xl block mb-2 uppercase tracking-wide">PT Khatulistiwa Sinar Energi (KSE)</strong> Merupakan entitas bisnis yang mengkhususkan diri pada perdagangan dan distribusi High Speed Diesel (HSD) Industri.</p>
-                    <p>Dedikasi kami berfokus pada <span class="text-white font-bold underline decoration-emerald-500">transparansi mutlak</span> melalui integrasi sistem <span class="text-emerald-400 font-extrabold italic">.SMARTDocs</span>.</p>
+                    <p class="border-l-4 border-emerald-500 pl-8"><strong class="text-white text-xl block mb-2 uppercase tracking-wide text-header">PT Khatulistiwa Sinar Energi (KSE)</strong> Merupakan entitas bisnis perdagangan dan distribusi High Speed Diesel (HSD) Industri nasional.</p>
                 </div>
             </div>
         </section>
 
         <section id="section-visi-misi" class="section">
-            <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Visi & Misi Strategis</h2>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10">
-                        <h3 class="text-emerald-500 font-black mb-6 uppercase text-xs tracking-[0.2em]">Our Vision</h3>
-                        <p class="text-white text-sm leading-loose uppercase font-semibold">Menjadi garda terdepan dalam digitalisasi energi di Indonesia.</p>
-                    </div>
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10">
-                        <h3 class="text-emerald-500 font-black mb-6 uppercase text-xs tracking-[0.2em]">Core Missions</h3>
-                        <ul class="text-slate-200 text-[12px] space-y-6 leading-relaxed uppercase font-bold">
-                            <li><span class="text-emerald-500">●</span> Integrasi teknologi dalam distribusi energi.</li>
-                            <li><span class="text-emerald-500">●</span> Konsistensi mutu produk sesuai regulasi.</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="glass-card p-12 border-emerald-500/10 italic text-center">
+                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Visi & Misi</h2>
+                <p class="text-slate-400 font-bold uppercase tracking-[0.2em]">Menjadi leader digitalisasi energi Indonesia.</p>
             </div>
         </section>
 
         <section id="section-armada" class="section">
             <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Infrastruktur Fleet</h2>
+                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header text-center">Infrastruktur Fleet</h2>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
-                        <p class="text-4xl text-white font-black mb-4 uppercase">TANGKI</p>
-                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">5.000 L - 8.000 L - 10.OOO L </p>
+                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center uppercase font-black">
+                        <p class="text-4xl text-white">TANGKI</p>
+                        <p class="text-[10px] text-slate-500 mt-2 tracking-widest">5.000 L - 10.000 L</p>
                     </div>
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
-                        <p class="text-4xl text-white font-black mb-4 uppercase">GPS LIVE</p>
-                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">Real-time Monitoring mobil Tangki</p>
+                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center uppercase font-black">
+                        <p class="text-4xl text-white">GPS LIVE</p>
+                        <p class="text-[10px] text-slate-500 mt-2 tracking-widest">Monitoring System</p>
                     </div>
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
-                        <p class="text-4xl text-white font-black mb-4 uppercase">CALIBRATED</p>
-                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">Tera Mobil Update tiap Tahun oleh Dinas Metrologi</p>
+                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center uppercase font-black">
+                        <p class="text-4xl text-white">TERA</p>
+                        <p class="text-[10px] text-slate-500 mt-2 tracking-widest">Metrologi Certified</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="section-kontak" class="section">
-            <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Contact Center</h2>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div>
-                        <h4 class="text-emerald-500 font-black text-[12px] uppercase mb-4 tracking-widest">Head Office Support</h4>
-                        <p class="text-5xl text-white font-black tracking-tighter mb-4">0815-8841-410</p>
-                        <p class="text-slate-400 text-sm italic font-bold">pt.khatulistiwa.sinar.energi@gmail.com</p>
-                    </div>
-                </div>
+            <div class="glass-card p-12 border-emerald-500/10 italic text-center">
+                <h2 class="text-3xl font-black text-white mb-6 uppercase text-header">Contact Center</h2>
+                <p class="text-4xl font-black text-emerald-500">0815-8841-410</p>
+                <p class="text-slate-500 text-sm mt-4 font-bold uppercase tracking-widest">pt.khatulistiwa.sinar.energi@gmail.com</p>
             </div>
         </section>
 
         <div id="admin-panel" class="hidden mb-12 glass-card p-8 border-emerald-500/20">
-            <h3 class="font-black uppercase text-white mb-8 text-sm italic tracking-[0.2em]">Archive Management System</h3>
+            <h3 class="font-black uppercase text-white mb-8 text-[11px] italic tracking-[0.2em]">Archive Management System</h3>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
                 <input type="file" id="file-input" class="w-full p-3 bg-white/5 rounded-xl text-[11px] text-slate-400 border border-white/10">
-                <select id="doc-category" class="w-full p-3 bg-slate-900 rounded-xl text-[11px] text-white border border-white/10">
+                <select id="doc-category" class="w-full p-3 bg-slate-900 rounded-xl text-[11px] text-white border border-white/10 uppercase">
                     <option value="SURAT JALAN">SURAT JALAN</option>
                     <option value="PURCHASE ORDER">PURCHASE ORDER</option>
                     <option value="INVOICE">INVOICE</option>
                     <option value="FAKTUR PAJAK">FAKTUR PAJAK</option>
                 </select>
-                <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-3 bg-slate-900 text-white rounded-xl text-[11px] border border-emerald-500/30">
+                <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-3 bg-slate-900 text-white rounded-xl text-[11px] border border-emerald-500/30 uppercase">
                     <option value="">-- PILIH CLIENT --</option>
                 </select>
                 <input type="hidden" id="manual-uid">
@@ -185,57 +167,34 @@
         </div>
 
         <section id="section-release" class="section">
-            <div class="glass-card overflow-hidden border-yellow-500/20">
-                <div class="p-8 bg-yellow-500/5 border-b border-white/10">
-                    <h3 class="font-black uppercase text-yellow-500 text-[12px] italic tracking-widest">E-FORM TRANSACTION HISTORY</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-[12px] italic">
-                        <thead class="bg-white/5 text-slate-400 uppercase font-black">
-                            <tr>
-                                <th class="p-5">Tanggal</th>
-                                <th class="p-5">Jenis</th>
-                                <th class="p-5">Nomor</th>
-                                <th class="p-5">Tujuan</th> 
-                                <th class="p-5 text-right">Nominal</th>
-                                <th class="p-5 text-center">Arsip</th>
-                            </tr>
-                        </thead>
-                        <tbody id="release-table-body" class="divide-y divide-white/5"></tbody>
-                    </table>
-                </div>
+            <div class="glass-card overflow-hidden">
+                <div class="p-8 bg-white/5 border-b border-white/10"><h3 class="font-black uppercase text-white text-[11px] tracking-widest">E-FORM TRANSACTION HISTORY</h3></div>
+                <div class="overflow-x-auto"><table class="w-full text-left italic text-[11px]"><tbody id="release-table-body" class="divide-y divide-white/5"></tbody></table></div>
             </div>
         </section>
 
         <section id="section-documents" class="section">
             <div class="glass-card overflow-hidden">
-                <div class="p-8 bg-white/5 border-b border-white/10">
-                    <h3 id="doc-title" class="font-black uppercase text-white text-[12px] italic tracking-widest">DOCUMENT_NODE</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left italic text-[12px]">
-                        <tbody id="file-table-body" class="divide-y divide-white/5"></tbody>
-                    </table>
-                </div>
+                <div class="p-8 bg-white/5 border-b border-white/10"><h3 id="doc-title" class="font-black uppercase text-white text-[11px] tracking-widest italic">DOCUMENT_NODE</h3></div>
+                <div class="overflow-x-auto"><table class="w-full text-left italic text-[11px]"><tbody id="file-table-body" class="divide-y divide-white/5"></tbody></table></div>
             </div>
         </section>
     </main>
 
     <div id="login-overlay">
-        <div class="glass-card p-12 w-full max-w-[400px] border-emerald-500/30 text-center relative">
+        <div class="glass-card p-12 w-full max-w-[450px] border-emerald-500/30 text-center relative">
             <button onclick="toggleLoginModal(false)" class="absolute top-6 right-6 text-slate-500 hover:text-white">✕</button>
             
-            <img src="logo.png" alt="KSE Logo" class="h-20 mx-auto mb-6 object-contain">
+            <img src="logo.png" alt="KSE" class="h-16 mx-auto mb-6 object-contain">
             
-            <h2 class="font-black text-white text-2xl uppercase mb-10 italic tracking-[0.3em]">Secure Access</h2>
-            
-            <div class="space-y-6">
-                <input type="email" id="login-email" placeholder="Credential ID" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
+            <h2 class="font-black text-white text-2xl uppercase mb-8 italic tracking-[0.3em]">Secure Access</h2>
+            <div class="space-y-5">
+                <input type="email" id="login-email" placeholder="Credential ID" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500">
                 
                 <div class="password-container">
-                    <input type="password" id="login-pass" placeholder="Password Key" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
-                    <span class="toggle-password" onclick="togglePasswordVisibility()">
-                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <input type="password" id="login-pass" placeholder="Password Key" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500">
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </span>
                 </div>
 
@@ -255,16 +214,13 @@
 
         let currentUser = null; let isAdmin = false;
 
-        // Fungsi Toggle Password
-        function togglePasswordVisibility() {
-            const passInput = document.getElementById('login-pass');
-            const eyeIcon = document.getElementById('eye-icon');
-            if (passInput.type === "password") {
-                passInput.type = "text";
-                eyeIcon.style.color = "#10b981";
+        function togglePassword() {
+            const pin = document.getElementById('login-pass');
+            const icon = document.getElementById('eye-icon');
+            if (pin.type === "password") {
+                pin.type = "text"; icon.style.color = "#10b981";
             } else {
-                passInput.type = "password";
-                eyeIcon.style.color = "#64748b";
+                pin.type = "password"; icon.style.color = "#64748b";
             }
         }
 
@@ -274,12 +230,10 @@
             if (session) {
                 currentUser = session.user;
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
-                
                 document.getElementById('btn-show-login').classList.add('hidden');
                 document.getElementById('user-info').classList.remove('hidden');
                 document.getElementById('protected-nav').classList.remove('hidden');
                 document.getElementById('display-user-email').innerText = currentUser.email;
-
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     document.getElementById('nav-eform').classList.remove('hidden');
@@ -292,20 +246,17 @@
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
-            const { data, error } = await query;
+            const { data } = await query;
             const tbody = document.getElementById('release-table-body');
-            if (error) return;
-            tbody.innerHTML = data?.length ? data.map(d => {
-                const pdfLink = d.pdf_url ? `<a href="${d.pdf_url}" target="_blank" class="text-white border border-white/30 px-4 py-2 rounded hover:bg-white hover:text-black font-black text-[10px] uppercase transition-all">VIEW PDF</a>` : '<span class="text-slate-600">NULL</span>';
-                return `<tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-5 text-slate-400 font-bold">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="p-5 uppercase font-black text-emerald-500">${d.jenis || 'FORM'}</td>
-                    <td class="p-5 text-white font-black tracking-wider">${d.nomor || d.no_invoice || '-'}</td>
-                    <td class="p-5 text-slate-200 font-bold uppercase">${d.tujuan || d.customer_name || '-'}</td> 
-                    <td class="p-5 text-right text-yellow-500 font-black text-sm">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
-                    <td class="p-5 text-center">${pdfLink}</td>
-                </tr>`;
-            }).join('') : '<tr><td colspan="6" class="p-10 text-center italic text-slate-600 uppercase font-black">SYSTEM_NO_DATA</td></tr>';
+            tbody.innerHTML = data?.length ? data.map(d => `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="p-4 font-bold text-slate-500">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
+                    <td class="p-4 uppercase font-black text-emerald-500">${d.jenis || 'FORM'}</td>
+                    <td class="p-4 text-white font-black">${d.nomor || d.no_invoice || '-'}</td>
+                    <td class="p-4 text-slate-400 uppercase">${d.tujuan || d.customer_name || '-'}</td>
+                    <td class="p-4 text-right text-yellow-500 font-black italic">Rp ${parseFloat(d.grand_total || 0).toLocaleString('id-ID')}</td>
+                    <td class="p-4 text-center"><button onclick="window.open('${d.pdf_url}', '_blank')" class="border border-white/20 px-3 py-1 rounded text-[9px] hover:bg-white hover:text-black">PDF</button></td>
+                </tr>`).join('') : '<tr><td class="p-10 text-center">NO DATA</td></tr>';
         }
 
         async function loadDocuments(cat) {
@@ -317,22 +268,21 @@
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-6 font-black text-white uppercase text-[12px] tracking-widest">${d.name}</td>
-                    <td class="p-6 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-white border border-white/20 px-6 py-3 rounded-xl hover:bg-white hover:text-black uppercase transition-all">Open Archive</button></td>
-                </tr>`).join('') : '<tr><td class="p-12 text-center text-slate-600 font-black uppercase italic">NODE_EMPTY</td></tr>';
+                    <td class="p-5 font-black text-white uppercase tracking-widest">${d.name}</td>
+                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black border border-white/20 px-4 py-2 rounded-xl hover:bg-white hover:text-black transition-all">OPEN ARCHIVE</button></td>
+                </tr>`).join('') : '<tr><td class="p-10 text-center">EMPTY</td></tr>';
         }
 
         function initHarga() {
             dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
                     const data = doc.data().sekarang || {};
-                    const grid = document.getElementById('harga-grid-dashboard');
-                    grid.innerHTML = "";
+                    const grid = document.getElementById('harga-grid-dashboard'); grid.innerHTML = "";
                     for(let i=1; i<=4; i++) {
                         const val = parseInt(data['wilayah'+i] || 0);
-                        grid.innerHTML += `<div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500/50 transition-all">
-                            <span class="text-[10px] text-emerald-500 uppercase font-black block mb-2 tracking-widest italic">Region ${i}</span>
-                            <h4 class="text-white font-black text-lg">Rp ${val.toLocaleString('id-ID')}</h4>
+                        grid.innerHTML += `<div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500 transition-all">
+                            <span class="text-[9px] text-emerald-500 uppercase font-black block mb-2 tracking-widest italic">Region ${i}</span>
+                            <h4 class="text-white font-black text-lg italic">Rp ${val.toLocaleString('id-ID')}</h4>
                         </div>`;
                     }
                 }
@@ -349,7 +299,7 @@
             if(!storageErr) {
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: document.getElementById('doc-category').value, user_id: uid }]);
-                alert("Archive Integrated Successfully."); location.reload();
+                alert("Archive Integrated."); location.reload();
             }
         }
 
@@ -364,9 +314,7 @@
 
         function toggleLoginModal(show) { document.getElementById('login-overlay').style.display = show ? 'flex' : 'none'; }
         async function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
+            const { error } = await _supabase.auth.signInWithPassword({ email: document.getElementById('login-email').value, password: document.getElementById('login-pass').value });
             if (error) alert("Verification Failed."); else window.location.reload();
         }
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
