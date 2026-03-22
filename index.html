@@ -71,13 +71,13 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="text-[11px] font-black uppercase tracking-widest text-cyan-400 flex items-center gap-1">KSE E-DOC <small>▼</small></button>
+                    <button class="text-[12px] font-black uppercase tracking-widest text-white flex items-center gap-1">KSE E-DOC <small>▼</small></button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">SURAT JALAN</button>
-                            <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</button>
-                            <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</button>
-                            <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold uppercase">FAKTUR PAJAK</button>
+                            <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-slate-700 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">SURAT JALAN</button>
+                            <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-slate-700 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</button>
+                            <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-slate-700 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">INVOICE</button>
+                            <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-slate-700 hover:text-white text-[11px] font-bold uppercase">FAKTUR PAJAK</button>
                         </div>
                     </div>
                 </div>
@@ -234,10 +234,10 @@
         <section id="section-documents" class="section">
             <div class="glass-card overflow-hidden">
                 <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
-                    <h3 id="doc-title" class="font-black uppercase text-emerald-400 text-xs italic">REPOSITORY_NODE</h3>
+                    <h3 id="doc-title" class="font-black uppercase text-white text-[12px] italic">REPOSITORY_NODE</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left italic text-[11px]">
+                    <table class="w-full text-left italic text-[12px]">
                         <tbody id="file-table-body" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
@@ -247,10 +247,10 @@
         <section id="section-release" class="section">
             <div class="glass-card overflow-hidden border-yellow-500/20">
                 <div class="p-6 bg-yellow-500/5 border-b border-white/10">
-                    <h3 class="font-black uppercase text-yellow-500 text-[10px]">E-FORM TRANSACTION HISTORY</h3>
+                    <h3 class="font-black uppercase text-yellow-500 text-[11px]">E-FORM TRANSACTION HISTORY</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-[10px] italic">
+                    <table class="w-full text-left text-[11px] italic">
                         <thead class="bg-white/5 text-slate-500 uppercase font-black">
                             <tr>
                                 <th class="p-4">Tanggal</th>
@@ -296,7 +296,6 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                // Logic: Admin identified by email
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 
                 document.getElementById('btn-show-login').classList.add('hidden');
@@ -304,7 +303,6 @@
                 document.getElementById('protected-nav').classList.remove('hidden');
                 document.getElementById('display-user-email').innerText = currentUser.email;
 
-                // VISIBILITY LOGIC: E-FORM only for Admin
                 if(isAdmin) {
                     document.getElementById('nav-eform').classList.remove('hidden');
                     document.getElementById('admin-panel').classList.remove('hidden');
@@ -318,18 +316,27 @@
 
         async function loadReleaseDocs() {
             showSection('release');
+            // LOGIKA: Ambil dari supabase tabel eforms
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
-            const { data } = await query;
+            
+            const { data, error } = await query;
             const tbody = document.getElementById('release-table-body');
+            
+            if(error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-500 uppercase font-black">FETCH_ERROR</td></tr>';
+                return;
+            }
+
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
-                    <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString()}</td>
-                    <td class="p-4 uppercase font-bold text-emerald-400">${jenis || 'FORM'}</td>
-                    <td class="p-4 text-white font-bold">${d.nomor || '-'}</td>
+                    <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
+                    <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_form || d.type || 'FORM'}</td>
+                    <td class="p-4 text-white font-bold">${d.nomor_urut || d.nomor || '-'}</td>
                     <td class="p-4 text-slate-300 font-bold uppercase">${d.vendor_name || d.customer_name || d.penerima || '-'}</td> 
-                    <td class="p-4 text-right text-yellow-500 font-black">Rp ${d.nominal?.toLocaleString('id-ID')}</td>
-                </tr>`).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase italic">NO_RECORDS</td></tr>';
+                    <td class="p-4 text-right text-yellow-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
+                </tr>`).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase font-black">NO_RECORDS</td></tr>';
         }
 
         async function loadDocuments(cat) {
@@ -341,8 +348,8 @@
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
-                    <td class="p-5 font-bold text-white uppercase text-[10px]">${d.name}</td>
-                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white">VIEW</button></td>
+                    <td class="p-5 font-bold text-white uppercase text-[11px]">${d.name}</td>
+                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white">VIEW</button></td>
                 </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 font-bold uppercase italic">NO_DATA</td></tr>';
         }
 
