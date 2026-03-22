@@ -123,16 +123,16 @@
                 <div class="row g-2 mb-2">
                     <div class="col-6">
                         <label class="small fw-bold">DPP Nilai Lain</label>
-                        <input type="number" id="in_dpp_lain" class="form-control form-control-sm bg-light" step="0.01" oninput="syncAll()">
+                        <input type="number" id="in_dpp_lain" class="form-control form-control-sm bg-light" step="1" oninput="syncAll()">
                     </div>
                     <div class="col-6">
                         <label class="small fw-bold">PPN (12%)</label>
-                        <input type="number" id="in_ppn" class="form-control form-control-sm bg-light" step="0.01" oninput="syncAll()">
+                        <input type="number" id="in_ppn" class="form-control form-control-sm bg-light" step="1" oninput="syncAll()">
                     </div>
                 </div>
 
                 <label class="small fw-bold">Penyesuaian (+/-)</label>
-                <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" step="0.01" oninput="syncAll()">
+                <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" step="1" oninput="syncAll()">
             </div>
             
             <datalist id="list_barang">
@@ -273,9 +273,8 @@
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // Fungsi pembulatan sesuai instruksi: 0.5 ke atas naik
     function roundKSE(num) {
-        return Math.round(num);
+        return Math.round(num); // 0.5 ke atas naik
     }
 
     function calculateFromBasic() {
@@ -284,24 +283,24 @@
         const qty = parseFloat(qtyRaw) || 0;
         const hNett = parseFloat(hNettRaw) || 0;
         
-        // Step 1: Hitung DPP Unit Murni
-        let hTax = (hNett / 1.11);
+        // DPP Unit 14.864,87
+        let hTax = Math.ceil((hNett / 1.11) * 100) / 100;
         
-        // Step 2: Bulatkan DPP Unit (Sesuai Foto 2, 14.864,86 menjadi 14.864,87)
-        hTax = Math.ceil(hTax * 100) / 100;
-
-        // Step 3: Total DPP (Subtotal) = Qty * DPP Unit yang sudah dibulatkan
+        // Subtotal: 5000 * 14.864,87 = 74.324.350
         const subtotal = qty * hTax;
 
         document.getElementById('in_h_tax_text').value = hTax.toFixed(2).replace('.', ',');
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         
-        // Step 4: Hitung Pajak dari Subtotal
-        const dppLain = roundKSE(subtotal * (11 / 12));
-        const ppn = roundKSE(dppLain * 0.12);
+        // Perhitungan Pajak
+        const dppLainRaw = subtotal * (11 / 12);
+        const dppLainBulat = roundKSE(dppLainRaw); // 68.130.654
         
-        document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
-        document.getElementById('in_ppn').value = ppn.toFixed(2);
+        const ppnRaw = dppLainBulat * 0.12;
+        const ppnBulat = roundKSE(ppnRaw); // 8.175.679
+        
+        document.getElementById('in_dpp_lain').value = dppLainBulat;
+        document.getElementById('in_ppn').value = ppnBulat;
 
         syncAll();
     }
@@ -315,20 +314,28 @@
         const subtotal = qty * dppUnit;
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         
-        const dppLain = roundKSE(subtotal * (11 / 12));
-        const ppn = roundKSE(dppLain * 0.12);
-        document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
-        document.getElementById('in_ppn').value = ppn.toFixed(2);
+        const dppLainRaw = subtotal * (11 / 12);
+        const dppLainBulat = roundKSE(dppLainRaw);
+        
+        const ppnRaw = dppLainBulat * 0.12;
+        const ppnBulat = roundKSE(ppnRaw);
+
+        document.getElementById('in_dpp_lain').value = dppLainBulat;
+        document.getElementById('in_ppn').value = ppnBulat;
 
         syncAll();
     }
 
     function manualTaxCalc() {
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
-        const dppLain = roundKSE(sub * (11 / 12));
-        const ppn = roundKSE(dppLain * 0.12);
-        document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
-        document.getElementById('in_ppn').value = ppn.toFixed(2);
+        const dppLainRaw = sub * (11 / 12);
+        const dppLainBulat = roundKSE(dppLainRaw);
+        
+        const ppnRaw = dppLainBulat * 0.12;
+        const ppnBulat = roundKSE(ppnRaw);
+        
+        document.getElementById('in_dpp_lain').value = dppLainBulat;
+        document.getElementById('in_ppn').value = ppnBulat;
         syncAll();
     }
 
@@ -336,7 +343,7 @@
         document.getElementById('out_no').innerText = document.getElementById('in_no').value;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
-        document.getElementById('out_po_no').innerText = document.getElementById('in_no').value; // Mengikuti foto
+        document.getElementById('out_po_no').innerText = document.getElementById('in_po_no').value;
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value + " Ltr";
@@ -350,6 +357,7 @@
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
+        // Grand Total Bulat Sempurna
         const grandTotalFinal = roundKSE(sub + ppn + adj);
 
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
