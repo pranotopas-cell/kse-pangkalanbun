@@ -105,7 +105,7 @@
                     </div>
                     <div class="col-6">
                         <label class="small fw-bold">Harga Jual/Ltr</label>
-                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="15500" oninput="calculateFromBasic()">
+                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="16500" oninput="calculateFromBasic()">
                     </div>
                 </div>
 
@@ -115,7 +115,7 @@
                         <input type="text" id="in_h_tax_text" class="form-control form-control-sm border-primary" oninput="calculateFromDPPUnit()">
                     </div>
                     <div class="col-6">
-                        <label class="small fw-bold text-danger">Sub Total</label>
+                        <label class="small fw-bold text-danger">Harga Total</label>
                         <input type="number" id="in_subtotal" class="form-control form-control-sm border-danger" step="0.01" oninput="manualTaxCalc()">
                     </div>
                 </div>
@@ -273,7 +273,7 @@
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // UPDATE LOGIKA PEMBULATAN: 0.5 ke atas naik satuan
+    // Fungsi pembulatan sesuai instruksi: 0.5 ke atas naik
     function roundKSE(num) {
         return Math.round(num);
     }
@@ -284,14 +284,22 @@
         const qty = parseFloat(qtyRaw) || 0;
         const hNett = parseFloat(hNettRaw) || 0;
         
-        const hTax = Math.round((hNett / 1.11) * 100) / 100; 
+        // Step 1: Hitung DPP Unit Murni
+        let hTax = (hNett / 1.11);
+        
+        // Step 2: Bulatkan DPP Unit (Sesuai Foto 2, 14.864,86 menjadi 14.864,87)
+        hTax = Math.ceil(hTax * 100) / 100;
+
+        // Step 3: Total DPP (Subtotal) = Qty * DPP Unit yang sudah dibulatkan
         const subtotal = qty * hTax;
 
         document.getElementById('in_h_tax_text').value = hTax.toFixed(2).replace('.', ',');
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         
-        const dppLain = subtotal * (11 / 12);
-        const ppn = dppLain * 0.12;
+        // Step 4: Hitung Pajak dari Subtotal
+        const dppLain = roundKSE(subtotal * (11 / 12));
+        const ppn = roundKSE(dppLain * 0.12);
+        
         document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
         document.getElementById('in_ppn').value = ppn.toFixed(2);
 
@@ -307,8 +315,8 @@
         const subtotal = qty * dppUnit;
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         
-        const dppLain = subtotal * (11 / 12);
-        const ppn = dppLain * 0.12;
+        const dppLain = roundKSE(subtotal * (11 / 12));
+        const ppn = roundKSE(dppLain * 0.12);
         document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
         document.getElementById('in_ppn').value = ppn.toFixed(2);
 
@@ -317,8 +325,8 @@
 
     function manualTaxCalc() {
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
-        const dppLain = sub * (11 / 12);
-        const ppn = dppLain * 0.12;
+        const dppLain = roundKSE(sub * (11 / 12));
+        const ppn = roundKSE(dppLain * 0.12);
         document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
         document.getElementById('in_ppn').value = ppn.toFixed(2);
         syncAll();
@@ -328,7 +336,7 @@
         document.getElementById('out_no').innerText = document.getElementById('in_no').value;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
-        document.getElementById('out_po_no').innerText = document.getElementById('in_po_no').value;
+        document.getElementById('out_po_no').innerText = document.getElementById('in_no').value; // Mengikuti foto
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value + " Ltr";
@@ -342,16 +350,13 @@
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        const grandTotalRaw = sub + ppn + adj;
-        const grandTotalFinal = roundKSE(grandTotalRaw);
+        const grandTotalFinal = roundKSE(sub + ppn + adj);
 
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
         document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
         document.getElementById('out_dpp_val').innerText = formatIDR(dppLain);
         document.getElementById('out_ppn_val').innerText = formatIDR(ppn);
         document.getElementById('out_adjust_val').innerText = formatIDR(adj);
-        
-        // Tampilkan 2 desimal tetap (.00) untuk Grand Total sesuai instruksi
         document.getElementById('out_grand_val').innerText = formatIDR(grandTotalFinal);
         
         document.getElementById('out_terbilang').innerText = grandTotalFinal != 0 ? terbilang(grandTotalFinal) + " Rupiah" : "-";
@@ -448,6 +453,7 @@
         handleDateChange();
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_qty_text').value = "5.000";
+        document.getElementById('in_h_nett_text').value = "16.500";
         calculateFromBasic();
     };
 </script>
