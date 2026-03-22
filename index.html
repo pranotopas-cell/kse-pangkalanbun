@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE_e-Documents</title>
+    <title>KSE_e-Documents_Full_Detail</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -62,6 +62,8 @@
                     <button class="text-[11px] font-black uppercase tracking-widest text-yellow-500 flex items-center gap-1">KSE E-FORM <small>▼</small></button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
+                            <a href="kse_po.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
+                            <a href="invoice.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</a>
                             <button onclick="loadReleaseDocs()" class="block w-full text-left px-5 py-3 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[10px] font-black uppercase">DOKUMEN RILIS (DATABASE)</button>
                         </div>
                     </div>
@@ -96,9 +98,125 @@
 
         <section id="section-profile" class="section active-section">
             <div class="glass-card p-10 border-emerald-500/10 italic">
-                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Overview</h2>
-                <div class="space-y-6 text-slate-300 leading-relaxed text-sm">
-                    <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> hadir sebagai mitra strategis dalam industri distribusi bahan bakar minyak (HSD) berkualitas tinggi di Indonesia.</p>
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Profil Perusahaan</h2>
+                <div class="space-y-8 text-slate-200 leading-relaxed text-base">
+                    <p class="border-l-4 border-emerald-500 pl-6">
+                        <strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan perusahaan penyedia dan distributor Bahan Bakar Minyak (BBM) industri terkemuka yang berfokus pada pemenuhan kebutuhan energi nasional dengan standar kualitas tinggi. Berdiri dengan visi untuk menjadi pilar utama dalam rantai pasok energi industri di Indonesia, kami memahami bahwa ketepatan waktu dan kualitas produk adalah kunci utama keberhasilan operasional mitra bisnis kami.
+                    </p>
+                    <p>
+                        Seiring dengan perkembangan teknologi informasi, KSE melakukan transformasi digital melalui platform <span class="text-emerald-400 font-bold">.SMARTDocs</span>. Platform ini dirancang khusus untuk memberikan transparansi penuh kepada seluruh pelanggan, mulai dari pengelolaan armada, pemantauan harga pasar secara real-time, hingga sistem administrasi dokumen yang terintegrasi secara online. Kami melayani berbagai sektor strategis meliputi industri pertambangan, manufaktur, konstruksi, hingga logistik maritim.
+                    </p>
+                    <p>
+                        Dengan dukungan tim ahli dan infrastruktur yang modern, kami berkomitmen untuk terus berinovasi dalam memberikan layanan distribusi energi yang aman, efisien, dan akuntabel di setiap wilayah operasional kami.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-visi-misi" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Visi & Misi Strategis</h2>
+                <div class="grid md:grid-cols-1 gap-8 text-slate-200 text-base leading-loose">
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-emerald-400 font-black mb-4 uppercase tracking-widest text-sm">Visi Utama Kami</h3>
+                        <p>Menjadi perusahaan distribusi energi industri berbasis teknologi yang paling terpercaya di Indonesia, unggul dalam kualitas produk, efisiensi logistik, serta menjadi mitra strategis yang memberikan nilai tambah maksimal bagi pembangunan industri berkelanjutan.</p>
+                    </div>
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-emerald-400 font-black mb-4 uppercase tracking-widest text-sm">Misi Perusahaan</h3>
+                        <ul class="space-y-4">
+                            <li class="flex gap-4">
+                                <span class="text-emerald-500 font-black">01.</span>
+                                <span>Menyediakan produk High Speed Diesel (HSD) berkualitas tinggi yang memenuhi standar spesifikasi Dirjen Migas dan standar internasional.</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="text-emerald-500 font-black">02.</span>
+                                <span>Mengoptimalkan sistem pengiriman melalui integrasi teknologi monitoring armada berbasis GPS untuk memastikan keamanan dan ketepatan waktu distribusi.</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="text-emerald-500 font-black">03.</span>
+                                <span>Membangun ekosistem administrasi digital yang transparan dan memudahkan mitra dalam mengakses riwayat transaksi serta dokumen legal.</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="text-emerald-500 font-black">04.</span>
+                                <span>Menjunjung tinggi aspek Keselamatan, Kesehatan Kerja, dan Lingkungan (K3L) dalam setiap aspek operasional perusahaan.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-legalitas" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Legalitas & Kepatuhan</h2>
+                <div class="space-y-6 text-slate-200 text-base leading-relaxed">
+                    <p>PT Khatulistiwa Sinar Energi mengutamakan kepatuhan terhadap regulasi hukum yang berlaku di Indonesia sebagai bentuk komitmen terhadap integritas bisnis. Berikut adalah rincian legalitas utama kami:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div class="p-6 bg-white/5 rounded-2xl border border-white/10">
+                            <h4 class="text-emerald-500 font-black text-xs uppercase mb-4">Administrasi Hukum</h4>
+                            <ul class="text-sm space-y-2 uppercase">
+                                <li>• NIB: <span class="text-white font-mono">Tersertifikasi Berbasis Risiko</span></li>
+                                <li>• NPWP: <span class="text-white font-mono">Terdaftar Wajib Pajak Badan</span></li>
+                                <li>• Akta Pendirian: <span class="text-white font-mono">Tersedia via Database SMARTDocs</span></li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-white/5 rounded-2xl border border-white/10">
+                            <h4 class="text-emerald-500 font-black text-xs uppercase mb-4">Izin Operasional</h4>
+                            <ul class="text-sm space-y-2 uppercase">
+                                <li>• Izin Niaga Umum Migas (HSD Industri)</li>
+                                <li>• Sertifikasi Standar Kualitas Produk</li>
+                                <li>• Lisensi Transportasi BBM Jalur Darat</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-armada" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Infrastruktur Armada</h2>
+                <div class="space-y-8 text-slate-200 text-base leading-relaxed">
+                    <p>Kami mengoperasikan unit armada pengangkut BBM yang telah tersertifikasi dan diawasi secara ketat. Seluruh armada kami dilengkapi dengan sistem keamanan modern untuk menjamin volume dan kualitas produk tetap terjaga dari titik pengisian hingga ke lokasi pelanggan.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/5 text-center">
+                            <div class="text-emerald-500 font-black text-3xl mb-2">Multi-Kapasitas</div>
+                            <p class="text-sm uppercase tracking-widest text-slate-400">Unit Tanker 5KL, 8KL, 10KL, & 16KL</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/5 text-center">
+                            <div class="text-emerald-500 font-black text-3xl mb-2">GPS Fleet</div>
+                            <p class="text-sm uppercase tracking-widest text-slate-400">Monitoring Rute Real-Time</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-2xl border border-white/5 text-center">
+                            <div class="text-emerald-500 font-black text-3xl mb-2">Maintenance</div>
+                            <p class="text-sm uppercase tracking-widest text-slate-400">Pengecekan Rutin Standar Migas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-kontak" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Hubungi Kami</h2>
+                <div class="grid md:grid-cols-2 gap-12 text-slate-200 text-base">
+                    <div class="space-y-6">
+                        <p>Kami siap melayani kebutuhan energi industri Anda 24 jam sehari untuk operasional darurat. Silahkan hubungi pusat bantuan kami:</p>
+                        <div class="bg-emerald-500/10 p-8 rounded-3xl border border-emerald-500/20">
+                            <h4 class="text-emerald-500 font-black text-xs uppercase mb-4 tracking-widest">Customer Care</h4>
+                            <div class="text-2xl font-black text-white">0815-8841-410</div>
+                            <div class="text-sm text-emerald-400 mt-2 lowercase">pt.khatulistiwa.sinar.energi@gmail.com</div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10">
+                        <h4 class="text-emerald-500 font-black text-xs uppercase mb-4 tracking-widest">Kantor Pusat</h4>
+                        <p class="font-bold text-white uppercase leading-relaxed">
+                            PT Khatulistiwa Sinar Energi<br>
+                            Sektor Logistik & Energi Industri<br>
+                            Kalimantan Tengah - Indonesia
+                        </p>
+                        <p class="mt-4 text-sm text-slate-400 italic uppercase">Layanan Supply BBM Industri meliputi wilayah Kalimantan dan sekitarnya.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -186,14 +304,13 @@
             if(error) { tbody.innerHTML = '<tr><td class="p-10 text-center text-red-500 font-black">ERROR</td></tr>'; return; }
 
             tbody.innerHTML = data?.length ? data.map(d => {
-                // Teks Jenis kembali ke aslinya (INVOICE / PURCHASE ORDER)
                 const valJenis = (d.jenis || d.jenis_form || '-').toUpperCase();
                 return `
-                <tr class="hover:bg-white/5 transition-all">
-                    <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="p-4 uppercase font-bold text-emerald-400">${valJenis}</td>
+                <tr class="hover:bg-white/5 transition-all border-b border-white/5">
+                    <td class="p-4 text-slate-400 font-medium">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
+                    <td class="p-4 uppercase font-black text-emerald-400">${valJenis}</td>
                     <td class="p-4 text-white font-bold">${d.nomor_urut || d.nomor || d.no_invoice || '-'}</td>
-                    <td class="p-4 text-slate-300 font-bold uppercase">${d.customer_name || d.vendor_name || d.penerima || '-'}</td> 
+                    <td class="p-4 text-slate-200 font-bold uppercase">${d.customer_name || d.vendor_name || d.penerima || '-'}</td> 
                     <td class="p-4 text-right text-yellow-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
                 </tr>`;
             }).join('') : '<tr><td class="p-10 text-center text-slate-600 font-black uppercase">NO_RECORDS</td></tr>';
@@ -208,8 +325,8 @@
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
-                    <td class="p-5 font-bold text-white uppercase text-[11px]">${d.name}</td>
-                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white">VIEW</button></td>
+                    <td class="p-5 font-bold text-white uppercase text-sm">${d.name}</td>
+                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white transition-all">VIEW DOCUMENT</button></td>
                 </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 uppercase italic">NO_DATA</td></tr>';
         }
 
