@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE - Invoice System Cloud</title>
+    <title>KSE - Invoice System Cloud & Auto-Upload</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -51,7 +51,7 @@
     </div>
     <div class="d-flex gap-2">
         <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
-        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb"><i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA</button>
+        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb"><i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA & CLOUD</button>
         <button class="btn btn-primary btn-sm fw-bold px-3" onclick="downloadPDF()"><i class="bi bi-download"></i> DOWNLOAD PDF</button>
     </div>
 </div>
@@ -273,7 +273,6 @@
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // Fungsi pembulatan standar: 0.5 ke atas naik
     function roundKSE(num) {
         return Math.round(num);
     }
@@ -285,14 +284,13 @@
         const hNett = parseFloat(hNettRaw) || 0;
         
         let hTax = (hNett / 1.11);
-        hTax = Math.ceil(hTax * 100) / 100; // Pembulatan unit sesuai foto sebelumnya
+        hTax = Math.ceil(hTax * 100) / 100; 
 
         const subtotal = qty * hTax;
 
         document.getElementById('in_h_tax_text').value = hTax.toFixed(2).replace('.', ',');
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         
-        // Logika PPN & DPP Nilai Lain Pembulatan 0.5 ke atas
         const dppLain = roundKSE(subtotal * (11 / 12));
         const ppn = roundKSE(dppLain * 0.12);
         
@@ -403,21 +401,43 @@
 
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
-        btn.innerText = "SAVING..."; btn.disabled = true;
+        const noInv = document.getElementById('in_no').value;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> UPLOADING...'; btn.disabled = true;
+        
         try {
+            // 1. Generate PDF Blob
+            const element = document.getElementById('main-doc');
+            const pdfBlob = await html2pdf().set({ 
+                margin: 0, filename: `INV-${noInv}.pdf`, 
+                html2canvas: { scale: 2, useCORS: true }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            }).from(element).output('blob');
+
+            // 2. Upload to Storage (Bucket 'documents')
+            const fileName = `invoices/INV_${Date.now()}_${noInv.replace(/\//g, '_')}.pdf`;
+            const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, pdfBlob, { contentType: 'application/pdf', upsert: true });
+            if (upErr) throw upErr;
+
+            // 3. Get Public URL
+            const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(fileName);
+            const publicUrl = urlData.publicUrl;
+
+            // 4. Save to Database
             const payload = {
                 jenis: "INVOICE", 
-                nomor: document.getElementById('in_no').value,
+                nomor: noInv,
                 tanggal: document.getElementById('in_tgl_raw').value,
                 tujuan: document.getElementById('in_cust').value,
                 nominal: roundKSE(parseFloat(document.getElementById('out_grand_val').innerText.replace(/\./g, '').replace(',', '.'))),
+                pdf_url: publicUrl,
                 client_email: "system@kse.co.id"
             };
-            const { error } = await _supabase.from('eforms').insert([payload]);
-            if (error) throw error;
-            alert("Berhasil Disimpan!");
+            const { error: dbErr } = await _supabase.from('eforms').insert([payload]);
+            if (dbErr) throw dbErr;
+
+            alert("Berhasil! Data & PDF tersimpan di Cloud.");
         } catch (e) { alert("Error: " + e.message); }
-        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA'; btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA & CLOUD'; btn.disabled = false;
     }
 
     function downloadPDF() {
