@@ -254,7 +254,7 @@
                         <thead class="bg-white/5 text-slate-500 uppercase font-black">
                             <tr>
                                 <th class="p-4">Tanggal</th>
-                                <th class="p-4">Jenis Dokumen</th>
+                                <th class="p-4">Jenis</th>
                                 <th class="p-4">Nomor Dokumen</th>
                                 <th class="p-4">Tujuan</th> 
                                 <th class="p-4 text-right">Nominal</th>
@@ -325,7 +325,7 @@
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
                     <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString()}</td>
-                    <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || 'FORM'}</td>
+                    <td class="p-4 uppercase font-bold text-emerald-400">${jenis || 'FORM'}</td>
                     <td class="p-4 text-white font-bold">${d.nomor || '-'}</td>
                     <td class="p-4 text-slate-300 font-bold uppercase">${d.vendor_name || d.customer_name || d.penerima || '-'}</td> 
                     <td class="p-4 text-right text-yellow-500 font-black">Rp ${d.nominal?.toLocaleString('id-ID')}</td>
