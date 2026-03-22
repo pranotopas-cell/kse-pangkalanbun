@@ -1,3 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSE - Invoice System Cloud</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
+        body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 13px; margin: 0; padding: 0; }
+        .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
+        .input-sidebar { background: #fff; height: calc(100vh - 60px); overflow-y: auto; padding: 15px; border-right: 1px solid #ddd; }
+        #pdf-area { background: #f4f7f6; padding: 20px 0; }
+        .document-canvas { 
+            background: white; width: 210mm; min-height: 297mm; margin: 0 auto; 
+            padding: 5mm 15mm 5mm 15mm; position: relative;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); box-sizing: border-box;
+            display: flex; flex-direction: column;
+        }
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 25px; }
+        .logo-img { height: 50px; width: auto; }
+        .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 38px; color: var(--kse-primary); margin: 0; }
+        .table-main { width: 100%; border-collapse: collapse; margin-top: 5px; border: 1.5px solid #000; font-size: 13px; }
+        .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px; border: 1px solid #000; text-align: center; text-transform: uppercase; font-size: 12px; }
+        .table-main td { border: 1px solid #000; padding: 10px; vertical-align: middle; }
+        .meta-table td { border: none !important; padding: 3px 0; font-size: 13px; }
+        .lang-en { font-style: italic; font-size: 10px; color: #666; display: block; margin-top: -1px; }
+        .terbilang-box { border: 1.5px solid #000; border-top: none; padding: 12px; font-style: italic; background: #fafafa; margin-bottom: 20px; font-size: 13px; font-weight: bold; }
+        .signature-row { display: flex; justify-content: flex-start; margin-top: 30px; }
+        .signature-box { text-align: left; width: 300px; }
+        .signature-space { height: 100px; margin: 5px 0; } 
+        .footer-kse { margin-top: auto; padding-top: 50px; padding-bottom: 10px; border-top: 1px solid #eee; }
+        @media print {
+            .control-nav, .input-sidebar { display: none !important; }
+            .col-lg-9 { width: 100% !important; }
+            .document-canvas { margin: 0 !important; box-shadow: none !important; padding: 10mm !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-2">
+        <a href="index.html" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-house"></i> HOME</a>
+        <button class="btn btn-outline-secondary btn-sm" onclick="initAutoNumber()"><i class="bi bi-arrow-clockwise"></i> REFRESH NO INV</button>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
+        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb"><i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA</button>
+        <button class="btn btn-primary btn-sm fw-bold px-3" onclick="downloadPDF()"><i class="bi bi-download"></i> DOWNLOAD PDF</button>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 input-sidebar">
+            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> INPUT PANEL</h6>
+            <div class="mb-2">
+                <label class="fw-bold small">Nomor Invoice</label>
+                <input type="text" id="in_no" class="form-control form-control-sm" oninput="syncAll()">
+            </div>
+            <div class="mb-3">
+                <label class="fw-bold small">Tanggal Invoice</label>
+                <input type="date" id="in_tgl_raw" class="form-control form-control-sm" oninput="handleDateChange()">
+            </div>
+            <div class="card p-2 mb-3 bg-light border-0">
+                <label class="fw-bold small">Customer</label>
+                <input list="list_cust" id="in_cust" class="form-control form-control-sm" oninput="autoFillCustomer()">
+                <datalist id="list_cust">
+                    <option value="CV. SAMI JAYA">
+                    <option value="PT. PELAYARAN JASA SAMUDRA SHIPPING">
+                    <option value="PT. EXPLOITASI ENERGI INDONESIA, Tbk">
+                    <option value="PT. JAYA ABADI">
+                </datalist>
+                <label class="fw-bold small mt-1">Alamat</label>
+                <textarea id="in_addr" class="form-control form-control-sm mb-1" rows="3" oninput="syncAll()"></textarea>
+                <label class="fw-bold small">NPWP</label>
+                <input type="text" id="in_npwp" class="form-control form-control-sm" oninput="syncAll()">
+            </div>
+            <div class="row g-2 mb-3">
+                <div class="col-6"><label class="small fw-bold">No. PO</label><input type="text" id="in_po_no" class="form-control form-control-sm" oninput="syncAll()"></div>
+                <div class="col-6"><label class="small fw-bold">Tgl PO</label><input type="text" id="in_po_tgl" class="form-control form-control-sm" oninput="syncAll()"></div>
+            </div>
+            <div class="card p-2 mb-3 border-success">
+                <label class="fw-bold small text-success text-center">DETAIL ITEM</label>
+                <hr class="my-1">
+                <label class="small fw-bold">Nama Barang</label>
+                <input list="list_barang" id="in_produk" class="form-control form-control-sm mb-2" oninput="syncAll()">
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="small fw-bold">Qty (Ltr)</label>
+                        <input type="text" id="in_qty_text" class="form-control form-control-sm" placeholder="5000" oninput="calculateFromBasic()">
+                    </div>
+                    <div class="col-6">
+                        <label class="small fw-bold">Harga Jual/Ltr</label>
+                        <input type="text" id="in_h_nett_text" class="form-control form-control-sm" placeholder="15500" oninput="calculateFromBasic()">
+                    </div>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="small fw-bold text-primary">Harga DPP/Unit</label>
+                        <input type="text" id="in_h_tax_text" class="form-control form-control-sm border-primary" oninput="calculateFromDPPUnit()">
+                    </div>
+                    <div class="col-6">
+                        <label class="small fw-bold text-danger">DPP TOTAL</label>
+                        <input type="number" id="in_subtotal" class="form-control form-control-sm border-danger" step="0.01" oninput="syncAll()">
+                    </div>
+                </div>
+                <label class="small fw-bold">Penyesuaian (+/-)</label>
+                <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" step="0.01" oninput="syncAll()">
+            </div>
+            <datalist id="list_barang">
+                <option value="BBM SOLAR INDUSTRI (HSD)">
+                <option value="MFO (MARINE FUEL OIL)">
+                <option value="MINYAK TANAH INDUSTRI">
+            </datalist>
+        </div>
+
+        <div class="col-lg-9 p-0" id="pdf-area">
+            <div class="document-canvas" id="main-doc">
+                <div class="header-section">
+                    <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=LOGO+KSE'">
+                    <div class="doc-identity">
+                        <h2>INVOICE</h2>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-7">
+                        <p class="mb-1">Kepada yang kami hormati,</p>
+                        <h6 class="fw-bold mb-1 text-uppercase" id="out_cust" style="font-size: 16px; color: var(--kse-primary);"></h6>
+                        <div id="out_addr" style="white-space: pre-line; line-height: 1.5;"></div>
+                    </div>
+                    <div class="col-5">
+                        <table class="w-100 meta-table">
+                            <tr><td width="40%">TANGGAL<span class="lang-en">Date</span></td><td width="5%">:</td><td width="55%" id="out_tgl" style="font-weight:bold;"></td></tr>
+                            <tr><td>NOMOR INV<span class="lang-en">Invoice Number</span></td><td>:</td><td id="out_no" style="font-weight:bold;"></td></tr>
+                            <tr><td>NPWP<span class="lang-en">Tax ID Number</span></td><td>:</td><td class="fw-bold">100.000.000.7-734.31</td></tr>
+                            <tr><td>TANGGAL PO<span class="lang-en">PO Date</span></td><td>:</td><td id="out_po_tgl"></td></tr>
+                            <tr><td>NOMOR PO<span class="lang-en">PO Number</span></td><td>:</td><td id="out_po_no"></td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <table class="table-main">
+                    <thead>
+                        <tr>
+                            <th width="38%">NAMA BARANG / <span style="font-size: 7px;">Description</span></th>
+                            <th width="14%">QUANTITY / <span style="font-size: 7px;">Qty</span></th>
+                            <th width="20%">HARGA DPP/UNIT / <span style="font-size: 7px;">Unit Price</span></th>
+                            <th width="28%">HARGA TOTAL / <span style="font-size: 7px;">Total Amount</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center fw-bold" id="out_produk" style="height: 80px; vertical-align: middle; font-size: 14px;"></td>
+                            <td class="text-center" id="out_qty_val" style="font-size: 14px;"></td>
+                            <td class="text-center" id="out_h_tax_val" style="font-size: 14px;"></td>
+                            <td class="p-0" style="vertical-align: middle;">
+                                <div class="d-flex justify-content-between px-3 py-2 fw-bold" style="font-size: 14px;">
+                                    <span>Rp</span>
+                                    <span id="out_subtotal_top">0,00</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="p-0">
+                                <table class="w-100 border-0" style="margin: 0;">
+                                    <tr>
+                                        <td class="border-0 p-3" width="250">Harga Jual per liter (Nett)<br><i class="text-muted" style="font-size: 11px;">Selling Price per liter (Nett)</i></td>
+                                        <td class="border-0 p-3" width="30">Rp</td>
+                                        <td class="border-0 p-3 text-center fw-bold" id="out_h_nett_val" style="font-size: 14px;">0,00</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="p-0">
+                                <table class="w-100" style="font-size: 12px; border-collapse: collapse;">
+                                    <tr><td class="p-2 border-bottom border-end" width="55%">Sub Total</td><td class="p-2 border-bottom text-end fw-bold" id="out_subtotal_display">0,00</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end"><i>DPP Nilai Lain</i></td><td class="p-2 border-bottom text-end" id="out_dpp_val">0,00</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end"><i>PPN 12%</i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0,00</td></tr>
+                                    <tr><td class="p-2 border-end"><i>Penyesuaian</i></td><td class="p-2 text-end" id="out_adjust_val">0,00</td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr class="fw-bold bg-light" style="font-size: 17px;">
+                            <td colspan="3" class="text-end p-3">Grand Total</td>
+                            <td class="p-0">
+                                <div class="d-flex justify-content-between px-3 py-2" style="color: var(--kse-primary);">
+                                    <span>Rp</span>
+                                    <span id="out_grand_val">0,00</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="terbilang-box">
+                    <b>Terbilang : </b> <span id="out_terbilang"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-8">
+                        <p class="mb-1 text-decoration-underline fw-bold">Pembayaran / <span class="text-muted">Payment:</span></p>
+                        <p class="mb-0">1. Cash / Tunai</p>
+                        <p class="mb-0">2. Transfer Bank Rakyat Indonesia ( BRI )</p>
+                        <p class="mb-0 ms-3">Account Name : <b>PT KHATULISTIWA SINAR ENERGI</b></p>
+                        <p class="mb-0 ms-3">Account Number : <b>1806-01-001088-56-5</b></p>
+                    </div>
+                </div>
+
+                <div class="signature-row">
+                    <div class="signature-box">
+                        <p class="mb-0">Regard,</p>
+                        <p class="fw-bold mb-0">PT. KHATULISTIWA SINAR ENERGI</p>
+                        <div class="signature-space"></div> 
+                        <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 15px;">SUPRANOTO</p>
+                        <p class="mb-0 small">Direktur / <span class="text-muted">Director</span></p>
+                    </div>
+                </div>
+
+                <div class="footer-kse">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <img id="qr_footer" src="" width="75">
+                            <div style="font-size: 9px; line-height: 1.3;">
+                                <b>Digital E-Form KSE System</b><br>Scan QR untuk validasi Invoice.<br><span id="qr_timestamp" style="color: #888; font-size: 8px;"></span>
+                            </div>
+                        </div>
+                        <div class="text-end" style="font-size: 10px;">
+                            <b style="font-size: 11px; color: var(--kse-primary);">PT. KHATULISTIWA SINAR ENERGI</b><br>Jl. H.M. Rafi'i RT.24 Pangkalan Bun, Kalimantan Tengah<br>pt.khatulistiwa.sinar.energi@gmail.com | 0815-884-1410
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
@@ -54,7 +297,7 @@
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // Logika Pajak & Total Baru
+        // Logika Pajak
         const dppLain = sub * (11 / 12);
         const ppn = dppLain * 0.12;
         
@@ -164,3 +407,5 @@
         calculateFromBasic();
     };
 </script>
+</body>
+</html>
