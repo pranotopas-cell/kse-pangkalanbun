@@ -21,11 +21,16 @@
         
         #login-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(12px); z-index: 200; align-items: center; justify-content: center; }
 
-        .dropdown { position: relative; padding: 10px 0; }
+        /* Dropdown Styles */
+        .dropdown { position: relative; }
         .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; min-width: 260px; z-index: 1000; padding-top: 12px; }
         .dropdown:hover .dropdown-menu { display: block; }
         .dropdown-content { background: #0f172a; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         
+        /* Mobile Menu Styles */
+        #mobile-menu { transition: transform 0.3s ease-in-out; transform: translateX(100%); }
+        #mobile-menu.active { transform: translateX(0); }
+
         .text-header { letter-spacing: 0.15em; }
         .password-container { position: relative; }
         .toggle-password { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; }
@@ -47,8 +52,8 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-6 md:gap-10">
-            <div id="public-nav" class="hidden lg:flex items-center space-x-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+        <div class="hidden lg:flex items-center gap-10">
+            <div id="public-nav" class="flex items-center space-x-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                 <button onclick="showSection('profile')" class="hover:text-white transition-colors">Profile</button>
                 <button onclick="showSection('visi-misi')" class="hover:text-white transition-colors">Vision</button>
                 <button onclick="showSection('armada')" class="hover:text-white transition-colors">Fleet</button>
@@ -57,7 +62,7 @@
 
             <div id="protected-nav" class="hidden flex items-center gap-6 border-x border-white/10 px-6">
                 <div id="nav-eform" class="dropdown hidden">
-                    <button class="text-[11px] font-black uppercase tracking-[0.15em] text-yellow-500 flex items-center gap-2">
+                    <button class="text-[11px] font-black uppercase tracking-[0.15em] text-yellow-500 flex items-center gap-2 py-4">
                         <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></span> E-FORM
                     </button>
                     <div class="dropdown-menu">
@@ -71,7 +76,7 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="text-[11px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-2">
+                    <button class="text-[11px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-2 py-4">
                         <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> E-ARCHIVE
                     </button>
                     <div class="dropdown-menu">
@@ -85,15 +90,58 @@
                 </div>
             </div>
 
-            <div id="auth-buttons">
-                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">Silahkan Login</button>
-                <div id="user-info" class="hidden flex items-center gap-4">
-                    <span id="display-user-email" class="text-[10px] font-bold text-emerald-400 lowercase italic">...</span>
+            <div id="auth-buttons-desktop">
+                <button id="btn-show-login-desktop" onclick="toggleLoginModal(true)" class="kse-gradient px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">Login</button>
+                <div id="user-info-desktop" class="hidden flex items-center gap-4">
+                    <span id="display-user-email-desktop" class="text-[10px] font-bold text-emerald-400 lowercase italic">...</span>
                     <button onclick="handleLogout()" class="text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></button>
                 </div>
             </div>
         </div>
+
+        <button onclick="toggleMobileMenu(true)" class="lg:hidden p-2 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
     </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 z-[200] lg:hidden bg-slate-950 flex flex-col p-8 overflow-y-auto">
+        <div class="flex justify-between items-center mb-12">
+            <img src="header1.png" alt="Logo" class="h-8">
+            <button onclick="toggleMobileMenu(false)" class="text-slate-400 text-3xl">✕</button>
+        </div>
+
+        <div class="flex flex-col gap-8 text-[12px] font-black uppercase tracking-widest text-slate-300">
+            <button onclick="showSection('profile'); toggleMobileMenu(false)" class="text-left py-2 border-b border-white/5">Profile</button>
+            <button onclick="showSection('visi-misi'); toggleMobileMenu(false)" class="text-left py-2 border-b border-white/5">Vision</button>
+            <button onclick="showSection('armada'); toggleMobileMenu(false)" class="text-left py-2 border-b border-white/5">Fleet</button>
+            <button onclick="showSection('kontak'); toggleMobileMenu(false)" class="text-left py-2 border-b border-white/5">Contact</button>
+
+            <div id="mobile-protected-nav" class="hidden flex flex-col gap-8">
+                <div class="flex flex-col gap-4">
+                    <p class="text-yellow-500 text-[10px]">E-FORM TOOLS</p>
+                    <a href="penawaran.html" class="pl-4 text-white">Buat Penawaran</a>
+                    <a href="kse_po.html" class="pl-4 text-white">Purchase Order</a>
+                    <a href="invoice.html" class="pl-4 text-white">Invoice</a>
+                    <button onclick="loadReleaseDocs(); toggleMobileMenu(false)" class="text-left pl-4 text-emerald-400 italic">History Transaksi</button>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <p class="text-emerald-500 text-[10px]">E-ARCHIVE DATA</p>
+                    <button onclick="loadDocuments('SURAT JALAN'); toggleMobileMenu(false)" class="text-left pl-4">Surat Jalan</button>
+                    <button onclick="loadDocuments('PURCHASE ORDER'); toggleMobileMenu(false)" class="text-left pl-4">Purchase Order</button>
+                    <button onclick="loadDocuments('INVOICE'); toggleMobileMenu(false)" class="text-left pl-4">Invoice</button>
+                    <button onclick="loadDocuments('FAKTUR PAJAK'); toggleMobileMenu(false)" class="text-left pl-4">Faktur Pajak</button>
+                </div>
+            </div>
+
+            <div id="auth-buttons-mobile" class="mt-8">
+                <button id="btn-show-login-mobile" onclick="toggleLoginModal(true); toggleMobileMenu(false)" class="w-full kse-gradient py-4 rounded-xl text-white">Login System</button>
+                <div id="user-info-mobile" class="hidden">
+                    <p id="display-user-email-mobile" class="text-emerald-500 lowercase italic mb-4">...</p>
+                    <button onclick="handleLogout()" class="w-full bg-red-500/10 text-red-500 py-4 rounded-xl font-bold">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <main class="container mx-auto px-6 py-12">
         <div class="mb-16">
@@ -150,22 +198,21 @@
         <section id="section-armada" class="section">
             <div class="glass-card p-10 md:p-16 border-emerald-500/10 italic">
                 <h2 class="text-4xl font-black text-white mb-10 uppercase text-center tracking-widest">Infrastruktur & Fleet</h2>
-                <p class="text-center text-slate-400 mb-12 max-w-2xl mx-auto text-sm leading-relaxed">Keandalan distribusi didukung oleh armada yang terstandarisasi dan sistem monitoring real-time untuk memastikan volume serta keamanan kargo.</p>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-slate-900/50 p-10 rounded-3xl border border-white/5 text-center transition-all hover:bg-emerald-950/20">
+                    <div class="bg-slate-900/50 p-10 rounded-3xl border border-white/5 text-center">
                         <div class="text-emerald-500 text-4xl mb-4">🚛</div>
                         <p class="text-2xl text-white font-black uppercase">Multi-Capacity</p>
-                        <p class="text-[9px] text-slate-500 mt-2 tracking-widest leading-loose">Unit tangki kapasitas 5.000L, 8.000L, hingga 16.000L untuk fleksibilitas pengiriman.</p>
+                        <p class="text-[9px] text-slate-500 mt-2 tracking-widest leading-loose">5.000L, 8.000L, 16.000L Capacity</p>
                     </div>
-                    <div class="bg-slate-900/50 p-10 rounded-3xl border border-white/5 text-center transition-all hover:bg-emerald-950/20">
+                    <div class="bg-slate-900/50 p-10 rounded-3xl border border-white/5 text-center">
                         <div class="text-emerald-500 text-4xl mb-4">📡</div>
                         <p class="text-2xl text-white font-black uppercase">GPS Tracking</p>
-                        <p class="text-[9px] text-slate-500 mt-2 tracking-widest leading-loose">Sistem pemantauan armada 24/7 guna menjamin keamanan dan estimasi waktu tiba yang akurat.</p>
+                        <p class="text-[9px] text-slate-500 mt-2 tracking-widest leading-loose">24/7 Monitoring System</p>
                     </div>
-                    <div class="bg-slate-900/50 p-10 rounded-3xl border border-white/5 text-center transition-all hover:bg-emerald-950/20">
+                    <div class="bg-slate-900/50 p-10 rounded-3xl border border-white/5 text-center">
                         <div class="text-emerald-500 text-4xl mb-4">🛡️</div>
-                        <p class="text-2xl text-white font-black uppercase">Quality Control</p>
-                        <p class="text-[9px] text-slate-500 mt-2 tracking-widest leading-loose">Sertifikasi Tera Metrologi berkala pada seluruh flow meter untuk akurasi volume pengiriman.</p>
+                        <p class="text-2xl text-white font-black uppercase">Tera Metrologi</p>
+                        <p class="text-[9px] text-slate-500 mt-2 tracking-widest leading-loose">Akurasi Volume Terjamin</p>
                     </div>
                 </div>
             </div>
@@ -174,16 +221,10 @@
         <section id="section-kontak" class="section">
             <div class="glass-card p-10 md:p-20 border-emerald-500/10 italic text-center">
                 <h2 class="text-4xl font-black text-white mb-8 uppercase tracking-widest">Contact Center</h2>
-                <p class="text-slate-400 mb-12 max-w-xl mx-auto">Layanan bantuan dan informasi operasional PT Khatulistiwa Sinar Energi tersedia untuk mendukung kebutuhan energi industri Anda.</p>
                 <div class="flex flex-col md:flex-row justify-center gap-10 items-center">
-                    <div class="group">
-                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-2">Operation Office</p>
-                        <a href="https://wa.me/628158841410" class="text-3xl font-black text-emerald-500 hover:text-white transition-colors">0815-8841-410</a>
-                    </div>
-                    <div class="w-px h-12 bg-white/10 hidden md:block"></div>
-                    <div class="group">
-                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-2">Email Inquiry</p>
-                        <p class="text-xl font-black text-white lowercase group-hover:text-emerald-400 transition-colors">pt.khatulistiwa.sinar.energi@gmail.com</p>
+                    <div>
+                        <p class="text-[10px] text-slate-500 uppercase font-black mb-2">Operation Office</p>
+                        <a href="https://wa.me/628158841410" class="text-3xl font-black text-emerald-500">0815-8841-410</a>
                     </div>
                 </div>
             </div>
@@ -225,8 +266,7 @@
                                 <th class="p-4 text-center">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="release-table-body" class="divide-y divide-white/5">
-                            </tbody>
+                        <tbody id="release-table-body" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
@@ -267,6 +307,12 @@
 
         let currentUser = null; let isAdmin = false;
 
+        function toggleMobileMenu(show) {
+            const menu = document.getElementById('mobile-menu');
+            if(show) menu.classList.add('active');
+            else menu.classList.remove('active');
+        }
+
         function togglePassword() {
             const pin = document.getElementById('login-pass');
             pin.type = (pin.type === "password") ? "text" : "password";
@@ -278,10 +324,19 @@
             if (session) {
                 currentUser = session.user;
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
-                document.getElementById('btn-show-login').classList.add('hidden');
-                document.getElementById('user-info').classList.remove('hidden');
+                
+                // Desktop Updates
+                document.getElementById('btn-show-login-desktop').classList.add('hidden');
+                document.getElementById('user-info-desktop').classList.remove('hidden');
                 document.getElementById('protected-nav').classList.remove('hidden');
-                document.getElementById('display-user-email').innerText = currentUser.email;
+                document.getElementById('display-user-email-desktop').innerText = currentUser.email;
+                
+                // Mobile Updates
+                document.getElementById('btn-show-login-mobile').classList.add('hidden');
+                document.getElementById('user-info-mobile').classList.remove('hidden');
+                document.getElementById('mobile-protected-nav').classList.remove('hidden');
+                document.getElementById('display-user-email-mobile').innerText = currentUser.email;
+
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     document.getElementById('nav-eform').classList.remove('hidden');
@@ -301,7 +356,6 @@
             if (error) { console.error(error); return; }
 
             tbody.innerHTML = data?.length ? data.map(d => {
-                // Perbaikan Logika Nominal (Mengambil dari field grand_total atau total_harga)
                 const nominal = d.grand_total || d.nominal || 0;
                 return `
                 <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
@@ -311,9 +365,9 @@
                     <td class="p-4 text-slate-400 uppercase font-bold">${d.tujuan || d.customer_name || '-'}</td>
                     <td class="p-4 text-right text-yellow-500 font-black italic">Rp ${parseFloat(nominal).toLocaleString('id-ID')}</td>
                     <td class="p-4 text-center">
-                        <button onclick="window.open('${d.pdf_url}', '_blank')" class="bg-white/10 hover:bg-white hover:text-black px-4 py-1.5 rounded-lg text-[9px] font-black transition-all">VIEW PDF</button>
+                        <button onclick="window.open('${d.pdf_url}', '_blank')" class="bg-white/10 hover:bg-white hover:text-black px-4 py-1.5 rounded-lg text-[9px] font-black transition-all">VIEW</button>
                     </td>
-                </tr>`}).join('') : '<tr><td colspan="6" class="p-20 text-center text-slate-500 font-black italic tracking-widest">NO TRANSACTION DETECTED</td></tr>';
+                </tr>`}).join('') : '<tr><td colspan="6" class="p-20 text-center text-slate-500 font-black italic tracking-widest">NO TRANSACTION</td></tr>';
         }
 
         async function loadDocuments(cat) {
@@ -326,7 +380,7 @@
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5 transition-colors">
                     <td class="p-6 font-black text-white uppercase tracking-widest">${d.name}</td>
-                    <td class="p-6 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black border border-white/20 px-6 py-2 rounded-xl hover:bg-emerald-500 hover:border-emerald-500 transition-all uppercase">Open Document</button></td>
+                    <td class="p-6 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black border border-white/20 px-6 py-2 rounded-xl hover:bg-emerald-500 transition-all uppercase">Open</button></td>
                 </tr>`).join('') : '<tr><td class="p-20 text-center text-slate-600 font-black italic">EMPTY_NODE</td></tr>';
         }
 
@@ -338,7 +392,7 @@
                     for(let i=1; i<=4; i++) {
                         const val = parseInt(data['wilayah'+i] || 0);
                         grid.innerHTML += `<div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500 transition-all">
-                            <span class="text-[9px] text-emerald-500 uppercase font-black block mb-2 tracking-widest italic opacity-70">Pricing Region ${i}</span>
+                            <span class="text-[9px] text-emerald-500 uppercase font-black block mb-2 tracking-widest italic opacity-70">Region ${i}</span>
                             <h4 class="text-white font-black text-xl italic">Rp ${val.toLocaleString('id-ID')}</h4>
                         </div>`;
                     }
@@ -375,6 +429,7 @@
             if (error) alert("Verification Failed."); else window.location.reload();
         }
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
+        
         function showSection(id) { 
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section')); 
             const target = document.getElementById('section-' + id);
