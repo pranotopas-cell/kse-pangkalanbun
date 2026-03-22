@@ -38,6 +38,7 @@
             <div id="public-nav" class="hidden md:flex space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
                 <button onclick="showSection('profile')" class="hover:text-emerald-500">Profile</button>
                 <button onclick="showSection('visi-misi')" class="hover:text-emerald-500">Visi & Misi</button>
+                <button onclick="showSection('armada')" class="hover:text-emerald-500">Armada</button>
                 <button onclick="showSection('kontak')" class="hover:text-emerald-500">Kontak</button>
             </div>
 
@@ -46,8 +47,9 @@
                     <button class="text-[11px] font-black uppercase tracking-widest text-yellow-500 flex items-center gap-1">KSE E-FORM <small>▼</small></button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <a href="kse_po.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT PO</a>
-                            <a href="invoice.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT INVOICE</a>
+                            <a href="penawaran.html" class="block px-5 py-3 text-cyan-400 hover:bg-slate-800 text-[10px] font-black border-b border-white/5 uppercase italic">BUAT PENAWARAN</a>
+                            <a href="kse_po.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
+                            <a href="invoice.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</a>
                             <button onclick="loadReleaseDocs()" class="block w-full text-left px-5 py-3 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[10px] font-black uppercase">DATA RILIS (DATABASE)</button>
                         </div>
                     </div>
@@ -82,38 +84,118 @@
             <div id="harga-grid-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
 
+        <section id="section-profile" class="section active-section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Profile</h2>
+                <div class="space-y-6 text-slate-300 leading-relaxed text-sm">
+                    <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white text-lg">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas bisnis yang bergerak di bidang perdagangan dan distribusi bahan bakar minyak (HSD) Industri dengan fokus utama pada pemenuhan kebutuhan energi nasional yang berkualitas tinggi.</p>
+                    <p>Berbekal pengalaman bertahun-tahun dalam manajemen logistik energi, kami membangun fondasi perusahaan di atas pilar <span class="text-emerald-400 font-bold">Integritas</span>, <span class="text-emerald-400 font-bold">Keamanan</span>, dan <span class="text-emerald-400 font-bold">Ketepatan Waktu</span>. Kami memahami bahwa dalam dunia industri, ketersediaan energi adalah nadi utama operasional, oleh karena itu kami memastikan rantai pasok kami bekerja 24/7 tanpa henti.</p>
+                    <p>Melalui platform digital <span class="text-white font-bold">.SMARTDocs</span>, kami merevolusi sistem administrasi konvensional menjadi ekosistem digital yang transparan, memungkinkan seluruh mitra bisnis kami untuk memantau dokumen, transaksi, dan histori pengiriman secara real-time dengan akurasi data yang terjamin oleh enkripsi tingkat tinggi.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-visi-misi" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Visi & Misi Strategis</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                        <h3 class="text-white font-black mb-4 uppercase text-sm tracking-widest text-emerald-400">Visi Kami</h3>
+                        <p class="text-slate-400 text-sm leading-loose uppercase">Menjadi integrator solusi energi terdepan di Indonesia yang mengedepankan efisiensi berbasis teknologi mutakhir, serta menjadi mitra pilihan utama dalam mendukung pertumbuhan infrastruktur dan industri nasional melalui distribusi energi yang berkelanjutan.</p>
+                    </div>
+                    <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                        <h3 class="text-white font-black mb-4 uppercase text-sm tracking-widest text-emerald-400">Misi Kami</h3>
+                        <ul class="text-slate-400 text-[11px] space-y-4 leading-relaxed uppercase">
+                            <li><span class="text-emerald-500 font-bold">01.</span> Menjamin standar kualitas produk HSD sesuai spesifikasi Dirjen Migas guna mendukung performa mesin industri mitra kami.</li>
+                            <li><span class="text-emerald-500 font-bold">02.</span> Mengoptimalkan sistem logistik darat dan laut dengan pemanfaatan teknologi pemantauan real-time untuk efisiensi pengiriman.</li>
+                            <li><span class="text-emerald-500 font-bold">03.</span> Membangun hubungan kemitraan jangka panjang yang didasari pada kepercayaan, transparansi data, dan kepuasan pelanggan.</li>
+                            <li><span class="text-emerald-500 font-bold">04.</span> Berkontribusi aktif dalam menjaga ketahanan energi nasional dengan jangkauan distribusi yang luas dan kompetitif.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-armada" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-8 uppercase italic">Infrastruktur & Kapasitas Armada</h2>
+                <div class="grid md:grid-cols-3 gap-6 mb-10">
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-center">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-2">Transport Tanker</h4>
+                        <p class="text-3xl text-white font-black mb-4 uppercase">Multi-Capacity</p>
+                        <p class="text-xs text-slate-500 leading-relaxed uppercase">Kami mengoperasikan unit tangki dengan kapasitas 5KL, 8KL, 16KL, hingga 24KL yang dilengkapi dengan segel keamanan berstandar nasional.</p>
+                    </div>
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-center">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-2">Fleet Monitoring</h4>
+                        <p class="text-3xl text-white font-black mb-4 uppercase">GPS Live</p>
+                        <p class="text-xs text-slate-500 leading-relaxed uppercase">Seluruh unit armada kami terintegrasi dengan sistem Fleet Tracking System yang memungkinkan pemantauan posisi dan keamanan muatan secara presisi.</p>
+                    </div>
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-center">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-2">Safety Standard</h4>
+                        <p class="text-3xl text-white font-black mb-4 uppercase">Certified</p>
+                        <p class="text-xs text-slate-500 leading-relaxed uppercase">Driver dan kru kami dibekali dengan sertifikasi HSSE (Health, Safety, Security, and Environment) untuk menjamin operasional yang zero-accident.</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-500/5 p-6 rounded-2xl border border-emerald-500/20">
+                    <p class="text-[10px] text-emerald-500 font-black uppercase text-center tracking-widest">Siap melayani distribusi untuk sektor Pertambangan, Manufaktur, Perkebunan, dan Konstruksi di seluruh wilayah operasional.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-kontak" class="section">
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-8 uppercase italic">Global Network & Support</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="text-emerald-500 font-black text-[11px] uppercase mb-4 tracking-widest">Direct Assistance</h4>
+                            <p class="text-4xl text-white font-black tracking-tighter">0815-8841-410</p>
+                            <p class="text-slate-400 text-sm mt-2">Hubungi unit layanan pelanggan kami untuk konsultasi penawaran harga dan jadwal pengiriman.</p>
+                        </div>
+                        <div class="pt-8 border-t border-white/5">
+                            <h4 class="text-emerald-500 font-black text-[11px] uppercase mb-2 tracking-widest">Electronic Mail</h4>
+                            <p class="text-white font-bold text-lg">pt.khatulistiwa.sinar.energi@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-500/5 p-8 rounded-3xl border border-emerald-500/20">
+                        <h4 class="text-emerald-500 font-black text-[11px] uppercase mb-6 tracking-widest">Headquarter Location</h4>
+                        <p class="text-slate-300 font-bold uppercase text-xs leading-loose">
+                            PT Khatulistiwa Sinar Energi<br>
+                            Sektor Energi & Logistik Strategis<br>
+                            Kawasan Pusat Distribusi Nasional<br>
+                            Kalimantan Tengah - Indonesia
+                        </p>
+                        <div class="mt-8 flex gap-4">
+                            <div class="px-4 py-2 bg-emerald-500/20 rounded-lg text-[10px] text-emerald-500 font-black">OFFICE: 08.00 - 17.00</div>
+                            <div class="px-4 py-2 bg-blue-500/20 rounded-lg text-[10px] text-blue-400 font-black">SUPPLY: 24 HOURS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <div id="admin-panel" class="hidden mb-10 glass-card p-6 border-emerald-500/20">
-            <h3 class="font-black uppercase text-white mb-6 text-sm italic">Admin: Upload Document to Client</h3>
+            <h3 class="font-black uppercase text-white mb-6 text-sm italic">Admin Repository Control</h3>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                <div>
-                    <label class="text-[9px] text-slate-500 uppercase font-black ml-1">File</label>
-                    <input type="file" id="file-input" class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-slate-400 mt-1">
-                </div>
-                <div>
-                    <label class="text-[9px] text-slate-500 uppercase font-black ml-1">Kategori</label>
-                    <select id="doc-category" class="w-full p-2 bg-slate-900 rounded-lg text-[10px] text-emerald-400 mt-1">
-                        <option value="SURAT JALAN">SURAT JALAN</option>
-                        <option value="PURCHASE ORDER">PURCHASE ORDER</option>
-                        <option value="INVOICE">INVOICE</option>
-                        <option value="FAKTUR PAJAK">FAKTUR PAJAK</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[9px] text-slate-500 uppercase font-black ml-1">Client Email</label>
-                    <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-2 bg-slate-900 text-white rounded-lg text-[10px] border border-emerald-500/30 mt-1">
-                        <option value="">-- Pilih Email --</option>
-                    </select>
-                </div>
+                <input type="file" id="file-input" class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-slate-400">
+                <select id="doc-category" class="w-full p-2 bg-slate-900 rounded-lg text-[10px] text-emerald-400">
+                    <option value="SURAT JALAN">SURAT JALAN</option>
+                    <option value="PURCHASE ORDER">PURCHASE ORDER</option>
+                    <option value="INVOICE">INVOICE</option>
+                    <option value="FAKTUR PAJAK">FAKTUR PAJAK</option>
+                </select>
+                <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-2 bg-slate-900 text-white rounded-lg text-[10px] border border-emerald-500/30">
+                    <option value="">-- Pilih Client --</option>
+                </select>
                 <input type="hidden" id="manual-uid">
-                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase tracking-widest h-[38px]">Sync Archive</button>
+                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase tracking-widest">Upload Archive</button>
             </div>
         </div>
 
         <section id="section-release" class="section">
             <div class="glass-card overflow-hidden border-yellow-500/20">
-                <div class="p-6 bg-yellow-500/5 border-b border-white/10 flex justify-between items-center">
-                    <h3 class="font-black uppercase text-yellow-500 text-[11px] italic tracking-widest">E-FORM TRANSACTION DATABASE</h3>
-                    <span id="release-count" class="text-[9px] bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">0 RECORDS</span>
+                <div class="p-6 bg-yellow-500/5 border-b border-white/10">
+                    <h3 class="font-black uppercase text-yellow-500 text-[10px] italic">E-FORM TRANSACTION HISTORY DATABASE</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-[10px] italic">
@@ -121,10 +203,9 @@
                             <tr>
                                 <th class="p-4">Tanggal</th>
                                 <th class="p-4">Jenis</th>
-                                <th class="p-4 text-emerald-500">Nomor</th>
-                                <th class="p-4">Tujuan / Client</th> 
+                                <th class="p-4">Nomor</th>
+                                <th class="p-4">Tujuan</th> 
                                 <th class="p-4 text-right">Nominal</th>
-                                <th class="p-4 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="release-table-body" class="divide-y divide-white/5"></tbody>
@@ -135,8 +216,8 @@
 
         <section id="section-documents" class="section">
             <div class="glass-card overflow-hidden">
-                <div class="p-6 bg-white/5 border-b border-white/10">
-                    <h3 id="doc-title" class="font-black uppercase text-emerald-400 text-xs italic tracking-widest">REPOSITORY_NODE</h3>
+                <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
+                    <h3 id="doc-title" class="font-black uppercase text-emerald-400 text-xs italic">REPOSITORY_NODE</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left italic text-[11px]">
@@ -146,23 +227,16 @@
             </div>
         </section>
 
-        <section id="section-profile" class="section active-section">
-            <div class="glass-card p-10 border-emerald-500/10 italic">
-                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Overview</h2>
-                <p class="text-slate-300 leading-relaxed text-sm border-l-4 border-emerald-500 pl-6">Selamat Datang di Portal .SMARTDocs PT Khatulistiwa Sinar Energi. Silahkan Login untuk mengakses database dokumen dan transaksi rilis BBM.</p>
-            </div>
-        </section>
-
     </main>
 
     <div id="login-overlay">
-        <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 text-center relative">
+        <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 text-center">
             <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-slate-500">✕</button>
-            <h2 class="font-black text-white text-xl uppercase mb-8 italic">System Access</h2>
+            <h2 class="font-black text-white text-xl uppercase mb-8 italic tracking-widest">System Access</h2>
             <div class="space-y-4">
                 <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
                 <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
-                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify Access</button>
+                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify</button>
             </div>
         </div>
     </div>
@@ -197,91 +271,36 @@
             }
         }
 
-        // LOGIKA LOAD HISTORY DARI TABEL eforms
         async function loadReleaseDocs() {
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
-            
-            // Jika bukan admin, hanya ambil data milik user yang sedang login
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
-            
-            const { data, error } = await query;
+            const { data } = await query;
             const tbody = document.getElementById('release-table-body');
-            document.getElementById('release-count').innerText = `${data?.length || 0} RECORDS`;
-
-            if(error) { tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-500">SYNC_ERROR_DB</td></tr>'; return; }
-
             tbody.innerHTML = data?.length ? data.map(d => `
-                <tr class="hover:bg-white/5 transition-all">
-                    <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="p-4 uppercase font-bold text-yellow-500">${d.jenis_form || d.jenis_dokumen || 'FORM'}</td>
-                    <td class="p-4 text-white font-black tracking-widest">${d.nomor || d.no_invoice || '-'}</td>
-                    <td class="p-4 text-slate-300 font-bold uppercase">${d.customer_name || d.vendor_name || d.penerima || '-'}</td> 
-                    <td class="p-4 text-right text-emerald-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
-                    <td class="p-4 text-center">
-                        <button onclick="window.open('${d.pdf_url || d.url}', '_blank')" class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-md text-[9px] font-black border border-emerald-500/30 hover:bg-emerald-500 hover:text-white transition-all">VIEW PDF</button>
-                    </td>
-                </tr>`).join('') : '<tr><td colspan="6" class="p-10 text-center italic text-slate-600 uppercase">NO_TRANSACTION_HISTORY</td></tr>';
+                <tr class="hover:bg-white/5">
+                    <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString()}</td>
+                    <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || d.jenis_form || 'FORM'}</td>
+                    <td class="p-4 text-white font-bold">${d.nomor || d.no_invoice || '-'}</td>
+                    <td class="p-4 text-slate-300 font-bold uppercase">${d.vendor_name || d.customer_name || d.penerima || '-'}</td> 
+                    <td class="p-4 text-right text-yellow-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
+                </tr>`).join('') : '<tr><td colspan="5" class="p-10 text-center italic text-slate-600 uppercase">NO_RECORDS</td></tr>';
         }
 
-        // LOGIKA LOAD DOKUMEN (E-DOC)
         async function loadDocuments(cat) {
             showSection('documents');
             document.getElementById('doc-title').innerText = `DATA_NODE: ${cat}`;
             let query = _supabase.from('documents').select('*').eq('type', cat).order('created_at', { ascending: false });
-            
             if(!isAdmin) query = query.eq('user_id', currentUser.id); 
-            
             const { data } = await query;
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
-                    <td class="p-5 font-bold text-white uppercase text-[10px] tracking-widest">${d.name}</td>
-                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white transition-all uppercase">Open Document</button></td>
-                </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 font-bold uppercase italic">NO_RECORDS_FOUND</td></tr>';
+                    <td class="p-5 font-bold text-white uppercase text-[10px]">${d.name}</td>
+                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white uppercase">View Document</button></td>
+                </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 font-bold uppercase italic">NO_DATA</td></tr>';
         }
 
-        // FUNGSI UPLOAD OLEH ADMIN KE USER SPESIFIK
-        async function startUploadProcess() {
-            const fIn = document.getElementById('file-input');
-            const uid = document.getElementById('manual-uid').value.trim();
-            if(!fIn.files[0] || !uid) return alert("Pilih File dan Client Tujuan!");
-
-            const file = fIn.files[0];
-            const fileName = `edoc/${uid}/${Date.now()}_${file.name}`;
-            
-            // 1. Upload ke Storage
-            const { error: storageErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
-            
-            if(!storageErr) {
-                const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
-                
-                // 2. Simpan Metadata ke Tabel documents
-                const { error: dbErr } = await _supabase.from('documents').insert([{ 
-                    name: file.name, 
-                    url: urlData.publicUrl, 
-                    type: document.getElementById('doc-category').value, 
-                    user_id: uid 
-                }]);
-
-                if(!dbErr) { alert("Archive Synced!"); location.reload(); }
-                else alert("Database Error: " + dbErr.message);
-            } else {
-                alert("Upload Error: " + storageErr.message);
-            }
-        }
-
-        // LOAD DAFTAR CLIENT UNTUK ADMIN
-        async function loadClients() {
-            const { data } = await _supabase.from('profiles').select('id, email');
-            const select = document.getElementById('select-penerima-auth');
-            if(data) data.forEach(item => {
-                const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email;
-                select.appendChild(opt);
-            });
-        }
-
-        // HARGA BBM DARI FIREBASE
         function initHarga() {
             dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
@@ -299,15 +318,36 @@
             });
         }
 
+        async function startUploadProcess() {
+            const fIn = document.getElementById('file-input');
+            const uid = document.getElementById('manual-uid').value.trim();
+            if(!fIn.files[0] || !uid) return alert("Archive Sync Failed: Incomplete Payload.");
+            const file = fIn.files[0];
+            const fileName = `edoc/${uid}/${Date.now()}_${file.name}`;
+            const { error: storageErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
+            if(!storageErr) {
+                const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
+                await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: document.getElementById('doc-category').value, user_id: uid }]);
+                alert("Archive Synced."); location.reload();
+            }
+        }
+
+        async function loadClients() {
+            const { data } = await _supabase.from('profiles').select('id, email');
+            const select = document.getElementById('select-penerima-auth');
+            if(data) data.forEach(item => {
+                const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email;
+                select.appendChild(opt);
+            });
+        }
+
         function toggleLoginModal(show) { document.getElementById('login-overlay').style.display = show ? 'flex' : 'none'; }
-        
         async function handleLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
             if (error) alert("Access Denied."); else window.location.reload();
         }
-        
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
         
         function showSection(id) { 
