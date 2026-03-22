@@ -49,6 +49,7 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
                             <div id="admin-only-tools" class="hidden">
+                                <a href="penawaran.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT PENAWARAN</a>
                                 <a href="kse_po.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT PO</a>
                                 <a href="invoice.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT INVOICE</a>
                             </div>
@@ -191,7 +192,6 @@
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             
-            // Client hanya bisa lihat datanya sendiri
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
 
             const { data, error } = await query;
@@ -200,8 +200,6 @@
 
             tbody.innerHTML = data?.length ? data.map(d => {
                 const valJenis = (d.jenis || d.jenis_form || '-').toUpperCase();
-                
-                // LOGIKA PDF: Mengambil URL dari kolom 'pdf_url' yang disimpan saat buat Invoice/PO
                 const pdfLink = d.pdf_url || d.url; 
                 const btnPdf = pdfLink ? 
                     `<button onclick="window.open('${pdfLink}', '_blank')" class="bg-emerald-500 text-white px-3 py-1.5 rounded text-[9px] font-black uppercase hover:bg-emerald-400 transition-all">VIEW PDF</button>` : 
