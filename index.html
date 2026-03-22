@@ -328,9 +328,9 @@
             }
 
             tbody.innerHTML = data?.length ? data.map(d => {
-                // UPDATE LOGIKA: Cek kolom jenis/jenis_form, jika ada INVOICE/PURCHASE ORDER, tampilkan "FORM"
-                const rawJenis = (d.jenis || d.jenis_form || '').toUpperCase();
-                const displayJenis = (rawJenis.includes('INVOICE') || rawJenis.includes('PURCHASE ORDER')) ? 'FORM' : (rawJenis || 'FORM');
+                // UPDATE LOGIKA: Cek kolom jenis, jika ada INVOICE/PURCHASE ORDER,"
+                const rawJenis = (jenis || jenis || '').toUpperCase();
+                const displayJenis = (rawJenis.includes('INVOICE') || rawJenis.includes('PURCHASE ORDER')) ? '' : (rawJenis || '');
 
                 return `
                 <tr class="hover:bg-white/5">
