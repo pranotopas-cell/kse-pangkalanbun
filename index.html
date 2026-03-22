@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -26,6 +25,8 @@
         .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; min-width: 240px; z-index: 1000; padding-top: 12px; }
         .dropdown:hover .dropdown-menu { display: block; }
         .dropdown-content { background: #0f172a; border-radius: 12px; border: 1px solid rgba(5, 150, 105, 0.4); overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        
+        input, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
     </style>
 </head>
 <body class="bg-hitech">
@@ -50,9 +51,9 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
                             <div id="admin-only-tools" class="hidden">
-                                <a href="penawaran.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT PENAWARAN</a>
                                 <a href="kse_po.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT PO</a>
                                 <a href="invoice.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">BUAT INVOICE</a>
+                                <button onclick="showSection('upload')" class="block w-full text-left px-5 py-3 text-blue-400 hover:bg-blue-600 hover:text-white text-[10px] font-black uppercase border-b border-white/5">UPLOAD E-DOC</button>
                             </div>
                             <button onclick="loadReleaseDocs()" class="block w-full text-left px-5 py-3 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[10px] font-black uppercase">DATA RILIS (DATABASE)</button>
                         </div>
@@ -90,9 +91,9 @@
                 <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Profil Perusahaan</h2>
                 <div class="space-y-6 text-slate-200 leading-relaxed text-lg">
                     <p class="border-l-4 border-emerald-500 pl-6">
-                        <strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> hadir sebagai mitra strategis nasional dalam distribusi High Speed Diesel (HSD) Industri berkualitas tinggi. Kami mengintegrasikan layanan fisik yang handal dengan ekosistem digital <span class="text-emerald-400">.SMARTDocs</span> untuk menjamin akuntabilitas di setiap tetes bahan bakar yang kami kirimkan.
+                        <strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> hadir sebagai mitra strategis nasional dalam distribusi High Speed Diesel (HSD) Industri berkualitas tinggi.
                     </p>
-                    <p>Dengan fokus pada sektor pertambangan, manufaktur, dan konstruksi, KSE memastikan rantai pasok energi Anda tidak pernah terputus melalui sistem monitoring armada real-time dan manajemen dokumen cloud yang transparan.</p>
+                    <p>Fokus pada transparansi data transaksi melalui sistem monitoring armada real-time dan manajemen dokumen digital.</p>
                 </div>
             </div>
         </section>
@@ -102,13 +103,38 @@
                 <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Visi & Misi</h2>
                 <div class="space-y-8 text-slate-200 text-lg">
                     <div class="bg-white/5 p-6 rounded-2xl">
-                        <h3 class="text-emerald-400 font-black text-sm uppercase mb-2 italic">Visi</h3>
-                        <p>Menjadi pemimpin distribusi energi industri yang paling inovatif di Indonesia dengan standar digitalisasi dokumen terbaik di kelasnya.</p>
+                        <h3 class="text-emerald-400 font-black text-sm uppercase mb-2">Visi</h3>
+                        <p>Menjadi pemimpin distribusi energi industri paling inovatif dengan standar digitalisasi dokumen terbaik.</p>
                     </div>
-                    <div class="bg-white/5 p-6 rounded-2xl">
-                        <h3 class="text-emerald-400 font-black text-sm uppercase mb-2 italic">Misi</h3>
-                        <p>Memberikan kepastian supply, menjamin kualitas HSD sesuai standar Migas, dan mempermudah akses data transaksi bagi setiap mitra melalui integrasi sistem database yang aman.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-upload" class="section">
+            <div class="glass-card p-8 border-blue-500/30 max-w-2xl mx-auto">
+                <h3 class="text-blue-400 font-black uppercase mb-6 italic text-xl">Upload / Register New Document</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">Nama Dokumen</label>
+                        <input type="text" id="doc-name" placeholder="Contoh: INV-KSE-001" class="w-full p-3 rounded-lg outline-none mt-1">
                     </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">Kategori</label>
+                        <select id="doc-cat" class="w-full p-3 rounded-lg outline-none mt-1">
+                            <option value="SURAT JALAN">SURAT JALAN</option>
+                            <option value="PURCHASE ORDER">PURCHASE ORDER</option>
+                            <option value="INVOICE">INVOICE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">URL File (G-Drive / S3)</label>
+                        <input type="text" id="doc-url" placeholder="https://..." class="w-full p-3 rounded-lg outline-none mt-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">Assign to User ID (ID dari Supabase)</label>
+                        <input type="text" id="doc-userid" placeholder="Kosongkan jika untuk semua" class="w-full p-3 rounded-lg outline-none mt-1">
+                    </div>
+                    <button onclick="submitDocument()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl uppercase tracking-widest text-[11px] transition-all">Simpan Dokumen</button>
                 </div>
             </div>
         </section>
@@ -117,7 +143,6 @@
             <div class="glass-card overflow-hidden border-yellow-500/20">
                 <div class="p-6 bg-yellow-500/5 border-b border-white/10 flex justify-between items-center">
                     <h3 class="font-black uppercase text-yellow-500 text-[11px]">E-FORM TRANSACTION HISTORY</h3>
-                    <span class="text-[10px] text-slate-500 italic">Klik VIEW PDF untuk melihat lampiran dokumen</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-[11px] italic">
@@ -138,8 +163,8 @@
         </section>
 
         <section id="section-documents" class="section">
-            <div class="glass-card overflow-hidden">
-                <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
+            <div class="glass-card overflow-hidden border-emerald-500/20">
+                <div class="p-6 bg-white/5 border-b border-white/10">
                     <h3 id="doc-title" class="font-black uppercase text-white text-[12px] italic">REPOSITORY_NODE</h3>
                 </div>
                 <div class="overflow-x-auto">
@@ -155,16 +180,17 @@
     <div id="login-overlay">
         <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 text-center relative">
             <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-slate-500">✕</button>
-            <h2 class="font-black text-white text-xl uppercase mb-8">Access</h2>
+            <h2 class="font-black text-white text-xl uppercase mb-8">Verification Access</h2>
             <div class="space-y-4">
-                <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
-                <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
-                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify</button>
+                <input type="email" id="login-email" placeholder="Email" class="w-full p-4 rounded-xl text-xs outline-none">
+                <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 rounded-xl text-xs outline-none">
+                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Login</button>
             </div>
         </div>
     </div>
 
     <script>
+        // CONFIG
         const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -189,29 +215,25 @@
             }
         }
 
+        // FUNGSI LOAD E-FORM (HISTORY)
         async function loadReleaseDocs() {
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
-            
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
 
             const { data, error } = await query;
             const tbody = document.getElementById('release-table-body');
-            
-            if(error) { 
-                tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-500 font-black uppercase">ERR_SYNC</td></tr>'; 
-                return; 
-            }
+            if(error) { tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-500 uppercase">Error Connection</td></tr>'; return; }
 
             tbody.innerHTML = data?.length ? data.map(d => {
                 const valJenis = (d.jenis || d.jenis_form || '-').toUpperCase();
                 const pdfLink = d.pdf_url || d.url; 
                 
-                // --- PERBAIKAN LOGIK TUJUAN (MENYATUKAN BERBAGAI NAMA KOLOM SUPABASE) ---
+                // LOGIKA TUJUAN: Mengambil dari berbagai kemungkinan kolom
                 const valTujuan = d.tujuan || d.customer_name || d.vendor_name || d.penerima || '-';
 
                 const btnPdf = pdfLink ? 
-                    `<button onclick="window.open('${pdfLink}', '_blank')" class="bg-emerald-500 text-white px-3 py-1.5 rounded text-[9px] font-black uppercase hover:bg-emerald-400 transition-all">VIEW PDF</button>` : 
+                    `<button onclick="window.open('${pdfLink}', '_blank')" class="bg-emerald-500 text-white px-3 py-1.5 rounded text-[9px] font-black uppercase hover:bg-emerald-400">VIEW PDF</button>` : 
                     `<span class="text-slate-600 text-[9px]">NO_FILE</span>`;
 
                 return `
@@ -226,20 +248,46 @@
             }).join('') : '<tr><td colspan="6" class="p-10 text-center text-slate-600 font-black uppercase">EMPTY_RECORDS</td></tr>';
         }
 
+        // FUNGSI LOAD E-DOCS
         async function loadDocuments(cat) {
             showSection('documents');
             document.getElementById('doc-title').innerText = `REPOSITORY_NODE: ${cat}`;
             let query = _supabase.from('documents').select('*').eq('type', cat).order('created_at', { ascending: false });
+            
             if(!isAdmin) query = query.eq('user_id', currentUser.id); 
-            const { data } = await query;
+            
+            const { data, error } = await query;
             const tbody = document.getElementById('file-table-body');
+            
+            if(error) { tbody.innerHTML = '<tr><td class="p-10 text-center text-red-500 italic">SYNC_ERROR</td></tr>'; return; }
+
             tbody.innerHTML = data?.length ? data.map(d => `
                 <tr class="hover:bg-white/5">
                     <td class="p-5 font-bold text-white uppercase text-[11px]">${d.name}</td>
-                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white">VIEW</button></td>
-                </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 uppercase italic">NO_DATA</td></tr>';
+                    <td class="p-5 text-right">
+                        <button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white transition-all">VIEW</button>
+                    </td>
+                </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 uppercase italic">NO_DATA_AVAILABLE</td></tr>';
         }
 
+        // FUNGSI SUBMIT DOKUMEN (ADMIN)
+        async function submitDocument() {
+            const name = document.getElementById('doc-name').value;
+            const type = document.getElementById('doc-cat').value;
+            const url = document.getElementById('doc-url').value;
+            const uid = document.getElementById('doc-userid').value;
+
+            if(!name || !url) { alert("Nama dan URL wajib diisi!"); return; }
+
+            const { error } = await _supabase.from('documents').insert([
+                { name, type, url, user_id: uid || null }
+            ]);
+
+            if(error) alert("Gagal Simpan: " + error.message);
+            else { alert("Dokumen berhasil disimpan!"); location.reload(); }
+        }
+
+        // HARGA BBM DASHBOARD
         function initHarga() {
             dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
                 if(doc.exists) {
@@ -257,13 +305,15 @@
             });
         }
 
+        // NAVIGATION & AUTH
         function toggleLoginModal(show) { document.getElementById('login-overlay').style.display = show ? 'flex' : 'none'; }
         
         async function handleLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
-            if (error) alert("Gagal Login."); else window.location.reload();
+            if (error) alert("Login Gagal: " + error.message); 
+            else window.location.reload();
         }
         
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
