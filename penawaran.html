@@ -25,13 +25,16 @@
 
         .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
         .logo-img { height: 45px; width: auto; }
-        .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 28px; color: var(--kse-primary); margin: 0; }
+        
+        /* Update Styles Judul */
+        .doc-identity { text-align: right; }
+        .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 26px; color: var(--kse-primary); margin: 0; line-height: 1; }
+        .doc-identity .sub-title-en { font-size: 14px; color: #666; font-style: italic; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         
         .table-main { width: 100%; border-collapse: collapse; margin-top: 15px; border: 1.5px solid #000; }
         .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 8px; border: 1px solid #000; text-align: center; font-size: 11px; }
         .table-main td { border: 1px solid #000; padding: 10px; vertical-align: middle; }
         
-        /* Fix Kolom Nomor agar tidak turun */
         .meta-table { width: 100%; border-collapse: collapse; }
         .meta-table td { border: none !important; padding: 2px 0; font-size: 12px; vertical-align: top; }
         .meta-table td.label-col { white-space: nowrap; width: 1%; padding-right: 10px; }
@@ -131,7 +134,10 @@
             <div class="document-canvas" id="main-doc">
                 <div class="header-section">
                     <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=LOGO+KSE'">
-                    <div class="doc-identity"><h2>PENAWARAN HARGA</h2></div>
+                    <div class="doc-identity">
+                        <h2>PENAWARAN HARGA</h2>
+                        <div class="sub-title-en">QUOTATION</div>
+                    </div>
                 </div>
 
                 <div class="row mb-3">
