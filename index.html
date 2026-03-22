@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE_SMARTDocs_Integrated_System</title>
+    <title>KSE_SMARTDocs</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -38,9 +38,22 @@
 <body class="bg-hitech">
 
     <nav class="bg-slate-950/90 backdrop-blur-xl text-white px-6 md:px-12 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-white/10">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('profile')">
-            <img src="header1.png" alt="KHATULISTIWA SINAR ENERGI- SMARTDOCS" class="h-10 md:h-12 object-contain">
+    <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('profile')">
+        <img src="header1.png" alt="Logo" class="h-10 md:h-12 object-contain">
+        
+        <div class="flex flex-col justify-center">
+            <h1 class="text-lg md:text-xl font-black tracking-tighter uppercase leading-none">
+                KHATULISTIWA <span class="text-emerald-500">SINAR ENERGI</span>
+            </h1>
+            <p class="text-[9px] tracking-[0.3em] text-slate-400 font-bold uppercase">
+                SMARTDocs System
+            </p>
         </div>
+    </div>
+    
+    <div class="flex items-center space-x-8">
+        </div>
+</nav>
         
         <div class="flex items-center space-x-8">
             <div id="public-nav" class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
@@ -77,7 +90,7 @@
             </div>
 
             <div id="auth-buttons">
-                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-7 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">Verify Access</button>
+                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-7 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">Login</button>
                 <div id="user-info" class="hidden flex items-center gap-6 border-l border-white/20 pl-6">
                     <span id="display-user-email" class="text-[12px] font-bold text-emerald-400 lowercase tracking-tight">...</span>
                     <button onclick="handleLogout()" class="text-[12px] font-black text-red-500 uppercase hover:text-red-400">Logout</button>
