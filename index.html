@@ -26,16 +26,20 @@
         .dropdown:hover .dropdown-menu { display: block; }
         .dropdown-content { background: #0f172a; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         
-        /* Elemen Teks Elegan */
         .text-header { letter-spacing: 0.1em; }
         .text-body-large { font-size: 0.95rem; line-height: 1.7; }
+
+        /* Style tambahan untuk icon mata */
+        .password-container { position: relative; }
+        .toggle-password { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; }
+        .toggle-password:hover { color: #10b981; }
     </style>
 </head>
 <body class="bg-hitech">
 
-    <nav class="bg-slate-950/90 backdrop-blur-xl text-white px-6 md:px-12 py-5 flex justify-between items-center sticky top-0 z-[100] border-b border-white/10">
+    <nav class="bg-slate-950/90 backdrop-blur-xl text-white px-6 md:px-12 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-white/10">
         <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('profile')">
-            <h1 class="text-xl font-black tracking-tighter uppercase text-header">KSE <span class="text-emerald-500">.SMARTDocs</span></h1>
+            <img src="HEADER1.PNG" alt="KSE Logo Header" class="h-10 md:h-12 object-contain">
         </div>
         
         <div class="flex items-center space-x-8">
@@ -83,7 +87,6 @@
     </nav>
 
     <main class="container mx-auto px-6 py-12">
-        
         <div class="mb-12">
             <div id="harga-grid-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
         </div>
@@ -92,8 +95,8 @@
             <div class="glass-card p-12 border-emerald-500/10 italic">
                 <h2 class="text-5xl font-black text-white mb-10 uppercase tracking-tighter text-header">Corporate Profile</h2>
                 <div class="space-y-8 text-slate-300 text-body-large">
-                    <p class="border-l-4 border-emerald-500 pl-8"><strong class="text-white text-xl block mb-2 uppercase tracking-wide">PT Khatulistiwa Sinar Energi (KSE)</strong> Merupakan entitas bisnis yang mengkhususkan diri pada perdagangan dan distribusi High Speed Diesel (HSD) Industri, melayani kebutuhan energi skala nasional dengan standar operasional kelas dunia.</p>
-                    <p>Dedikasi kami berfokus pada <span class="text-white font-bold underline decoration-emerald-500">transparansi mutlak</span> dan efisiensi logistik. Melalui integrasi sistem <span class="text-emerald-400 font-extrabold italic">.SMARTDocs</span>, kami memastikan setiap alur transaksi terdokumentasi secara real-time, memberikan ketenangan pikiran bagi setiap mitra strategis kami.</p>
+                    <p class="border-l-4 border-emerald-500 pl-8"><strong class="text-white text-xl block mb-2 uppercase tracking-wide">PT Khatulistiwa Sinar Energi (KSE)</strong> Merupakan entitas bisnis yang mengkhususkan diri pada perdagangan dan distribusi High Speed Diesel (HSD) Industri.</p>
+                    <p>Dedikasi kami berfokus pada <span class="text-white font-bold underline decoration-emerald-500">transparansi mutlak</span> melalui integrasi sistem <span class="text-emerald-400 font-extrabold italic">.SMARTDocs</span>.</p>
                 </div>
             </div>
         </section>
@@ -104,14 +107,13 @@
                 <div class="grid md:grid-cols-2 gap-12">
                     <div class="bg-white/5 p-10 rounded-3xl border border-white/10">
                         <h3 class="text-emerald-500 font-black mb-6 uppercase text-xs tracking-[0.2em]">Our Vision</h3>
-                        <p class="text-white text-sm leading-loose uppercase font-semibold">Menjadi garda terdepan dalam digitalisasi energi di Indonesia, menciptakan standar baru dalam keamanan distribusi dan akurasi data bahan bakar industri.</p>
+                        <p class="text-white text-sm leading-loose uppercase font-semibold">Menjadi garda terdepan dalam digitalisasi energi di Indonesia.</p>
                     </div>
                     <div class="bg-white/5 p-10 rounded-3xl border border-white/10">
                         <h3 class="text-emerald-500 font-black mb-6 uppercase text-xs tracking-[0.2em]">Core Missions</h3>
                         <ul class="text-slate-200 text-[12px] space-y-6 leading-relaxed uppercase font-bold">
-                            <li><span class="text-emerald-500">●</span> Integrasi teknologi dalam setiap rantai pasok energi.</li>
-                            <li><span class="text-emerald-500">●</span> Konsistensi mutu produk sesuai regulasi pemerintah.</li>
-                            <li><span class="text-emerald-500">●</span> Keunggulan operasional melalui armada yang terkalibrasi.</li>
+                            <li><span class="text-emerald-500">●</span> Integrasi teknologi dalam distribusi energi.</li>
+                            <li><span class="text-emerald-500">●</span> Konsistensi mutu produk sesuai regulasi.</li>
                         </ul>
                     </div>
                 </div>
@@ -124,15 +126,15 @@
                 <div class="grid md:grid-cols-3 gap-8">
                     <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
                         <p class="text-4xl text-white font-black mb-4 uppercase">TANGKI</p>
-                        <p class="text-[11px] text-slate-400 leading-relaxed uppercase font-bold tracking-widest">5.000 L - 8.000 L - 10.OOO L </p>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">5.000 L - 10.OOO L </p>
                     </div>
                     <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
                         <p class="text-4xl text-white font-black mb-4 uppercase">GPS LIVE</p>
-                        <p class="text-[11px] text-slate-400 leading-relaxed uppercase font-bold tracking-widest">Real-time Monitoring by system </p>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">Real-time Monitoring</p>
                     </div>
                     <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
                         <p class="text-4xl text-white font-black mb-4 uppercase">CALIBRATED</p>
-                        <p class="text-[11px] text-slate-400 leading-relaxed uppercase font-bold tracking-widest">Tera Mobil Akurat Berdasar Tera dari Dinas Metrologi dan Update tiap Tahun </p>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">Update tiap Tahun</p>
                     </div>
                 </div>
             </div>
@@ -172,7 +174,7 @@
         <section id="section-release" class="section">
             <div class="glass-card overflow-hidden border-yellow-500/20">
                 <div class="p-8 bg-yellow-500/5 border-b border-white/10">
-                    <h3 class="font-black uppercase text-yellow-500 text-[12px] italic tracking-widest">E-FORM TRANSACTION HISTORY DATABASE</h3>
+                    <h3 class="font-black uppercase text-yellow-500 text-[12px] italic tracking-widest">E-FORM TRANSACTION HISTORY</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-[12px] italic">
@@ -204,16 +206,26 @@
                 </div>
             </div>
         </section>
-
     </main>
 
     <div id="login-overlay">
-        <div class="glass-card p-12 w-full max-w-[450px] border-emerald-500/30 text-center">
+        <div class="glass-card p-12 w-full max-w-[450px] border-emerald-500/30 text-center relative">
             <button onclick="toggleLoginModal(false)" class="absolute top-6 right-6 text-slate-500 hover:text-white">✕</button>
+            
+            <img src="LOGO.PNG" alt="KSE Logo" class="h-20 mx-auto mb-6 object-contain">
+            
             <h2 class="font-black text-white text-2xl uppercase mb-10 italic tracking-[0.3em]">Secure Access</h2>
+            
             <div class="space-y-6">
                 <input type="email" id="login-email" placeholder="Credential ID" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
-                <input type="password" id="login-pass" placeholder="Password Key" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
+                
+                <div class="password-container">
+                    <input type="password" id="login-pass" placeholder="Password Key" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </span>
+                </div>
+
                 <button onclick="handleLogin()" class="w-full kse-gradient text-white py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest">Verify Identity</button>
             </div>
         </div>
@@ -229,6 +241,19 @@
         const dbF = firebase.firestore();
 
         let currentUser = null; let isAdmin = false;
+
+        // Fungsi Toggle Password
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('login-pass');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                eyeIcon.style.color = "#10b981";
+            } else {
+                passInput.type = "password";
+                eyeIcon.style.color = "#64748b";
+            }
+        }
 
         async function checkAuth() {
             initHarga();
@@ -254,22 +279,16 @@
             showSection('release');
             let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
-            
             const { data, error } = await query;
             const tbody = document.getElementById('release-table-body');
             if (error) return;
-
             tbody.innerHTML = data?.length ? data.map(d => {
-                const jenisData = d.jenis || d.jenis_dokumen || 'FORM';
-                const tujuanData = d.tujuan || d.customer_name || d.penerima || '-';
                 const pdfLink = d.pdf_url ? `<a href="${d.pdf_url}" target="_blank" class="text-white border border-white/30 px-4 py-2 rounded hover:bg-white hover:text-black font-black text-[10px] uppercase transition-all">VIEW PDF</a>` : '<span class="text-slate-600">NULL</span>';
-
-                return `
-                <tr class="hover:bg-white/5 transition-colors">
+                return `<tr class="hover:bg-white/5 transition-colors">
                     <td class="p-5 text-slate-400 font-bold">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="p-5 uppercase font-black text-emerald-500">${jenisData}</td>
+                    <td class="p-5 uppercase font-black text-emerald-500">${d.jenis || 'FORM'}</td>
                     <td class="p-5 text-white font-black tracking-wider">${d.nomor || d.no_invoice || '-'}</td>
-                    <td class="p-5 text-slate-200 font-bold uppercase">${tujuanData}</td> 
+                    <td class="p-5 text-slate-200 font-bold uppercase">${d.tujuan || d.customer_name || '-'}</td> 
                     <td class="p-5 text-right text-yellow-500 font-black text-sm">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
                     <td class="p-5 text-center">${pdfLink}</td>
                 </tr>`;
