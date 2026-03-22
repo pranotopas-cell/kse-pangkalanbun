@@ -273,7 +273,7 @@
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // Fungsi Pembulatan Khas KSE: Jika >= 0.5 bulatkan ke atas
+    // UPDATE LOGIKA PEMBULATAN: 0.5 ke atas naik satuan
     function roundKSE(num) {
         return Math.round(num);
     }
@@ -290,7 +290,6 @@
         document.getElementById('in_h_tax_text').value = hTax.toFixed(2).replace('.', ',');
         document.getElementById('in_subtotal').value = subtotal.toFixed(2);
         
-        // Auto Calculate Tax Fields
         const dppLain = subtotal * (11 / 12);
         const ppn = dppLain * 0.12;
         document.getElementById('in_dpp_lain').value = dppLain.toFixed(2);
@@ -343,9 +342,8 @@
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // Grand Total = Subtotal + PPN + Adj (Mengikuti input manual)
         const grandTotalRaw = sub + ppn + adj;
-        const grandTotalBulat = roundKSE(grandTotalRaw);
+        const grandTotalFinal = roundKSE(grandTotalRaw);
 
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
         document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
@@ -353,11 +351,11 @@
         document.getElementById('out_ppn_val').innerText = formatIDR(ppn);
         document.getElementById('out_adjust_val').innerText = formatIDR(adj);
         
-        // Grand total tampil bulat sesuai instruksi sebelumnya, namun angka detail di atasnya tetap 2 desimal
-        document.getElementById('out_grand_val').innerText = formatIDR(grandTotalBulat);
+        // Tampilkan 2 desimal tetap (.00) untuk Grand Total sesuai instruksi
+        document.getElementById('out_grand_val').innerText = formatIDR(grandTotalFinal);
         
-        document.getElementById('out_terbilang').innerText = grandTotalBulat != 0 ? terbilang(grandTotalBulat) + " Rupiah" : "-";
-        updateQRCode(grandTotalBulat);
+        document.getElementById('out_terbilang').innerText = grandTotalFinal != 0 ? terbilang(grandTotalFinal) + " Rupiah" : "-";
+        updateQRCode(grandTotalFinal);
     }
 
     function autoFillCustomer() {
