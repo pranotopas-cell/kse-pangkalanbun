@@ -164,7 +164,7 @@
                             <td class="p-0" style="vertical-align: middle;">
                                 <div class="d-flex justify-content-between px-3 py-2 fw-bold" style="font-size: 14px;">
                                     <span>Rp</span>
-                                    <span id="out_subtotal_top">0,00</span>
+                                    <span id="out_subtotal_top">0</span>
                                 </div>
                             </td>
                         </tr>
@@ -174,16 +174,16 @@
                                     <tr>
                                         <td class="border-0 p-3" width="250">Harga Jual per liter (Nett)<br><i class="text-muted" style="font-size: 11px;">Selling Price per liter (Nett)</i></td>
                                         <td class="border-0 p-3" width="30">Rp</td>
-                                        <td class="border-0 p-3 text-center fw-bold" id="out_h_nett_val" style="font-size: 14px;">0,00</td>
+                                        <td class="border-0 p-3 text-center fw-bold" id="out_h_nett_val" style="font-size: 14px;">0</td>
                                     </tr>
                                 </table>
                             </td>
                             <td class="p-0">
                                 <table class="w-100" style="font-size: 12px; border-collapse: collapse;">
-                                    <tr><td class="p-2 border-bottom border-end" width="55%">Sub Total</td><td class="p-2 border-bottom text-end fw-bold" id="out_subtotal_display">0,00</td></tr>
-                                    <tr><td class="p-2 border-bottom border-end"><i>DPP Nilai Lain</i></td><td class="p-2 border-bottom text-end" id="out_dpp_val">0,00</td></tr>
-                                    <tr><td class="p-2 border-bottom border-end"><i>PPN 12%</i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0,00</td></tr>
-                                    <tr><td class="p-2 border-end"><i>Penyesuaian</i></td><td class="p-2 text-end" id="out_adjust_val">0,00</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end" width="55%">Sub Total</td><td class="p-2 border-bottom text-end fw-bold" id="out_subtotal_display">0</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end"><i>DPP Nilai Lain</i></td><td class="p-2 border-bottom text-end" id="out_dpp_val">0</td></tr>
+                                    <tr><td class="p-2 border-bottom border-end"><i>PPN 12%</i></td><td class="p-2 border-bottom text-end" id="out_ppn_val">0</td></tr>
+                                    <tr><td class="p-2 border-end"><i>Penyesuaian</i></td><td class="p-2 text-end" id="out_adjust_val">0</td></tr>
                                 </table>
                             </td>
                         </tr>
@@ -192,7 +192,7 @@
                             <td class="p-0">
                                 <div class="d-flex justify-content-between px-3 py-2" style="color: var(--kse-primary);">
                                     <span>Rp</span>
-                                    <span id="out_grand_val">0,00</span>
+                                    <span id="out_grand_val">0</span>
                                 </div>
                             </td>
                         </tr>
@@ -248,12 +248,14 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    function formatIDR(val) {
-        return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // Format tanpa desimal untuk hasil akhir yang bulat
+    function formatIDRFull(val) {
+        return Math.round(val).toLocaleString('id-ID');
     }
 
-    function roundPrice(num) {
-        return Math.round(num * 100) / 100;
+    // Tetap gunakan desimal untuk input agar akurat
+    function formatIDR(val) {
+        return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function calculateFromBasic() {
@@ -262,7 +264,7 @@
         const qty = parseFloat(qtyRaw) || 0;
         const hNett = parseFloat(hNettRaw) || 0;
         
-        const hTax = roundPrice(hNett / 1.11); 
+        const hTax = Math.round((hNett / 1.11) * 100) / 100; 
         const subtotal = qty * hTax;
 
         document.getElementById('in_h_tax_text').value = hTax.toFixed(2).replace('.', ',');
@@ -289,29 +291,32 @@
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value + " Ltr";
-        document.getElementById('out_h_nett_val').innerText = formatIDR(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.') || 0);
         
+        // Tampilan angka Nett & DPP tetap dengan desimal untuk transparansi
+        document.getElementById('out_h_nett_val').innerText = formatIDR(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.') || 0);
         const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(',', '.')) || 0;
         document.getElementById('out_h_tax_val').innerText = formatIDR(dppUnitVal);
 
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // Logika Pajak
         const dppLain = sub * (11 / 12);
         const ppn = dppLain * 0.12;
         
-        // Grand Total = Sub Total + PPN + Penyesuaian
-        const grand = sub + ppn + adj;
+        // Logika Pembulatan Sesuai Instruksi (>= 0.5 bulatkan ke atas)
+        const grandTotalRaw = sub + ppn + adj;
+        const grandTotalBulat = Math.round(grandTotalRaw);
 
-        document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
-        document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
-        document.getElementById('out_dpp_val').innerText = formatIDR(dppLain);
-        document.getElementById('out_ppn_val').innerText = formatIDR(ppn);
-        document.getElementById('out_adjust_val').innerText = formatIDR(adj);
-        document.getElementById('out_grand_val').innerText = formatIDR(grand);
-        document.getElementById('out_terbilang').innerText = grand != 0 ? terbilang(Math.round(grand)) + " Rupiah" : "-";
-        updateQRCode(grand);
+        // Update tampilan PDF - Gunakan format bulat (tanpa desimal)
+        document.getElementById('out_subtotal_top').innerText = formatIDRFull(sub);
+        document.getElementById('out_subtotal_display').innerText = formatIDRFull(sub);
+        document.getElementById('out_dpp_val').innerText = formatIDRFull(dppLain);
+        document.getElementById('out_ppn_val').innerText = formatIDRFull(ppn);
+        document.getElementById('out_adjust_val').innerText = formatIDRFull(adj);
+        document.getElementById('out_grand_val').innerText = formatIDRFull(grandTotalBulat);
+        
+        document.getElementById('out_terbilang').innerText = grandTotalBulat != 0 ? terbilang(grandTotalBulat) + " Rupiah" : "-";
+        updateQRCode(grandTotalBulat);
     }
 
     function autoFillCustomer() {
@@ -351,7 +356,7 @@
     function updateQRCode(grandTotal) {
         const noInv = document.getElementById('in_no').value;
         const customer = document.getElementById('in_cust').value;
-        const qrContent = `KSE-INV|NO:${noInv}|CUST:${customer}|TOTAL:Rp${formatIDR(grandTotal)}`;
+        const qrContent = `KSE-INV|NO:${noInv}|CUST:${customer}|TOTAL:Rp${formatIDRFull(grandTotal)}`;
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrContent)}`;
         document.getElementById('qr_timestamp').innerText = `Generated: ${new Date().toLocaleString('id-ID')}`;
     }
@@ -365,7 +370,7 @@
                 nomor: document.getElementById('in_no').value,
                 tanggal: document.getElementById('in_tgl_raw').value,
                 tujuan: document.getElementById('in_cust').value,
-                nominal: parseFloat(document.getElementById('out_grand_val').innerText.replace(/\./g, '').replace(',', '.')),
+                nominal: Math.round(parseFloat(document.getElementById('out_grand_val').innerText.replace(/\./g, ''))),
                 client_email: "system@kse.co.id"
             };
             const { error } = await _supabase.from('eforms').insert([payload]);
