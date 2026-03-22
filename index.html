@@ -15,103 +15,99 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; scroll-behavior: smooth; color: #f8fafc; }
         .bg-hitech { background: radial-gradient(circle at top right, #064e3b, transparent), radial-gradient(circle at bottom left, #082f49, transparent), url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); background-attachment: fixed; }
         .kse-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%); box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; }
         .active-section { display: block !important; }
         .section { display: none; }
         
-        #login-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(12px); z-index: 200; align-items: center; justify-content: center; }
+        #login-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(10px); z-index: 200; align-items: center; justify-content: center; }
 
         .dropdown { position: relative; padding: 10px 0; }
-        .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; min-width: 260px; z-index: 1000; padding-top: 12px; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; min-width: 240px; z-index: 1000; padding-top: 12px; }
         .dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-content { background: #0f172a; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        
-        /* Elemen Teks Elegan */
-        .text-header { letter-spacing: 0.1em; }
-        .text-body-large { font-size: 0.95rem; line-height: 1.7; }
+        .dropdown-content { background: #0f172a; border-radius: 12px; border: 1px solid rgba(5, 150, 105, 0.4); overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     </style>
 </head>
 <body class="bg-hitech">
 
-    <nav class="bg-slate-950/90 backdrop-blur-xl text-white px-6 md:px-12 py-5 flex justify-between items-center sticky top-0 z-[100] border-b border-white/10">
+    <nav class="bg-slate-950/80 backdrop-blur-md text-white px-4 md:px-8 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-white/5">
         <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('profile')">
-            <h1 class="text-xl font-black tracking-tighter uppercase text-header">KSE <span class="text-emerald-500">.SMARTDocs</span></h1>
+            <h1 class="text-lg font-black tracking-tighter uppercase">KSE <span class="text-emerald-500">.SMARTDocs</span></h1>
         </div>
         
-        <div class="flex items-center space-x-8">
-            <div id="public-nav" class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
-                <button onclick="showSection('profile')" class="hover:text-white transition-colors">Profile</button>
-                <button onclick="showSection('visi-misi')" class="hover:text-white transition-colors">Visi & Misi</button>
-                <button onclick="showSection('armada')" class="hover:text-white transition-colors">Armada</button>
-                <button onclick="showSection('kontak')" class="hover:text-white transition-colors">Kontak</button>
+        <div class="flex items-center space-x-4">
+            <div id="public-nav" class="hidden md:flex space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                <button onclick="showSection('profile')" class="hover:text-emerald-500">Profile</button>
+                <button onclick="showSection('visi-misi')" class="hover:text-emerald-500">Visi & Misi</button>
+                <button onclick="showSection('armada')" class="hover:text-emerald-500">Armada</button>
+                <button onclick="showSection('kontak')" class="hover:text-emerald-500">Kontak</button>
             </div>
 
-            <div id="protected-nav" class="hidden flex items-center space-x-8">
+            <div id="protected-nav" class="hidden flex items-center space-x-6">
                 <div id="nav-eform" class="dropdown hidden">
-                    <button class="text-[12px] font-black uppercase tracking-[0.15em] text-yellow-500 flex items-center gap-1 hover:brightness-125">KSE E-FORM <small class="text-[8px]">▼</small></button>
+                    <button class="text-[11px] font-black uppercase tracking-widest text-yellow-500 flex items-center gap-1">KSE E-FORM <small>▼</small></button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <a href="penawaran.html" class="block px-6 py-4 text-white hover:bg-emerald-600 text-[11px] font-black border-b border-white/5 uppercase italic tracking-wider">BUAT PENAWARAN</a>
-                            <a href="kse_po.html" class="block px-6 py-4 text-slate-200 hover:bg-yellow-600 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
-                            <a href="invoice.html" class="block px-6 py-4 text-slate-200 hover:bg-yellow-600 hover:text-white text-[11px] font-bold border-b border-white/5 uppercase">INVOICE</a>
-                            <button onclick="loadReleaseDocs()" class="block w-full text-left px-6 py-4 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[11px] font-black uppercase tracking-widest">E-FORM HISTORY</button>
+                            <a href="penawaran.html" class="block px-5 py-3 text-cyan-400 hover:bg-slate-800 text-[10px] font-black border-b border-white/5 uppercase italic">BUAT PENAWARAN</a>
+                            <a href="kse_po.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</a>
+                            <a href="invoice.html" class="block px-5 py-3 text-slate-300 hover:bg-yellow-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</a>
+                            <button onclick="loadReleaseDocs()" class="block w-full text-left px-5 py-3 text-emerald-400 hover:bg-emerald-600 hover:text-white text-[10px] font-black uppercase">E-FORM HISTORY</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="dropdown">
-                    <button class="text-[12px] font-black uppercase tracking-[0.15em] text-white flex items-center gap-1 hover:text-emerald-400">KSE E-DOC <small class="text-[8px]">▼</small></button>
+                    <button class="text-[11px] font-black uppercase tracking-widest text-cyan-400 flex items-center gap-1">KSE E-DOC <small>▼</small></button>
                     <div class="dropdown-menu">
                         <div class="dropdown-content">
-                            <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold border-b border-white/5 uppercase">SURAT JALAN</button>
-                            <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</button>
-                            <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold border-b border-white/5 uppercase">INVOICE</button>
-                            <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-6 py-4 text-slate-200 hover:bg-slate-800 text-[11px] font-bold uppercase">FAKTUR PAJAK</button>
+                            <button onclick="loadDocuments('SURAT JALAN')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">SURAT JALAN</button>
+                            <button onclick="loadDocuments('PURCHASE ORDER')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">PURCHASE ORDER</button>
+                            <button onclick="loadDocuments('INVOICE')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold border-b border-white/5 uppercase">INVOICE</button>
+                            <button onclick="loadDocuments('FAKTUR PAJAK')" class="block w-full text-left px-5 py-3 text-slate-300 hover:bg-cyan-600 hover:text-white text-[10px] font-bold uppercase">FAKTUR PAJAK</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div id="auth-buttons">
-                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-7 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">Verify Access</button>
-                <div id="user-info" class="hidden flex items-center gap-6 border-l border-white/20 pl-6">
-                    <span id="display-user-email" class="text-[12px] font-bold text-emerald-400 lowercase tracking-tight">...</span>
-                    <button onclick="handleLogout()" class="text-[12px] font-black text-red-500 uppercase hover:text-red-400">Logout</button>
+                <button id="btn-show-login" onclick="toggleLoginModal(true)" class="kse-gradient px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">SILAHKAN LOGIN</button>
+                <div id="user-info" class="hidden flex items-center gap-4 border-l border-white/10 pl-4">
+                    <span id="display-user-email" class="text-[11px] font-bold text-emerald-400 lowercase truncate max-w-[100px]">...</span>
+                    <button onclick="handleLogout()" class="text-[11px] font-black text-red-500 uppercase">Logout</button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="container mx-auto px-4 py-8">
         
-        <div class="mb-12">
-            <div id="harga-grid-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        <div class="mb-10">
+            <div id="harga-grid-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
 
         <section id="section-profile" class="section active-section">
-            <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-5xl font-black text-white mb-10 uppercase tracking-tighter text-header">Corporate Profile</h2>
-                <div class="space-y-8 text-slate-300 text-body-large">
-                    <p class="border-l-4 border-emerald-500 pl-8"><strong class="text-white text-xl block mb-2 uppercase tracking-wide">PT Khatulistiwa Sinar Energi (KSE)</strong> Merupakan entitas bisnis yang mengkhususkan diri pada perdagangan dan distribusi High Speed Diesel (HSD) Industri, melayani kebutuhan energi skala nasional dengan standar operasional kelas dunia.</p>
-                    <p>Dedikasi kami berfokus pada <span class="text-white font-bold underline decoration-emerald-500">transparansi mutlak</span> dan efisiensi logistik. Melalui integrasi sistem <span class="text-emerald-400 font-extrabold italic">.SMARTDocs</span>, kami memastikan setiap alur transaksi terdokumentasi secara real-time, memberikan ketenangan pikiran bagi setiap mitra strategis kami.</p>
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-4xl font-black text-emerald-500 mb-8 uppercase tracking-tighter">Corporate Profile</h2>
+                <div class="space-y-6 text-slate-300 leading-relaxed text-sm">
+                    <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white text-lg">PT Khatulistiwa Sinar Energi (KSE)</strong> merupakan entitas bisnis yang bergerak di bidang perdagangan dan distribusi bahan bakar minyak (HSD) Industri dengan fokus utama pada pemenuhan kebutuhan energi nasional yang berkualitas tinggi.</p>
+                    <p>Berbekal pengalaman bertahun-tahun dalam manajemen logistik energi, kami membangun fondasi perusahaan di atas pilar <span class="text-emerald-400 font-bold">Integritas</span>, <span class="text-emerald-400 font-bold">Keamanan</span>, dan <span class="text-emerald-400 font-bold">Ketepatan Waktu</span>. Melalui platform digital <span class="text-white font-bold">.SMARTDocs</span>, kami merevolusi sistem administrasi konvensional menjadi ekosistem digital yang transparan.</p>
                 </div>
             </div>
         </section>
 
         <section id="section-visi-misi" class="section">
-            <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Visi & Misi Strategis</h2>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10">
-                        <h3 class="text-emerald-500 font-black mb-6 uppercase text-xs tracking-[0.2em]">Our Vision</h3>
-                        <p class="text-white text-sm leading-loose uppercase font-semibold">Menjadi garda terdepan dalam digitalisasi energi di Indonesia, menciptakan standar baru dalam keamanan distribusi dan akurasi data bahan bakar industri.</p>
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-6 uppercase italic">Visi & Misi Strategis</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                        <h3 class="text-white font-black mb-4 uppercase text-sm tracking-widest text-emerald-400">Visi Kami</h3>
+                        <p class="text-slate-400 text-sm leading-loose uppercase">Menjadi integrator solusi energi terdepan di Indonesia yang mengedepankan efisiensi berbasis teknologi mutakhir, serta menjadi mitra pilihan utama dalam mendukung pertumbuhan industri nasional.</p>
                     </div>
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10">
-                        <h3 class="text-emerald-500 font-black mb-6 uppercase text-xs tracking-[0.2em]">Core Missions</h3>
-                        <ul class="text-slate-200 text-[12px] space-y-6 leading-relaxed uppercase font-bold">
-                            <li><span class="text-emerald-500">●</span> Integrasi teknologi dalam setiap rantai pasok energi.</li>
-                            <li><span class="text-emerald-500">●</span> Konsistensi mutu produk sesuai regulasi pemerintah.</li>
-                            <li><span class="text-emerald-500">●</span> Keunggulan operasional melalui armada yang terkalibrasi.</li>
+                    <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
+                        <h3 class="text-white font-black mb-4 uppercase text-sm tracking-widest text-emerald-400">Misi Kami</h3>
+                        <ul class="text-slate-400 text-[11px] space-y-4 leading-relaxed uppercase">
+                            <li><span class="text-emerald-500 font-bold">01.</span> Menjamin standar kualitas produk HSD sesuai spesifikasi Dirjen Migas.</li>
+                            <li><span class="text-emerald-500 font-bold">02.</span> Mengoptimalkan sistem logistik darat dan laut dengan pemanfaatan teknologi.</li>
+                            <li><span class="text-emerald-500 font-bold">03.</span> Membangun hubungan kemitraan jangka panjang yang didasari pada kepercayaan.</li>
                         </ul>
                     </div>
                 </div>
@@ -119,71 +115,80 @@
         </section>
 
         <section id="section-armada" class="section">
-            <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Infrastruktur Fleet</h2>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
-                        <p class="text-4xl text-white font-black mb-4 uppercase">5 - 24 KL</p>
-                        <p class="text-[11px] text-slate-400 leading-relaxed uppercase font-bold tracking-widest">Kapasitas Tangki Variatif</p>
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-8 uppercase italic">Infrastruktur & Kapasitas Armada</h2>
+                <div class="grid md:grid-cols-3 gap-6 mb-10">
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-center">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-2">Transport Tanker</h4>
+                        <p class="text-3xl text-white font-black mb-4 uppercase">Multi-Capacity</p>
+                        <p class="text-xs text-slate-500 leading-relaxed uppercase">Kami mengoperasikan unit tangki dengan kapasitas 5KL, 8KL, 16KL, hingga 24KL yang dilengkapi dengan segel keamanan berstandar nasional.</p>
                     </div>
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
-                        <p class="text-4xl text-white font-black mb-4 uppercase">GPS LIVE</p>
-                        <p class="text-[11px] text-slate-400 leading-relaxed uppercase font-bold tracking-widest">Real-time Monitoring</p>
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-center">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-2">Fleet Monitoring</h4>
+                        <p class="text-3xl text-white font-black mb-4 uppercase">GPS Live</p>
+                        <p class="text-xs text-slate-500 leading-relaxed uppercase">Seluruh unit armada kami terintegrasi dengan sistem Fleet Tracking System untuk pemantauan presisi.</p>
                     </div>
-                    <div class="bg-white/5 p-10 rounded-3xl border border-white/10 text-center">
-                        <p class="text-4xl text-white font-black mb-4 uppercase">CALIBRATED</p>
-                        <p class="text-[11px] text-slate-400 leading-relaxed uppercase font-bold tracking-widest">Flow Meter Akurat</p>
+                    <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-center">
+                        <h4 class="text-emerald-500 font-black text-[10px] uppercase mb-2">Safety Standard</h4>
+                        <p class="text-3xl text-white font-black mb-4 uppercase">Certified</p>
+                        <p class="text-xs text-slate-500 leading-relaxed uppercase">Driver dan kru kami dibekali dengan sertifikasi HSSE untuk menjamin operasional yang aman.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="section-kontak" class="section">
-            <div class="glass-card p-12 border-emerald-500/10 italic">
-                <h2 class="text-3xl font-black text-white mb-10 uppercase text-header">Contact Center</h2>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div>
-                        <h4 class="text-emerald-500 font-black text-[12px] uppercase mb-4 tracking-widest">Head Office Support</h4>
-                        <p class="text-5xl text-white font-black tracking-tighter mb-4">0815-8841-410</p>
-                        <p class="text-slate-400 text-sm italic font-bold">pt.khatulistiwa.sinar.energi@gmail.com</p>
+            <div class="glass-card p-10 border-emerald-500/10 italic">
+                <h2 class="text-2xl font-black text-emerald-500 mb-8 uppercase italic">Global Network & Support</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="text-emerald-500 font-black text-[11px] uppercase mb-4 tracking-widest">Direct Assistance</h4>
+                            <p class="text-4xl text-white font-black tracking-tighter">0815-8841-410</p>
+                            <p class="text-slate-400 text-sm mt-2">Hubungi unit layanan pelanggan kami untuk konsultasi penawaran harga.</p>
+                        </div>
+                        <div class="pt-8 border-t border-white/5">
+                            <h4 class="text-emerald-500 font-black text-[11px] uppercase mb-2 tracking-widest">Electronic Mail</h4>
+                            <p class="text-white font-bold text-lg">pt.khatulistiwa.sinar.energi@gmail.com</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div id="admin-panel" class="hidden mb-12 glass-card p-8 border-emerald-500/20">
-            <h3 class="font-black uppercase text-white mb-8 text-sm italic tracking-[0.2em]">Archive Management System</h3>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
-                <input type="file" id="file-input" class="w-full p-3 bg-white/5 rounded-xl text-[11px] text-slate-400 border border-white/10">
-                <select id="doc-category" class="w-full p-3 bg-slate-900 rounded-xl text-[11px] text-white border border-white/10">
+        <div id="admin-panel" class="hidden mb-10 glass-card p-6 border-emerald-500/20">
+            <h3 class="font-black uppercase text-white mb-6 text-sm italic">Admin Repository Control</h3>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                <input type="file" id="file-input" class="w-full p-2 bg-white/5 rounded-lg text-[10px] text-slate-400">
+                <select id="doc-category" class="w-full p-2 bg-slate-900 rounded-lg text-[10px] text-emerald-400">
                     <option value="SURAT JALAN">SURAT JALAN</option>
                     <option value="PURCHASE ORDER">PURCHASE ORDER</option>
                     <option value="INVOICE">INVOICE</option>
                     <option value="FAKTUR PAJAK">FAKTUR PAJAK</option>
                 </select>
-                <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-3 bg-slate-900 text-white rounded-xl text-[11px] border border-emerald-500/30">
-                    <option value="">-- PILIH CLIENT --</option>
+                <select id="select-penerima-auth" onchange="document.getElementById('manual-uid').value = this.value" class="w-full p-2 bg-slate-900 text-white rounded-lg text-[10px] border border-emerald-500/30">
+                    <option value="">-- Pilih Client --</option>
                 </select>
                 <input type="hidden" id="manual-uid">
-                <button onclick="startUploadProcess()" class="kse-gradient text-white p-3.5 rounded-xl font-black text-[11px] uppercase tracking-widest">Sync Archive</button>
+                <button onclick="startUploadProcess()" class="kse-gradient text-white p-2.5 rounded-lg font-black text-[10px] uppercase tracking-widest">Upload Archive</button>
             </div>
         </div>
 
         <section id="section-release" class="section">
             <div class="glass-card overflow-hidden border-yellow-500/20">
-                <div class="p-8 bg-yellow-500/5 border-b border-white/10">
-                    <h3 class="font-black uppercase text-yellow-500 text-[12px] italic tracking-widest">E-FORM TRANSACTION HISTORY DATABASE</h3>
+                <div class="p-6 bg-yellow-500/5 border-b border-white/10">
+                    <h3 class="font-black uppercase text-yellow-500 text-[10px] italic">E-FORM TRANSACTION HISTORY DATABASE</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-[12px] italic">
-                        <thead class="bg-white/5 text-slate-400 uppercase font-black">
+                    <table class="w-full text-left text-[10px] italic">
+                        <thead class="bg-white/5 text-slate-500 uppercase font-black">
                             <tr>
-                                <th class="p-5">Tanggal</th>
-                                <th class="p-5">Jenis</th>
-                                <th class="p-5">Nomor</th>
-                                <th class="p-5">Tujuan</th> 
-                                <th class="p-5 text-right">Nominal</th>
-                                <th class="p-5 text-center">Arsip</th>
+                                <th class="p-4">Tanggal</th>
+                                <th class="p-4">Jenis</th>
+                                <th class="p-4">Nomor</th>
+                                <th class="p-4">Tujuan</th> 
+                                <th class="p-4 text-right">Nominal</th>
+                                <th class="p-4 text-center">Dokumen</th>
                             </tr>
                         </thead>
                         <tbody id="release-table-body" class="divide-y divide-white/5"></tbody>
@@ -194,11 +199,11 @@
 
         <section id="section-documents" class="section">
             <div class="glass-card overflow-hidden">
-                <div class="p-8 bg-white/5 border-b border-white/10">
-                    <h3 id="doc-title" class="font-black uppercase text-white text-[12px] italic tracking-widest">DOCUMENT_NODE</h3>
+                <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
+                    <h3 id="doc-title" class="font-black uppercase text-emerald-400 text-xs italic">REPOSITORY_NODE</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left italic text-[12px]">
+                    <table class="w-full text-left italic text-[11px]">
                         <tbody id="file-table-body" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
@@ -208,13 +213,13 @@
     </main>
 
     <div id="login-overlay">
-        <div class="glass-card p-12 w-full max-w-[450px] border-emerald-500/30 text-center">
-            <button onclick="toggleLoginModal(false)" class="absolute top-6 right-6 text-slate-500 hover:text-white">✕</button>
-            <h2 class="font-black text-white text-2xl uppercase mb-10 italic tracking-[0.3em]">Secure Access</h2>
-            <div class="space-y-6">
-                <input type="email" id="login-email" placeholder="Credential ID" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
-                <input type="password" id="login-pass" placeholder="Password Key" class="w-full p-5 bg-white/5 rounded-2xl text-white text-xs outline-none border border-white/10 focus:border-emerald-500 transition-colors">
-                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest">Verify Identity</button>
+        <div class="glass-card p-10 w-full max-w-[400px] border-emerald-500/30 text-center">
+            <button onclick="toggleLoginModal(false)" class="absolute top-5 right-5 text-slate-500">✕</button>
+            <h2 class="font-black text-white text-xl uppercase mb-8 italic tracking-widest">System Access</h2>
+            <div class="space-y-4">
+                <input type="email" id="login-email" placeholder="Email" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
+                <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 bg-white/5 rounded-xl text-white text-xs outline-none border border-white/10">
+                <button onclick="handleLogin()" class="w-full kse-gradient text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Verify</button>
             </div>
         </div>
     </div>
@@ -242,10 +247,13 @@
                 document.getElementById('protected-nav').classList.remove('hidden');
                 document.getElementById('display-user-email').innerText = currentUser.email;
 
+                // LOGIKA TAMPILAN MENU E-FORM (HANYA ADMIN)
                 if(isAdmin) {
                     document.getElementById('admin-panel').classList.remove('hidden');
                     document.getElementById('nav-eform').classList.remove('hidden');
                     loadClients();
+                } else {
+                    document.getElementById('nav-eform').classList.add('hidden');
                 }
             }
         }
@@ -257,23 +265,23 @@
             
             const { data, error } = await query;
             const tbody = document.getElementById('release-table-body');
-            if (error) return;
+            if (error) { console.error("Error:", error); return; }
 
             tbody.innerHTML = data?.length ? data.map(d => {
                 const jenisData = d.jenis || d.jenis_dokumen || 'FORM';
                 const tujuanData = d.tujuan || d.customer_name || d.penerima || '-';
-                const pdfLink = d.pdf_url ? `<a href="${d.pdf_url}" target="_blank" class="text-white border border-white/30 px-4 py-2 rounded hover:bg-white hover:text-black font-black text-[10px] uppercase transition-all">VIEW PDF</a>` : '<span class="text-slate-600">NULL</span>';
+                const pdfLink = d.pdf_url ? `<a href="${d.pdf_url}" target="_blank" class="text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded hover:bg-cyan-500 hover:text-white font-black text-[8px] uppercase tracking-tighter">VIEW PDF</a>` : '<span class="text-slate-600">NO PDF</span>';
 
                 return `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-5 text-slate-400 font-bold">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
-                    <td class="p-5 uppercase font-black text-emerald-500">${jenisData}</td>
-                    <td class="p-5 text-white font-black tracking-wider">${d.nomor || d.no_invoice || '-'}</td>
-                    <td class="p-5 text-slate-200 font-bold uppercase">${tujuanData}</td> 
-                    <td class="p-5 text-right text-yellow-500 font-black text-sm">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
-                    <td class="p-5 text-center">${pdfLink}</td>
+                <tr class="hover:bg-white/5">
+                    <td class="p-4 text-slate-400">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
+                    <td class="p-4 uppercase font-bold text-emerald-400">${jenisData}</td>
+                    <td class="p-4 text-white font-bold">${d.nomor || d.no_invoice || '-'}</td>
+                    <td class="p-4 text-slate-300 font-bold uppercase">${tujuanData}</td> 
+                    <td class="p-4 text-right text-yellow-500 font-black">Rp ${parseFloat(d.grand_total || d.nominal || 0).toLocaleString('id-ID')}</td>
+                    <td class="p-4 text-center">${pdfLink}</td>
                 </tr>`;
-            }).join('') : '<tr><td colspan="6" class="p-10 text-center italic text-slate-600 uppercase font-black">SYSTEM_NO_DATA</td></tr>';
+            }).join('') : '<tr><td colspan="6" class="p-10 text-center italic text-slate-600 uppercase">NO_RECORDS</td></tr>';
         }
 
         async function loadDocuments(cat) {
@@ -284,10 +292,10 @@
             const { data } = await query;
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-6 font-black text-white uppercase text-[12px] tracking-widest">${d.name}</td>
-                    <td class="p-6 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[10px] font-black text-white border border-white/20 px-6 py-3 rounded-xl hover:bg-white hover:text-black uppercase transition-all">Open Archive</button></td>
-                </tr>`).join('') : '<tr><td class="p-12 text-center text-slate-600 font-black uppercase italic">NODE_EMPTY</td></tr>';
+                <tr class="hover:bg-white/5">
+                    <td class="p-5 font-bold text-white uppercase text-[10px]">${d.name}</td>
+                    <td class="p-5 text-right"><button onclick="window.open('${d.url}', '_blank')" class="text-[9px] font-black text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-lg hover:bg-emerald-500 hover:text-white uppercase">View Document</button></td>
+                </tr>`).join('') : '<tr><td class="p-10 text-center text-slate-600 font-bold uppercase italic">NO_DATA</td></tr>';
         }
 
         function initHarga() {
@@ -298,9 +306,9 @@
                     grid.innerHTML = "";
                     for(let i=1; i<=4; i++) {
                         const val = parseInt(data['wilayah'+i] || 0);
-                        grid.innerHTML += `<div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500/50 transition-all">
-                            <span class="text-[10px] text-emerald-500 uppercase font-black block mb-2 tracking-widest italic">Region ${i}</span>
-                            <h4 class="text-white font-black text-lg">Rp ${val.toLocaleString('id-ID')}</h4>
+                        grid.innerHTML += `<div class="glass-card p-4 text-center border-emerald-500/20">
+                            <span class="text-[8px] text-emerald-500 uppercase font-black block mb-1">Wilayah ${i}</span>
+                            <h4 class="text-white font-black text-sm">Rp ${val.toLocaleString('id-ID')}</h4>
                         </div>`;
                     }
                 }
@@ -310,14 +318,14 @@
         async function startUploadProcess() {
             const fIn = document.getElementById('file-input');
             const uid = document.getElementById('manual-uid').value.trim();
-            if(!fIn.files[0] || !uid) return alert("System Error: Payload Incomplete.");
+            if(!fIn.files[0] || !uid) return alert("Archive Sync Failed.");
             const file = fIn.files[0];
             const fileName = `edoc/${uid}/${Date.now()}_${file.name}`;
             const { error: storageErr } = await _supabase.storage.from('kse-files').upload(fileName, file);
             if(!storageErr) {
                 const { data: urlData } = _supabase.storage.from('kse-files').getPublicUrl(fileName);
                 await _supabase.from('documents').insert([{ name: file.name, url: urlData.publicUrl, type: document.getElementById('doc-category').value, user_id: uid }]);
-                alert("Archive Integrated Successfully."); location.reload();
+                alert("Archive Synced."); location.reload();
             }
         }
 
@@ -325,7 +333,7 @@
             const { data } = await _supabase.from('profiles').select('id, email');
             const select = document.getElementById('select-penerima-auth');
             if(data) data.forEach(item => {
-                const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email.toUpperCase();
+                const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email;
                 select.appendChild(opt);
             });
         }
@@ -335,7 +343,7 @@
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             const { error } = await _supabase.auth.signInWithPassword({ email, password: pass });
-            if (error) alert("Verification Failed."); else window.location.reload();
+            if (error) alert("Access Denied."); else window.location.reload();
         }
         async function handleLogout() { await _supabase.auth.signOut(); window.location.reload(); }
         function showSection(id) { 
