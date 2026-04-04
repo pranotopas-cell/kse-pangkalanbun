@@ -384,22 +384,40 @@
                 </tr>`).join('') : '<tr><td class="p-20 text-center text-slate-600 font-black italic">EMPTY_NODE</td></tr>';
         }
 
-        function initHarga() {
-            dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
-                if(doc.exists) {
-                    const data = doc.data().sekarang || {};
-                    const grid = document.getElementById('harga-grid-dashboard'); grid.innerHTML = "";
-                    for(let i=1; i<=4; i++) {
-                        const val = parseInt(data['wilayah'+i] || 0);
-                        grid.innerHTML += `<div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500 transition-all">
-                            <span class="text-[12px] text-emerald-500 uppercase font-black block mb-2 tracking-widest italic opacity-70">Wilayah ${i}</span>
-                            <h4 class="text-white font-black text-xl italic">Rp ${val.toLocaleString('id-ID')}</h4>
-                        </div>`;
-                    }
-                }
-            });
-        }
+       function initHarga() {
+    dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
+        if(doc.exists) {
+            const data = doc.data().sekarang || {};
+            const grid = document.getElementById('harga-grid-dashboard'); 
+            grid.innerHTML = "";
 
+            // Definisikan nama wilayah dalam array (Urutan 0 = Wilayah 1, dst)
+            const namaWilayah = [
+                "Jawa, Madura, Bali",
+                "Kalimantan",
+                "Sumatera",
+                "Sulawesi & Papua"
+            ];
+
+            for(let i=1; i<=4; i++) {
+                const val = parseInt(data['wilayah'+i] || 0);
+                // Ambil nama dari array berdasarkan index (i-1)
+                const subWilayah = namaWilayah[i-1] || ""; 
+                
+                grid.innerHTML += `
+                <div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500 transition-all">
+                    <span class="text-[9px] text-emerald-500 uppercase font-black block mb-1 tracking-widest italic opacity-70">
+                        Wilayah ${i}
+                    </span>
+                    <span class="text-[8px] text-slate-400 uppercase font-bold block mb-2 tracking-tighter">
+                        ${subWilayah}
+                    </span>
+                    <h4 class="text-white font-black text-xl italic">Rp ${val.toLocaleString('id-ID')}</h4>
+                </div>`;
+            }
+        }
+    });
+} 
         async function startUploadProcess() {
             const fIn = document.getElementById('file-input');
             const uid = document.getElementById('manual-uid').value.trim();
