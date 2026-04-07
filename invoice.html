@@ -22,7 +22,7 @@
         .document-canvas { 
             background: white; 
             width: 210mm; 
-            height: 296mm; /* Dikunci sedikit di bawah A4 agar tidak spillover */
+            height: 296mm; 
             margin: 0 auto; 
             padding: 10mm 15mm; 
             position: relative;
@@ -30,7 +30,7 @@
             box-sizing: border-box;
             display: flex; 
             flex-direction: column;
-            overflow: hidden; /* Mencegah elemen keluar jalur */
+            overflow: hidden; 
         }
 
         .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
@@ -387,7 +387,6 @@
         document.getElementById('qr_timestamp').innerText = `Generated: ${new Date().toLocaleString('id-ID')}`;
     }
 
-    // FUNGSI AUTO DOWNLOAD & UPLOAD (ONE PAGE PDF)
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
         const noInv = document.getElementById('in_no').value;
@@ -395,7 +394,6 @@
         
         try {
             const element = document.getElementById('main-doc');
-            // Setting One Page A4
             const opt = {
                 margin: 0,
                 filename: `INV-${noInv}.pdf`,
@@ -405,7 +403,6 @@
             };
 
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-
             const fileName = `invoices/INV_${Date.now()}_${noInv.replace(/\//g, '_')}.pdf`;
             const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, pdfBlob, { contentType: 'application/pdf', upsert: true });
             if (upErr) throw upErr;
@@ -425,7 +422,7 @@
             const { error: dbErr } = await _supabase.from('eforms').insert([payload]);
             if (dbErr) throw dbErr;
 
-            alert("Berhasil! Data & PDF (1 Lembar) tersimpan di Cloud.");
+            alert("Berhasil! Data & PDF tersimpan di Cloud.");
         } catch (e) { alert("Error: " + e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA & AUTO UPLOAD'; btn.disabled = false;
     }
@@ -442,17 +439,33 @@
     }
 
     function terbilang(a) {
-        if (a < 0) return "Minus " + terbilang(Math.abs(a));
+        a = Math.floor(Math.abs(a));
+        if (a === 0) return "Nol";
+        
         var bil = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
-        if (a < 12) return bil[a];
-        if (a < 20) return terbilang(a - 10) + " Belas";
-        if (a < 100) return terbilang(Math.floor(a / 10)) + " Puluh " + terbilang(a % 10);
-        if (a < 200) return " Seratus " + terbilang(a - 100);
-        if (a < 1000) return terbilang(Math.floor(a / 100)) + " Ratus " + terbilang(a % 100);
-        if (a < 2000) return " Seribu " + terbilang(a - 1000);
-        if (a < 1000000) return terbilang(Math.floor(a / 1000)) + " Ribu " + terbilang(a % 1000);
-        if (a < 1000000000) return terbilang(Math.floor(a / 1000000)) + " Juta " + terbilang(a % 1000000);
-        return "";
+        var hasil = "";
+
+        if (a < 12) {
+            hasil = bil[a];
+        } else if (a < 20) {
+            hasil = terbilang(a - 10) + " Belas";
+        } else if (a < 100) {
+            hasil = terbilang(Math.floor(a / 10)) + " Puluh " + terbilang(a % 10);
+        } else if (a < 200) {
+            hasil = "Seratus " + terbilang(a - 100);
+        } else if (a < 1000) {
+            hasil = terbilang(Math.floor(a / 100)) + " Ratus " + terbilang(a % 100);
+        } else if (a < 2000) {
+            hasil = "Seribu " + terbilang(a - 1000);
+        } else if (a < 1000000) {
+            hasil = terbilang(Math.floor(a / 1000)) + " Ribu " + terbilang(a % 1000);
+        } else if (a < 1000000000) {
+            hasil = terbilang(Math.floor(a / 1000000)) + " Juta " + terbilang(a % 1000000);
+        } else if (a < 1000000000000) {
+            hasil = terbilang(Math.floor(a / 1000000000)) + " Milyar " + terbilang(a % 1000000000);
+        }
+        
+        return hasil.trim().replace(/\s+/g, ' ');
     }
 
     window.onload = () => {
