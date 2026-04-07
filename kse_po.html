@@ -38,7 +38,6 @@
         .doc-identity { text-align: right; line-height: 1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 24px; color: #000; letter-spacing: 1px; }
 
-        /* Update Table PO agar nempel ke bawah */
         .table-po { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 0; border: 1px solid #000; }
         .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; text-transform: uppercase; }
         .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
@@ -46,10 +45,9 @@
         .table-clean td { border: none !important; padding: 2px 0; vertical-align: top; }
         .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
 
-        /* Update Box Terbilang agar menyambung sempurna ke tabel */
         .terbilang-box { 
             border: 1px solid #000; 
-            border-top: none; /* Hilangkan garis atas agar tidak double */
+            border-top: none; 
             padding: 10px; 
             background-color: #fcfcfc; 
             font-style: italic; 
@@ -263,6 +261,7 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
 
+    // Update Fungsi Terbilang agar support sampai Milyar
     function terbilang(angka) {
         angka = Math.floor(Math.abs(angka));
         var huruf = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
@@ -275,6 +274,7 @@
         else if (angka < 2000) { temp = " Seribu" + terbilang(angka - 1000); }
         else if (angka < 1000000) { temp = terbilang(Math.floor(angka / 1000)) + " Ribu" + terbilang(angka % 1000); }
         else if (angka < 1000000000) { temp = terbilang(Math.floor(angka / 1000000)) + " Juta" + terbilang(angka % 1000000); }
+        else if (angka < 1000000000000) { temp = terbilang(Math.floor(angka / 1000000000)) + " Milyar" + terbilang(angka % 1000000000); }
         return temp;
     }
 
