@@ -105,7 +105,7 @@
                         <option value="">-- Pilih Customer --</option>
                         <option value="PT. SINARINDO SUKSES SELALU">PT. SINARINDO SUKSES SELALU</option>
                         <option value="PT. TELADAN MAKMUR JAYA">PT. TELADAN MAKMUR JAYA</option>
-                        <option value="PT. KHATULISTIWA SINAR ENERGI">PT. OCEANINDO ENERGY</option>
+                        <option value="PT. OCENINDO ENERGY">PT. OCENINDO ENERGY</option>
                         <option value="PT. INDO DHARMA ENERGI">PT. INDO DHARMA ENERGI</option>
                     </select>
                 </div>
@@ -260,12 +260,12 @@
 </div>
 
 <script>
-    // Database Alamat Mapping
+    // Database Alamat Mapping - DIPERBAIKI SINTAKSISNYA
     const CUSTOMER_DATABASE = {
-        "PT. SINARINDO SUKSES SELALU": "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun Kalimantan Tengah.\Up : Bpk.Riky",
-        "PT. TELADAN MAKMUR JAYA": ", Jl.Hksn no.23 Alalak Utara ,Banjarmasin, Kalimantan Selatan.\Up: Ibu amel ",
-        "PT. OCENINDO ENERGY": "Jl. Berangas Tim , Kec.Alalak Barito Kuala Kalimantan Selatan.\Up.Ibu Yuliana"
-         "PT. INDO DHARMA ENERGI": "Jl. Natai arahan  , Pangkalan Bun  Kalimantan Tengah.\Up.Bpk.Cipto"
+        "PT. SINARINDO SUKSES SELALU": "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun Kalimantan Tengah. Up : Bpk.Riky",
+        "PT. TELADAN MAKMUR JAYA": "Jl.Hksn no.23 Alalak Utara ,Banjarmasin, Kalimantan Selatan. Up: Ibu amel",
+        "PT. OCENINDO ENERGY": "Jl. Berangas Tim , Kec.Alalak Barito Kuala Kalimantan Selatan. Up.Ibu Yuliana",
+        "PT. INDO DHARMA ENERGI": "Jl. Natai arahan , Pangkalan Bun Kalimantan Tengah. Up.Bpk.Cipto"
     };
 
     const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
@@ -431,13 +431,14 @@
     }
 
     window.onload = () => {
+        // SET TANGGAL OTOMATIS
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
         // Inisialisasi default
         document.getElementById('in_cust').value = "PT. SINARINDO SUKSES SELALU";
-        handleCustChange(); // Otomatis isi alamat
+        handleCustChange(); 
 
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_perltr').value = 15500;
