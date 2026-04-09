@@ -21,13 +21,11 @@
         
         #login-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(12px); z-index: 200; align-items: center; justify-content: center; }
 
-        /* Dropdown Styles */
         .dropdown { position: relative; }
         .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; min-width: 260px; z-index: 1000; padding-top: 12px; }
         .dropdown:hover .dropdown-menu { display: block; }
         .dropdown-content { background: #0f172a; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         
-        /* Mobile Menu Styles */
         #mobile-menu { transition: transform 0.3s ease-in-out; transform: translateX(100%); }
         #mobile-menu.active { transform: translateX(0); }
 
@@ -154,10 +152,10 @@
                 <div class="grid md:grid-cols-2 gap-12 text-slate-300 leading-relaxed text-justify">
                     <div class="space-y-6">
                         <p class="border-l-4 border-emerald-500 pl-6"><strong class="text-white">PT Khatulistiwa Sinar Energi (KSE)</strong> hadir sebagai mitra strategis dalam penyediaan energi High Speed Diesel (HSD) Industri berkualitas tinggi di Indonesia. Kami berfokus pada keandalan pasokan dan ketepatan distribusi untuk mendukung operasional sektor manufaktur, pertambangan, dan maritim.</p>
-                        <p>Dengan integrasi teknologi digital melalui platform SMARTDocs, KSE memastikan setiap transaksi dan alur dokumen berjalan secara transparan, aman, dan efisien. Kami percaya bahwa transparansi adalah kunci utama dalam membangun kepercayaan jangka panjang dengan seluruh rekan bisnis kami.</p>
+                        <p>Dengan integrasi teknologi digital melalui platform SMARTDocs, KSE memastikan setiap transaksi dan alur dokumen berjalan secara transparan, aman, dan efisien.</p>
                     </div>
                     <div class="space-y-6">
-                        <p>Sebagai perusahaan yang dinamis, kami terus beradaptasi dengan perubahan pasar energi global. Standar operasional kami didesain untuk memitigasi risiko pasokan sehingga operasional pelanggan tetap berjalan tanpa hambatan. KSE bukan sekadar pemasok, melainkan mitra pertumbuhan bagi industri Anda.</p>
+                        <p>KSE bukan sekadar pemasok, melainkan mitra pertumbuhan bagi industri Anda. Standar operasional kami didesain untuk memitigasi risiko pasokan.</p>
                         <div class="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/20 italic text-sm text-emerald-400">
                             "Menghubungkan sumber daya energi dengan efisiensi digital untuk masa depan industri yang berkelanjutan."
                         </div>
@@ -176,19 +174,11 @@
                     <div class="grid md:grid-cols-2 gap-10 uppercase font-black text-[11px] tracking-widest">
                         <div class="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all">
                             <span class="text-emerald-500 text-3xl mb-4 block">01</span>
-                            <p class="leading-loose">Menjamin kualitas produk HSD sesuai standar Dirjen Migas dan ketepatan waktu distribusi di setiap titik penyerahan.</p>
+                            <p class="leading-loose">Menjamin kualitas produk HSD sesuai standar Dirjen Migas dan ketepatan waktu distribusi.</p>
                         </div>
                         <div class="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all">
                             <span class="text-emerald-500 text-3xl mb-4 block">02</span>
-                            <p class="leading-loose">Mengimplementasikan inovasi teknologi SMARTDocs untuk kemudahan administrasi dan transparansi data bagi pelanggan.</p>
-                        </div>
-                        <div class="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all">
-                            <span class="text-emerald-500 text-3xl mb-4 block">03</span>
-                            <p class="leading-loose">Membangun sumber daya manusia yang kompeten, berintegritas, dan responsif terhadap kebutuhan pasar industri.</p>
-                        </div>
-                        <div class="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all">
-                            <span class="text-emerald-500 text-3xl mb-4 block">04</span>
-                            <p class="leading-loose">Mengoptimalkan efisiensi biaya logistik guna memberikan nilai ekonomi terbaik bagi seluruh mitra strategis.</p>
+                            <p class="leading-loose">Mengimplementasikan inovasi teknologi SMARTDocs untuk kemudahan administrasi.</p>
                         </div>
                     </div>
                 </div>
@@ -325,13 +315,11 @@
                 currentUser = session.user;
                 isAdmin = currentUser.email === "pt.khatulistiwa.sinar.energi@gmail.com";
                 
-                // Desktop Updates
                 document.getElementById('btn-show-login-desktop').classList.add('hidden');
                 document.getElementById('user-info-desktop').classList.remove('hidden');
                 document.getElementById('protected-nav').classList.remove('hidden');
                 document.getElementById('display-user-email-desktop').innerText = currentUser.email;
                 
-                // Mobile Updates
                 document.getElementById('btn-show-login-mobile').classList.add('hidden');
                 document.getElementById('user-info-mobile').classList.remove('hidden');
                 document.getElementById('mobile-protected-nav').classList.remove('hidden');
@@ -357,11 +345,23 @@
 
             tbody.innerHTML = data?.length ? data.map(d => {
                 const nominal = d.grand_total || d.nominal || 0;
+                const jenis = (d.jenis || '').toUpperCase();
+                
+                // Logika pembeda warna nomor dokumen
+                let noColorClass = "text-white";
+                if (jenis.includes("PENAWARAN") || jenis.includes("SPH")) {
+                    noColorClass = "text-cyan-400"; // Warna SPH
+                } else if (jenis.includes("PURCHASE ORDER") || jenis.includes("PO")) {
+                    noColorClass = "text-orange-400"; // Warna PO
+                } else if (jenis.includes("INVOICE")) {
+                    noColorClass = "text-emerald-400"; // Warna Invoice
+                }
+
                 return `
                 <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                     <td class="p-4 font-bold text-slate-500">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
                     <td class="p-4 uppercase font-black text-emerald-500">${d.jenis || 'FORM'}</td>
-                    <td class="p-4 text-white font-black">${d.nomor || d.no_invoice || '-'}</td>
+                    <td class="p-4 font-black ${noColorClass}">${d.nomor || d.no_invoice || '-'}</td>
                     <td class="p-4 text-slate-400 uppercase font-bold">${d.tujuan || d.customer_name || '-'}</td>
                     <td class="p-4 text-right text-yellow-500 font-black italic">Rp ${parseFloat(nominal).toLocaleString('id-ID')}</td>
                     <td class="p-4 text-center">
@@ -374,7 +374,7 @@
             showSection('documents');
             document.getElementById('doc-title').innerText = `DATA_NODE: ${cat}`;
             let query = _supabase.from('documents').select('*').eq('type', cat).order('created_at', { ascending: false });
-            if(!isAdmin) query = query.eq('user_id', currentUser.id); 
+            if(!isAdmin) query = query.eq('user_id', currentUser.id);
             const { data } = await query;
             const tbody = document.getElementById('file-table-body');
             tbody.innerHTML = data?.length ? data.map(d => `
@@ -384,40 +384,28 @@
                 </tr>`).join('') : '<tr><td class="p-20 text-center text-slate-600 font-black italic">EMPTY_NODE</td></tr>';
         }
 
-       function initHarga() {
-    dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
-        if(doc.exists) {
-            const data = doc.data().sekarang || {};
-            const grid = document.getElementById('harga-grid-dashboard'); 
-            grid.innerHTML = "";
+        function initHarga() {
+            dbF.collection("hargaBBM").doc("periode").onSnapshot(doc => {
+                if(doc.exists) {
+                    const data = doc.data().sekarang || {};
+                    const grid = document.getElementById('harga-grid-dashboard'); 
+                    grid.innerHTML = "";
+                    const namaWilayah = ["Jawa, Madura, Bali", "Kalimantan", "Sumatera", "Sulawesi & Papua"];
 
-            // Definisikan nama wilayah dalam array (Urutan 0 = Wilayah 1, dst)
-            const namaWilayah = [
-                "Jawa, Madura, Bali",
-                "Kalimantan",
-                "Sumatera",
-                "Sulawesi & Papua"
-            ];
+                    for(let i=1; i<=4; i++) {
+                        const val = parseInt(data['wilayah'+i] || 0);
+                        const subWilayah = namaWilayah[i-1] || ""; 
+                        grid.innerHTML += `
+                        <div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500 transition-all">
+                            <span class="text-[9px] text-emerald-500 uppercase font-black block mb-1 tracking-widest italic opacity-70">Wilayah ${i}</span>
+                            <span class="text-[8px] text-slate-400 uppercase font-bold block mb-2 tracking-tighter">${subWilayah}</span>
+                            <h4 class="text-white font-black text-xl italic">Rp ${val.toLocaleString('id-ID')}</h4>
+                        </div>`;
+                    }
+                }
+            });
+        } 
 
-            for(let i=1; i<=4; i++) {
-                const val = parseInt(data['wilayah'+i] || 0);
-                // Ambil nama dari array berdasarkan index (i-1)
-                const subWilayah = namaWilayah[i-1] || ""; 
-                
-                grid.innerHTML += `
-                <div class="glass-card p-6 text-center border-white/10 hover:border-emerald-500 transition-all">
-                    <span class="text-[9px] text-emerald-500 uppercase font-black block mb-1 tracking-widest italic opacity-70">
-                        Wilayah ${i}
-                    </span>
-                    <span class="text-[8px] text-slate-400 uppercase font-bold block mb-2 tracking-tighter">
-                        ${subWilayah}
-                    </span>
-                    <h4 class="text-white font-black text-xl italic">Rp ${val.toLocaleString('id-ID')}</h4>
-                </div>`;
-            }
-        }
-    });
-} 
         async function startUploadProcess() {
             const fIn = document.getElementById('file-input');
             const uid = document.getElementById('manual-uid').value.trim();
