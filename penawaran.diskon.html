@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSE - Penawaran Harga Dual Price</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
+        body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 13px; margin: 0; padding: 0; }
+        .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
+        .input-sidebar { background: #fff; height: calc(100vh - 60px); overflow-y: auto; padding: 15px; border-right: 1px solid #ddd; }
+        
+        #pdf-area { background: #f4f7f6; padding: 20px 0; }
+        .document-canvas { 
+            background: white; width: 210mm; height: 296mm; margin: 0 auto; 
+            padding: 5mm 15mm 5mm 15mm; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 15px; }
+        .logo-img { height: 45px; width: auto; }
+        
+        .doc-identity { text-align: right; }
+        .doc-identity h2 { font-weight: 900; font-style: italic; font-size: 26px; color: var(--kse-primary); margin: 0; line-height: 1; }
+        .doc-identity .sub-title-en { font-size: 14px; color: #666; font-style: italic; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .table-main { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1.5px solid #000; }
+        .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 5px; border: 1px solid #000; text-align: center; font-size: 11px; }
+        .table-main td { border: 1px solid #000; padding: 8px; vertical-align: middle; }
+        
+        .meta-table { width: 100%; border-collapse: collapse; }
+        .meta-table td { border: none !important; padding: 2px 0; font-size: 12px; vertical-align: top; }
+        .meta-table td.label-col { white-space: nowrap; width: 1%; padding-right: 10px; }
+        .meta-table td.value-col { font-weight: bold; word-break: break-word; }
+
+        .footer-kse { margin-top: auto; padding-top: 10px; border-top: 1px solid #eee; }
+
+        .harga-tebus { color: #198754; font-weight: bold; } /* HIJAU UNTUK HARGA TEBUS */
+        .text-pengantar { font-size: 12px; line-height: 1.4; } /* TEKS LEBIH BESAR */
+
+        @media print {
+            .control-nav, .input-sidebar { display: none !important; }
+            .col-lg-9 { width: 100% !important; margin: 0 !important; }
+            #pdf-area { padding: 0 !important; }
+            .document-canvas { box-shadow: none !important; margin: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-2">
+        <a href="index.html" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-house"></i> HOME</a>
+        <button class="btn btn-outline-secondary btn-sm" onclick="handleDateChange()"><i class="bi bi-arrow-clockwise"></i> REFRESH NO</button>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
+        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="saveToSupabase()" id="btn-save-sb">
+            <i class="bi bi-cloud-arrow-up"></i> SIMPAN & UPLOAD
+        </button>
+        <button class="btn btn-primary btn-sm fw-bold px-3" onclick="downloadPDF()"><i class="bi bi-download"></i> DOWNLOAD PDF</button>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 input-sidebar">
+            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> PANEL PENAWARAN</h6>
+            
+            <div class="mb-2">
+                <label class="fw-bold small">Nomor Surat</label>
+                <input type="text" id="in_no" class="form-control form-control-sm" oninput="syncAll()">
+            </div>
+            
+            <div class="mb-2">
+                <label class="fw-bold small">Tanggal Surat</label>
+                <input type="date" id="in_tgl_raw" class="form-control form-control-sm" oninput="handleDateChange()">
+            </div>
+
+            <div class="card p-2 mb-3 bg-light border-0">
+                <label class="fw-bold small">Tujuan Perusahaan</label>
+                <input list="list_perusahaan" id="in_cust" class="form-control form-control-sm" oninput="handleCustomerSelect(this.value); syncAll()">
+                <datalist id="list_perusahaan">
+                    <option value="PT. INDO DIGITAL EKONOMI">
+                    <option value="PT. IKAN ASIN ENAK">
+                    <option value="PT. KHATULISTIWA SINAR ENERGI">
+                </datalist>
+
+                <label class="fw-bold small mt-1">Alamat / Lokasi</label>
+                <textarea id="in_addr" class="form-control form-control-sm" rows="2" oninput="syncAll()"></textarea>
+            </div>
+
+            <div class="card p-2 mb-2 border-primary">
+                <label class="fw-bold small text-primary">KONFIGURASI HARGA</label>
+                <hr class="my-1">
+                <label class="small fw-bold">Harga Publish Pertamina (Rp)</label>
+                <input type="number" id="in_hrg_pub" class="form-control form-control-sm" value="21250" oninput="syncAll()">
+            </div>
+
+            <div class="card p-2 mb-2 border-success">
+                <label class="fw-bold small text-success">HARGA CASH (A)</label>
+                <label class="small">Diskon (%)</label>
+                <input type="number" id="in_disc_a" class="form-control form-control-sm" value="17.329" step="0.001" oninput="syncAll()">
+            </div>
+
+            <div class="card p-2 mb-2 border-warning">
+                <label class="fw-bold small text-warning">HARGA TEMPO 7 HARI (B)</label>
+                <label class="small">Diskon (%)</label>
+                <input type="number" id="in_disc_b" class="form-control form-control-sm" value="16.329" step="0.001" oninput="syncAll()">
+            </div>
+
+            <div class="card p-2 mb-3 border-secondary">
+                <label class="fw-bold small text-center">DETAIL ITEM & INFO</label>
+                <hr class="my-1">
+                <label class="small fw-bold">Nama Produk</label>
+                <input type="text" id="in_produk" class="form-control form-control-sm mb-1" oninput="syncAll()">
+                <label class="small fw-bold">Tujuan / Destinasi</label>
+                <input type="text" id="in_dest" class="form-control form-control-sm mb-1" oninput="syncAll()">
+                <label class="small fw-bold">Qty (Kuantitas)</label>
+                <input type="text" id="in_qty" class="form-control form-control-sm mb-1" oninput="syncAll()">
+                <label class="small fw-bold">Toleransi</label>
+                <input type="text" id="in_tol" class="form-control form-control-sm mb-1" oninput="syncAll()">
+                <label class="small fw-bold">Kontak Person</label>
+                <input type="text" id="in_contact" class="form-control form-control-sm" oninput="syncAll()">
+            </div>
+        </div>
+
+        <div class="col-lg-9 p-0" id="pdf-area">
+            <div class="document-canvas" id="main-doc">
+                <div class="header-section">
+                    <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=LOGO+KSE'">
+                    <div class="doc-identity">
+                        <h2>PENAWARAN HARGA</h2>
+                        <div class="sub-title-en">QUOTATION</div>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-7">
+                        <p class="mb-1 text-pengantar">Kepada yang kami hormati,</p>
+                        <h6 class="fw-bold mb-1 text-uppercase" id="out_cust" style="font-size: 14px; color: var(--kse-primary);"></h6>
+                        <div id="out_addr" style="font-size: 12px; white-space: pre-line;"></div>
+                    </div>
+                    <div class="col-5">
+                        <table class="meta-table">
+                            <tr><td class="label-col">TANGGAL</td><td width="5%">:</td><td id="out_tgl" class="value-col"></td></tr>
+                            <tr><td class="label-col">NOMOR</td><td>:</td><td id="out_no" class="value-col"></td></tr>
+                            <tr><td class="label-col">PERIODE</td><td>:</td><td id="out_prd" class="value-col"></td></tr>
+                        </table>
+                    </div>
+                </div>
+<br>
+<br>
+<br>
+
+                <p class="text-pengantar">Bersama ini kami <strong>PT. Khatulistiwa Sinar Energi</strong> menawarkan supply BBM untuk operasional perusahaan Bapak/Ibu, dengan rincian sebagai berikut:</p>
+
+                <h6 class="fw-bold mb-1" style="font-size: 11px; color: var(--kse-primary);">Rincian Harga CASH / CBD:</h6>
+                <table class="table-main" style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th width="30%">PRODUK</th>
+                            <th width="20%">DESTINASI</th>
+                            <th>DETAIL RINCIAN HARGA</th>
+                            <th width="10%">SATUAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center fw-bold out_produk_val"></td>
+                            <td class="text-center out_dest_val"></td>
+                            <td class="p-2">
+                                <div class="d-flex justify-content-between"><span>Harga Dasar Keekonomian</span><span>Rp <span class="out_h_pub">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>Diskon Publish (<span id="out_pct_a">0</span>%)</span><span>Rp <span id="out_d_val_a">0</span></span></div>
+                                <div class="d-flex justify-content-between border-top mt-1"><span>Harga Dasar</span><span>Rp <span id="out_h_dasar_a">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>PPN </span><span>Rp <span id="out_ppn_a">0</span></span></div>
+                                <div class="d-flex justify-content-between border-top mt-1 harga-tebus"><span>Harga Tebus</span><span>Rp <span id="out_total_a">0</span></span></div>
+                            </td>
+                            <td class="text-center">Liter</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6 class="fw-bold mb-1 mt-3" style="font-size: 11px; color: var(--kse-primary);">Rincian Harga TEMPO:</h6>
+                <table class="table-main" style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th width="30%">PRODUK</th>
+                            <th width="20%">DESTINASI</th>
+                            <th>DETAIL RINCIAN HARGA</th>
+                            <th width="10%">SATUAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center fw-bold out_produk_val"></td>
+                            <td class="text-center out_dest_val"></td>
+                            <td class="p-2">
+                                <div class="d-flex justify-content-between"><span>Harga Dasar Keekonomian</span><span>Rp <span class="out_h_pub">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>Diskon Publish (<span id="out_pct_b">0</span>%)</span><span>Rp <span id="out_d_val_b">0</span></span></div>
+                                <div class="d-flex justify-content-between border-top mt-1"><span>Harga Dasar</span><span>Rp <span id="out_h_dasar_b">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>PPN </span><span>Rp <span id="out_ppn_b">0</span></span></div>
+                                <div class="d-flex justify-content-between border-top mt-1 harga-tebus"><span>Harga Tebus</span><span>Rp <span id="out_total_b">0</span></span></div>
+                            </td>
+                            <td class="text-center">Liter</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="font-size: 10px; font-style: italic; margin-top: 5px; margin-bottom: 2px;">(*) Harga Sudah Termasuk PPN, PBBKB, dan OAT. Harga tidak mengikat dan sewaktu-waktu bisa berubah sesuai periode harga Pertamina.</p>
+
+                <div class="mt-2 text-pengantar">
+                    <table class="w-100">
+                        <tr><td width="28%">Kuantitas / Quantity</td><td>: <span id="out_qty"></span></td></tr>
+                        <tr><td width="28%">Toleransi / Tolerance</td><td>: <span id="out_tol"></span></td></tr>
+                        <tr><td width="28%">Kontak Person / Contact</td><td>: <span id="out_contact"></span></td></tr>
+                    </table>
+                </div>
+<br>
+<br>
+
+                <div class="signature-row mt-3 text-pengantar">
+                    <p class="mb-0">Regard,</p>
+                    <p class="fw-bold mb-0">PT. KHATULISTIWA SINAR ENERGI</p>
+                    <div style="height: 60px;"><img src="ttd.png" style="height: 60px;" onerror="this.style.display='none'"></div>
+                    <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 13px;">SUPRANOTO</p>
+                    <p class="mb-0 small">Direktur</p>
+                </div>
+
+                <div class="footer-kse">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <img id="qr_footer" src="" width="55">
+                            <div style="font-size: 7px; line-height: 1.2;">
+                                <strong style="color: var(--kse-primary);">KSE SYSTEM DOCS</strong><br>
+                                <span class="text-muted">Scan QR untuk validasi sistem.</span>
+                            </div>
+                        </div>
+                        <div class="text-end" style="font-size: 8px;">
+                            <b style="color: var(--kse-primary);">PT. KHATULISTIWA SINAR ENERGI</b><br>
+                            Jl. H.M. Rafi'i RT.24 Pangkalan Bun, Kalimantan Tengah
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
+    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
+    const _supabase = supabase.createClient(SB_URL, SB_KEY);
+    const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+    const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    // Daftar Alamat Perusahaan Otomatis
+    const dbCustomer = {
+        "PT. INDO DIGITAL EKONOMI": "Jl. Sudirman No. 12, Jakarta Selatan",
+        "PT. IKAN ASIN ENAK": "Kawasan Industri Kendal, Jawa Tengah",
+        "PT. KHATULISTIWA SINAR ENERGI": "Jl. H.M. Rafi'i RT.24 Pangkalan Bun, Kalimantan Tengah"
+    };
+
+    function handleCustomerSelect(val) {
+        if(dbCustomer[val]) {
+            document.getElementById('in_addr').value = dbCustomer[val];
+        }
+    }
+
+    function formatIDR(val) {
+        return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function syncAll() {
+        const hPub = parseFloat(document.getElementById('in_hrg_pub').value) || 0;
+        
+        // Tabel A (Cash)
+        const discPctA = parseFloat(document.getElementById('in_disc_a').value) || 0;
+        const discValA = hPub * (discPctA / 100);
+        const hDasarA = hPub - discValA;
+        const ppnA = hDasarA * 0.11;
+        const totalA = hDasarA + ppnA;
+
+        // Tabel B (Tempo)
+        const discPctB = parseFloat(document.getElementById('in_disc_b').value) || 0;
+        const discValB = hPub * (discPctB / 100);
+        const hDasarB = hPub - discValB;
+        const ppnB = hDasarB * 0.11;
+        const totalB = hDasarB + ppnB;
+
+        document.querySelectorAll('.out_h_pub').forEach(el => el.innerText = formatIDR(hPub));
+        document.querySelectorAll('.out_produk_val').forEach(el => el.innerText = document.getElementById('in_produk').value);
+        document.querySelectorAll('.out_dest_val').forEach(el => el.innerText = document.getElementById('in_dest').value);
+
+        document.getElementById('out_pct_a').innerText = discPctA;
+        document.getElementById('out_d_val_a').innerText = formatIDR(discValA);
+        document.getElementById('out_h_dasar_a').innerText = formatIDR(hDasarA);
+        document.getElementById('out_ppn_a').innerText = formatIDR(ppnA);
+        document.getElementById('out_total_a').innerText = formatIDR(totalA);
+
+        document.getElementById('out_pct_b').innerText = discPctB;
+        document.getElementById('out_d_val_b').innerText = formatIDR(discValB);
+        document.getElementById('out_h_dasar_b').innerText = formatIDR(hDasarB);
+        document.getElementById('out_ppn_b').innerText = formatIDR(ppnB);
+        document.getElementById('out_total_b').innerText = formatIDR(totalB);
+
+        document.getElementById('out_no').innerText = document.getElementById('in_no').value;
+        document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
+        document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
+        document.getElementById('out_qty').innerText = document.getElementById('in_qty').value;
+        document.getElementById('out_tol').innerText = document.getElementById('in_tol').value;
+        document.getElementById('out_contact').innerText = document.getElementById('in_contact').value;
+
+        const qrContent = `KSE-DOC|NO:${document.getElementById('in_no').value}|CUST:${document.getElementById('in_cust').value}`;
+        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrContent)}`;
+    }
+
+    async function initAutoNumber(selectedDate = new Date()) {
+        const m = selectedDate.getMonth();
+        const y = selectedDate.getFullYear();
+        const d = selectedDate.getDate();
+        try {
+            const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'SPH');
+            const nextNum = (count || 0) + 1;
+            document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
+            let sD = (d <= 14) ? 1 : 15;
+            let eD = (d <= 14) ? 14 : new Date(y, m + 1, 0).getDate();
+            document.getElementById('in_prd').value = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
+            document.getElementById('out_prd').innerText = document.getElementById('in_prd').value;
+            syncAll();
+        } catch (e) { console.error(e); }
+    }
+
+    function handleDateChange() {
+        const val = document.getElementById('in_tgl_raw').value;
+        if (!val) return;
+        const d = new Date(val);
+        document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
+        initAutoNumber(d);
+    }
+
+    async function saveToSupabase() {
+        const btn = document.getElementById('btn-save-sb');
+        btn.innerHTML = 'SAVING...'; btn.disabled = true;
+        try {
+            const noSurat = document.getElementById('in_no').value;
+            const element = document.getElementById('main-doc');
+            const pdfBlob = await html2pdf().set({ margin:0, filename:`SPH-${noSurat}.pdf`, html2canvas:{scale:2, useCORS:true}, jsPDF:{unit:'mm', format:'a4'}}).from(element).output('blob');
+            const path = `penawaran/SPH_${Date.now()}.pdf`;
+            await _supabase.storage.from('documents').upload(path, pdfBlob);
+            const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(path);
+
+            await _supabase.from('eforms').insert([{
+                jenis: "SPH", nomor: noSurat, tanggal: document.getElementById('in_tgl_raw').value,
+                tujuan: document.getElementById('in_cust').value, pdf_url: urlData.publicUrl,
+                nominal: Math.round(parseFloat(document.getElementById('out_total_a').innerText.replace(/\./g,'').replace(',','.')))
+            }]);
+            alert("Tersimpan!");
+        } catch (e) { alert("Gagal: " + e.message); }
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & UPLOAD'; btn.disabled = false;
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('main-doc');
+        html2pdf().set({ margin: 0, filename: `SPH-${document.getElementById('in_no').value}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } }).from(element).save();
+    }
+
+    window.onload = () => {
+        document.getElementById('in_tgl_raw').value = new Date().toISOString().split('T')[0];
+        handleDateChange();
+        document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
+        document.getElementById('in_dest').value = "Site Pangkalan Bun";
+        document.getElementById('in_qty').value = "5.000 liter , 8.000 liter , 10.000 Liter";
+        document.getElementById('in_tol').value = "0,3% (Tera Mobil Transportir/T2)";
+        document.getElementById('in_contact').value = "0815-884-1410";
+        syncAll();
+    };
+</script>
+</body>
+</html>
