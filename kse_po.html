@@ -41,15 +41,21 @@
             color: #222;
         }
 
-        /* Typography & Spacing Updates */
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 50px; border-bottom: 2px solid var(--kse-primary); padding-bottom: 15px; }
+        /* Update: Menghilangkan garis border-bottom pada header-section sesuai request */
+        .header-section { 
+            display: flex; 
+            align-items: flex-end; 
+            justify-content: space-between; 
+            margin-bottom: 50px; 
+            padding-bottom: 15px; 
+        }
+        
         .logo-img { height: 55px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1.1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 28px; color: var(--kse-primary); letter-spacing: 1px; }
 
         .intro-text { margin-bottom: 20px; line-height: 1.6; font-size: 12px; }
 
-        /* Table Styling */
         .table-po { width: 100%; border-collapse: collapse; margin-top: 5px; border: 1.5px solid #000; }
         .table-po th { 
             background-color: var(--kse-primary) !important; 
@@ -79,8 +85,6 @@
         }
 
         .footer-kse { margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; padding-bottom: 5px; }
-        
-        /* Form Labeling */
         label.small { font-weight: 700; color: #444; margin-bottom: 4px; display: block; }
 
         @media print {
@@ -144,8 +148,8 @@
                     <label class="small">Nama Barang</label>
                     <input list="list_barang" id="in_barang" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_barang">
-                        <option value="BBM SOLAR INDUSTRI ">
-                        <option value=" BIO SOLAR ( B40 )">
+                        <option value="BBM SOLAR INDUSTRI">
+                        <option value="BIO SOLAR ( B40 )">
                     </datalist>
                 </div>
                 <div class="col-6">
@@ -468,12 +472,12 @@
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        document.getElementById('in_cust').value = " ";
+        document.getElementById('in_cust').value = "";
         handleCustChange(); 
 
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI";
-        document.getElementById('in_perltr').value =  ;
-        document.getElementById('in_qty').value =  ;
+        document.getElementById('in_perltr').value = 0;
+        document.getElementById('in_qty').value = 0;
         document.getElementById('in_pay').value = "Cash Before Delivery (CBD)";
         
         syncAutoNumber();
