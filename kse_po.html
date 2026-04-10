@@ -33,12 +33,14 @@
             overflow: hidden;
         }
 
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 70px; }
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 50px; }
         .logo-img { height: 45px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 24px; color: #000; letter-spacing: 1px; }
 
-        .table-po { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 0; border: 1px solid #000; }
+        .intro-text { margin-bottom: 15px; line-height: 1.5; font-size: 11px; }
+
+        .table-po { width: 100%; border-collapse: collapse; margin-top: 5px; margin-bottom: 0; border: 1px solid #000; }
         .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; text-transform: uppercase; }
         .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
         
@@ -113,8 +115,6 @@
                     <label class="fw-bold small">Alamat Pengiriman</label>
                     <textarea id="in_addr" class="form-control form-control-sm" rows="3" oninput="updateView()"></textarea>
                 </div>
-                <br>
-                <br>
                 <hr class="my-2">
                 <div class="col-12 mb-2">
                     <label class="fw-bold small">Nama Barang</label>
@@ -190,6 +190,11 @@
                     </div>
                 </div>
 
+                <div class="intro-text">
+                    <p class="mb-1">Dengan hormat,</p>
+                    <p class="mb-0">Bersama ini kami kirimkan purchase order dengan rincian sebagai berikut :</p>
+                </div>
+
                 <table class="table-po">
                     <thead>
                         <tr>
@@ -262,7 +267,6 @@
 </div>
 
 <script>
-    // Database Alamat Mapping - DIPERBAIKI SINTAKSISNYA
     const CUSTOMER_DATABASE = {
         "PT. SINARINDO SUKSES SELALU": "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun Kalimantan Tengah.\nUp : Bpk.Riky",
         "PT. TELADAN MAKMUR JAYA": "Jl.Hksn no.23 Alalak Utara ,Banjarmasin, Kalimantan Selatan. \nUp: Ibu amel",
@@ -433,12 +437,10 @@
     }
 
     window.onload = () => {
-        // SET TANGGAL OTOMATIS
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
         
-        // Inisialisasi default
         document.getElementById('in_cust').value = " ";
         handleCustChange(); 
 
