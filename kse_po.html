@@ -7,58 +7,82 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        :root { --kse-dark: #0f2d0b; --kse-primary: #1a3c15; --kse-accent: #2ecc71; }
-        body { background-color: #f4f7f6; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0; padding: 0; }
+        :root { 
+            --kse-dark: #0f2d0b; 
+            --kse-primary: #1a3c15; 
+            --kse-accent: #2ecc71; 
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        body { background-color: #f4f7f6; font-family: var(--doc-font); font-size: 13px; margin: 0; padding: 0; }
         
         .control-nav { background: #fff; border-bottom: 2px solid #ddd; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; }
-        .input-sidebar { background: #fff; height: calc(100vh - 60px); overflow-y: auto; padding: 20px; border-right: 1px solid #ddd; }
+        .input-sidebar { background: #fff; height: calc(100vh - 60px); overflow-y: auto; padding: 25px; border-right: 1px solid #ddd; }
         
-        #pdf-area { background: #f4f7f6; padding: 20px 0; }
+        #pdf-area { background: #f4f7f6; padding: 40px 0; }
 
         .document-canvas { 
             background: white; 
             width: 210mm; 
             height: 296mm; 
             margin: 0 auto; 
-            padding: 10mm 15mm; 
+            padding: 15mm 20mm; 
             position: relative;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            color: #222;
         }
 
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 70px; }
-        .logo-img { height: 45px; width: auto; object-fit: contain; }
-        .doc-identity { text-align: right; line-height: 1; }
-        .doc-identity h2 { font-weight: 800; margin: 0; font-size: 24px; color: #000; letter-spacing: 1px; }
+        /* Typography & Spacing Updates */
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 50px; border-bottom: 2px solid var(--kse-primary); padding-bottom: 15px; }
+        .logo-img { height: 55px; width: auto; object-fit: contain; }
+        .doc-identity { text-align: right; line-height: 1.1; }
+        .doc-identity h2 { font-weight: 800; margin: 0; font-size: 28px; color: var(--kse-primary); letter-spacing: 1px; }
 
-        .intro-text { margin-bottom: 15px; line-height: 1.5; font-size: 11px; }
+        .intro-text { margin-bottom: 20px; line-height: 1.6; font-size: 12px; }
 
-        .table-po { width: 100%; border-collapse: collapse; margin-top: 5px; margin-bottom: 0; border: 1px solid #000; }
-        .table-po th { background-color: var(--kse-primary) !important; color: white !important; padding: 10px 5px; border: 1px solid #000; text-align: center; font-size: 9px; text-transform: uppercase; }
-        .table-po td { border: 1px solid #000; padding: 10px 8px; vertical-align: middle; font-size: 11px; }
+        /* Table Styling */
+        .table-po { width: 100%; border-collapse: collapse; margin-top: 5px; border: 1.5px solid #000; }
+        .table-po th { 
+            background-color: var(--kse-primary) !important; 
+            color: white !important; 
+            padding: 12px 6px; 
+            border: 1px solid #000; 
+            text-align: center; 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        .table-po td { border: 1px solid #000; padding: 12px 8px; vertical-align: middle; font-size: 11.5px; line-height: 1.4; }
         
-        .table-clean td { border: none !important; padding: 2px 0; vertical-align: top; }
-        .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
+        .table-clean td { border: none !important; padding: 4px 0; vertical-align: top; font-size: 12px; }
+        .lang-en { font-style: italic; font-size: 9.5px; color: #777; display: block; margin-top: 2px; font-weight: 400; }
 
         .terbilang-box { 
-            border: 1px solid #000; 
+            border: 1.5px solid #000; 
             border-top: none; 
-            padding: 10px; 
-            background-color: #fcfcfc; 
+            padding: 15px; 
+            background-color: #f9f9f9; 
             font-style: italic; 
-            font-weight: bold; 
-            margin-bottom: 20px; 
+            font-weight: 600; 
+            margin-bottom: 25px;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
-        .footer-kse { margin-top: auto; border-top: 1px solid #ccc; padding-top: 10px; padding-bottom: 5px; }
+        .footer-kse { margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; padding-bottom: 5px; }
         
+        /* Form Labeling */
+        label.small { font-weight: 700; color: #444; margin-bottom: 4px; display: block; }
+
         @media print {
             body { background: none; }
             .control-nav, .input-sidebar { display: none !important; }
@@ -87,22 +111,22 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-3 input-sidebar shadow-sm">
-            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
-            <div class="row g-2">
-                <div class="col-12 mb-2">
-                    <label class="fw-bold text-primary small">Nomor Urut PO</label>
+            <h6 class="fw-bold mb-4 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="small text-primary">Nomor Urut PO</label>
                     <div class="input-group input-group-sm">
                         <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
                         <span class="input-group-text">/PO-KSE/...</span>
                     </div>
                     <input type="hidden" id="in_no">
                 </div>
-                <div class="col-12 mb-2">
-                    <label class="fw-bold small">Tanggal PO</label>
+                <div class="col-12">
+                    <label class="small">Tanggal PO</label>
                     <input type="date" id="in_tgl_raw" class="form-control form-control-sm" oninput="handleDateChange()">
                 </div>
-                <div class="col-12 mb-2">
-                    <label class="fw-bold small">Customer / Supplier</label>
+                <div class="col-12">
+                    <label class="small">Customer / Supplier</label>
                     <select id="in_cust" class="form-select form-select-sm" onchange="handleCustChange()">
                         <option value="">-- Pilih Customer --</option>
                         <option value="PT. SINARINDO SUKSES SELALU">PT. SINARINDO SUKSES SELALU</option>
@@ -111,43 +135,43 @@
                         <option value="PT. INDO DHARMA ENERGI">PT. INDO DHARMA ENERGI</option>
                     </select>
                 </div>
-                <div class="col-12 mb-2">
-                    <label class="fw-bold small">Alamat Pengiriman</label>
+                <div class="col-12">
+                    <label class="small">Alamat Pengiriman</label>
                     <textarea id="in_addr" class="form-control form-control-sm" rows="3" oninput="updateView()"></textarea>
                 </div>
                 <hr class="my-2">
-                <div class="col-12 mb-2">
-                    <label class="fw-bold small">Nama Barang</label>
+                <div class="col-12">
+                    <label class="small">Nama Barang</label>
                     <input list="list_barang" id="in_barang" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_barang">
                         <option value="BBM SOLAR INDUSTRI ">
                         <option value=" BIO SOLAR ( B40 )">
                     </datalist>
                 </div>
-                <div class="col-6 mb-2">
-                    <label class="fw-bold small text-success">Harga Dasar Pembelian</label>
+                <div class="col-6">
+                    <label class="small text-success">Harga Dasar Net</label>
                     <input type="number" id="in_perltr" class="form-control form-control-sm border-success" oninput="calculate()">
                 </div>
-                <div class="col-6 mb-2">
-                    <label class="fw-bold small">Qty (Ltr)</label>
+                <div class="col-6">
+                    <label class="small">Qty (Ltr)</label>
                     <input type="number" id="in_qty" class="form-control form-control-sm" oninput="calculate()">
                 </div>
                 
-                <div class="col-4 mb-2">
-                    <label class="fw-bold x-small">PPN %</label>
+                <div class="col-4">
+                    <label class="small">PPN %</label>
                     <input type="number" step="0.1" id="in_ppn_pct" class="form-control form-control-sm" value="11" oninput="calculate()">
                 </div>
-                <div class="col-4 mb-2">
-                    <label class="fw-bold x-small">PBBKB %</label>
+                <div class="col-4">
+                    <label class="small">PBBKB %</label>
                     <input type="number" step="0.1" id="in_pbbkb_pct" class="form-control form-control-sm" value="7.5" oninput="calculate()">
                 </div>
-                <div class="col-4 mb-2">
-                    <label class="fw-bold x-small">PPH %</label>
+                <div class="col-4">
+                    <label class="small">PPH %</label>
                     <input type="number" step="0.1" id="in_pph_pct" class="form-control form-control-sm" value="0.3" oninput="calculate()">
                 </div>
 
-                <div class="col-12 mb-3">
-                    <label class="fw-bold small">Sistem Pembayaran</label>
+                <div class="col-12">
+                    <label class="small">Sistem Pembayaran</label>
                     <input list="list_pay" id="in_pay" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_pay">
                         <option value="Cash Before Delivery (CBD)">
@@ -161,7 +185,7 @@
         <div class="col-lg-9 p-0" id="pdf-area">
             <div class="document-canvas" id="main-doc">
                 <div class="header-section">
-                    <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/150x45?text=KSE+LOGO'">
+                    <img src="header1.png" class="logo-img" onerror="this.src='https://via.placeholder.com/200x60?text=KSE+LOGO'">
                     <div class="doc-identity">
                         <h2>PURCHASE ORDER</h2>
                         <span class="lang-en text-uppercase">Electronic Purchase Order System</span>
@@ -170,26 +194,25 @@
 
                 <div class="row mb-4">
                     <div class="col-7">
-                        <p class="mb-1">Kepada yang kami hormati,</p>
-                        <h6 class="fw-bold mb-0 text-uppercase" id="out_cust" style="font-size: 15px; color: var(--kse-primary);"></h6>
-                        <p id="out_addr" class="mb-0 mt-1" style="white-space: pre-line; line-height: 1.4;"></p>
+                        <p class="mb-2" style="font-size: 12px;">Kepada yang kami hormati,</p>
+                        <h6 class="fw-bold mb-1 text-uppercase" id="out_cust" style="font-size: 16px; color: var(--kse-primary); letter-spacing: 0.5px;"></h6>
+                        <p id="out_addr" class="mb-0 mt-1" style="white-space: pre-line; line-height: 1.5; font-size: 12px;"></p>
                     </div>
                     <div class="col-5">
                         <table class="table table-sm table-clean mb-0">
                             <tr>
                                 <td width="45%">TANGGAL<span class="lang-en">Date</span></td>
                                 <td width="5%">:</td>
-                                <td id="out_tgl" class="fw-bold"></td>
+                                <td id="out_tgl" class="fw-bold text-end"></td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">NOMOR PO<span class="lang-en">PO Number</span></td>
                                 <td>:</td>
-                                <td id="out_no" class="fw-bold"></td>
+                                <td id="out_no" class="fw-bold text-end text-primary"></td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <br>
 
                 <div class="intro-text">
                     <p class="mb-1">Dengan hormat,</p>
@@ -199,7 +222,7 @@
                 <table class="table-po">
                     <thead>
                         <tr>
-                            <th width="22%">NAMA BARANG</th>
+                            <th width="20%">NAMA BARANG</th>
                             <th width="10%">QTY (Ltr)</th>
                             <th>HARGA DASAR</th>
                             <th id="th_ppn">PPN</th>
@@ -211,7 +234,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 10px; height: 50px;"></td>
+                            <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 11px; height: 60px;"></td>
                             <td class="text-center" id="out_qty"></td>
                             <td class="text-center" id="out_harga"></td>
                             <td class="text-center" id="out_ppn"></td>
@@ -220,9 +243,9 @@
                             <td class="text-center fw-bold" id="out_perltr"></td>
                             <td class="text-end fw-bold">Rp <span id="out_total">0,00</span></td>
                         </tr>
-                        <tr class="fw-bold bg-light" style="font-size: 14px;">
-                            <td colspan="7" class="text-end p-2">GRAND TOTAL</td>
-                            <td class="text-end p-2" style="color: var(--kse-primary);">Rp <span id="out_grandtotal">0,00</span></td>
+                        <tr class="fw-bold" style="background-color: #f2f2f2; font-size: 15px;">
+                            <td colspan="7" class="text-end p-3">GRAND TOTAL</td>
+                            <td class="text-end p-3" style="color: var(--kse-primary);">Rp <span id="out_grandtotal">0,00</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -231,33 +254,34 @@
                     Terbilang: # <span id="out_terbilang"></span> RUPIAH #
                 </div>
 
-                <div class="mt-2">
-                    <p class="mb-1">Sistem pembayaran : <b id="out_pay"></b></p>
+                <div class="mt-2" style="font-size: 12px; line-height: 1.6;">
+                    <p class="mb-1">Sistem pembayaran : <b id="out_pay" class="text-decoration-underline"></b></p>
                     <p>Demikian kami sampaikan, mohon di bantu untuk prosesnya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
                 </div>
 
                 <div class="row mt-4">
                     <div class="col-6">
-                        <p class="mb-0 italic">regard,</p>
-                        <p class="fw-bold mb-1">PT. KHATULISTIWA SINAR ENERGI</p>
-                        <div style="height: 80px; margin: 5px 0;">
-                            <img src="ttd.png" style="height: 75px;" onerror="this.style.display='none'">
+                        <p class="mb-1 italic" style="font-size: 11px;">Regards,</p>
+                        <p class="fw-bold mb-1" style="font-size: 13px;">PT. KHATULISTIWA SINAR ENERGI</p>
+                        <div style="height: 90px; margin: 10px 0; display: flex; align-items: center;">
+                            <img src="ttd.png" style="height: 85px;" onerror="this.style.display='none'">
                         </div>
-                        <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 14px;">SUPRANOTO</p>
-                        <p class="mb-0">Direktur</p>
+                        <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 15px; letter-spacing: 0.5px;">SUPRANOTO</p>
+                        <p class="mb-0" style="font-size: 12px; color: #555;">Direktur</p>
                     </div>
                 </div>
 
                 <div class="footer-kse d-flex justify-content-between align-items-end">
-                    <div class="d-flex align-items-center gap-2">
-                        <img id="qr_footer" width="65" height="65">
-                        <div style="font-size: 8px; color: #666; line-height: 1.2;">
-                            <b>KSE- DIGITAL VERIFIED</b><br>Scan QR untuk Validasi PO ini.<br>
-                            <span id="qr_timestamp" style="font-size: 7px;"></span>
+                    <div class="d-flex align-items-center gap-3">
+                        <img id="qr_footer" width="75" height="75" style="border: 1px solid #eee; padding: 2px;">
+                        <div style="font-size: 9px; color: #555; line-height: 1.4;">
+                            <b style="color: #000;">KSE- DIGITAL VERIFIED</b><br>
+                            Scan QR untuk validasi keaslian dokumen.<br>
+                            <span id="qr_timestamp" style="font-size: 8px; color: #888;"></span>
                         </div>
                     </div>
-                    <div class="text-end" style="font-size: 9px; line-height: 1.3;">
-                        <b style="color: var(--kse-primary); font-size: 10px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
+                    <div class="text-end" style="font-size: 10px; line-height: 1.4;">
+                        <b style="color: var(--kse-primary); font-size: 11px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
                         Mitra Penyalur dan Transportir BBM Industri<br>
                         Jl. H.M. Rafi'i rt.24 Pangkalan Bun, Kalimantan Tengah | 0815-884-1410
                     </div>
@@ -386,13 +410,15 @@
 
     function updateQRCode(no, total) {
         const data = `KSE-PO|${no}|TOT:${total}`;
-        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(data)}`;
+        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data)}`;
         document.getElementById('qr_timestamp').innerText = `Generated: ${new Date().toLocaleString('id-ID')}`;
     }
 
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
         const noPo = document.getElementById('in_no').value;
+        if(!noPo || noPo.includes('undefined')) return alert("Nomor PO tidak valid!");
+
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> UPLOADING...'; btn.disabled = true;
         
         try {
@@ -446,8 +472,8 @@
         handleCustChange(); 
 
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI";
-        document.getElementById('in_perltr').value = 15500;
-        document.getElementById('in_qty').value = 5000;
+        document.getElementById('in_perltr').value =  ;
+        document.getElementById('in_qty').value =  ;
         document.getElementById('in_pay').value = "Cash Before Delivery (CBD)";
         
         syncAutoNumber();
