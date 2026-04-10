@@ -33,7 +33,7 @@
             overflow: hidden;
         }
 
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; }
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 70px; }
         .logo-img { height: 45px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 24px; color: #000; letter-spacing: 1px; }
@@ -113,13 +113,15 @@
                     <label class="fw-bold small">Alamat Pengiriman</label>
                     <textarea id="in_addr" class="form-control form-control-sm" rows="3" oninput="updateView()"></textarea>
                 </div>
+                <br>
+                <br>
                 <hr class="my-2">
                 <div class="col-12 mb-2">
                     <label class="fw-bold small">Nama Barang</label>
                     <input list="list_barang" id="in_barang" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_barang">
-                        <option value="BBM SOLAR INDUSTRI (HSD)">
-                        <option value="MFO (MARINE FUEL OIL)">
+                        <option value="BBM SOLAR INDUSTRI ">
+                        <option value=" BIO SOLAR ( B40 )">
                     </datalist>
                 </div>
                 <div class="col-6 mb-2">
@@ -440,7 +442,7 @@
         document.getElementById('in_cust').value = " ";
         handleCustChange(); 
 
-        document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI (HSD)";
+        document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI";
         document.getElementById('in_perltr').value = 15500;
         document.getElementById('in_qty').value = 5000;
         document.getElementById('in_pay').value = "Cash Before Delivery (CBD)";
