@@ -88,9 +88,12 @@
 
             <div class="card p-2 mb-3 bg-light border-0">
                 <label class="fw-bold small">Tujuan Perusahaan</label>
-                <input type="text" id="in_cust" class="form-control form-control-sm" oninput="syncAll()">
+                <input type="text" list="list_cust" id="in_cust" class="form-control form-control-sm" oninput="handleCustChange()">
+                <datalist id="list_cust">
+                    </datalist>
+
                 <label class="fw-bold small mt-1">Alamat / Lokasi</label>
-                <textarea id="in_addr" class="form-control form-control-sm" rows="2" oninput="syncAll()"></textarea>
+                <textarea id="in_addr" class="form-control form-control-sm" rows="3" oninput="syncAll()"></textarea>
             </div>
 
             <div class="card p-2 mb-3 border-success">
@@ -249,8 +252,42 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
+    // DATA PERUSAHAAN
+    const databaseCust = {
+        "CV. SAMI JAYA": "Jl. HM Arsyad No.05 Sampit,\nKotawaringin Timur - Kalimantan Tengah",
+        "PT. PELAYARAN JASA SAMUDRA SHIPPING": "Jl. Gatot Subroto No.15 Pangkalan Bun,\nKotawaringin Barat - Kalimantan Tengah",
+        "PT. EXPLOITASI ENERGI INDONESIA, Tbk": "Jl. Rungun RT.10 Kel.sungai Kapitan, Kumai ,\nKotawaringin Barat - Kalimantan Tengah",
+        "PT. SINAR BAHAGIA INDAH": "Jl. Kapten Mulyono No.174B RT.23 RW.008 Mentawa Baru Hulu,Mentawa Baru Ketapang, Kab Kotawaringin Timur - Kalimantan Tengah",
+        "PT. FORTUNA LANCAR ADIMAKMUR": "Jl. Bypass Pandaan No.88 Karangjati Pandaan,\nKab.Pasuruan - Jawa Timur",
+        "PT. BUMI RAYA NUSANTARA": "Jl. Kapten Mulyono No.55 RT 029 RW.008,\nMentawa Baru Hilir, Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah",
+        "PT. BUMI AGRO PRIMA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu,\nMentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
+        "PT. INTI DAYA MANDIRI SERVITAMA": "Jl. kawitan I No.54 RT.017 RW.000 Sidorejo Arut Selatan,\nKab.Kotawaringin Barat - Kalimantan Tengah 74111",
+        "PT. BORNEO TRENGGINAS MANDIRI": "JL.Sri Kuncoro III No.142 RT.003 RW.003 Kalibanteng Kulon, Semarang Barat Kota Semarang - Jawa Tengah 50145",
+        "PT. GADING SAWIT KENCANA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu ,Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
+        "PT. BORNEO ARMADA PERKASA": "Jl. A.Yani Km.40 RT.021 RW.007 Pandu Sanjaya, Pangkalan Bun, Kab.Kotawringin Barat - Kalimantan Tengah 74184",
+        "PT. KORINDO ARIA BIMA SARII": "Wisma Korindo Jl. MT.Haryono Kav.62 Pancoran,Pancoran Kota Adm. DKI Jakarta 12780",
+        "PT. HATAKO KHARISMA ABADI": "Jl. Masjid No.01 Kumai Hilir , Kumai, Kotawaringin Barat – Kalimantan Tengah",
+        "PT. ARUT SAWIT MANDIRI": "Jl. Edy Suwargono No.39 Madurejo , Arut Selatan ,Kotawaringin Barat – Kalimantan Tengah 74112",
+        "PT. KURNIA TUNGGAL NUGRAHA": "Jl. WR. Supratman Block-No Kel.Orang Kayo hitam Kec.Pasar Jambi Kota Jambi 36134",
+        "CV. TIGA SAUDARA MAJU BERSAMA": "Jl. Negara Aspal Kel.Kenawan Kec.Permata Kecubung Sukamara – Kalimantan Tengah",
+        "PT. PELAYARAN SAHABAT SETIA BAHARI": "Jl. Pahlawan No.240/10 RT.02 RW.20 ,Benua Melayu Darat, Pontianak Selatan Kota Pontianak – Kalimantan Barat 78122",
+        "PT. TRIDEA SENADA": "Jl. Gatot Subroto No.14 Kota Tinggi, Pekan Baru Kota , Kota Pekan Baru Riau 28112",
+        "PT. GERBANG PERKASA PRATAMA": "Rayp Darmo Permai 3/26 Kel.Tanjungsari Kec.Sukomanunggal, Kota Surabaya – Jawa Timur 60187",
+        "PT. PARAMITA BANGUN SARANA, TBK": "Kyi Haji Hasyim No.39 Kel.Petojo Utara , Kec.Gambir, Kota Adm.Jakarta Pusat – DKI Jakarta 10130",
+        "PT. MEGA KARYA NUSA": "Jl. Pahlawan Seribu, Ruko Golden Boulevard Block R.29 RT.02 RW.10, Lengkong Karya Serpong Utara, Kota Tangerang Selatan – Banten 15331",
+        "PT. JAYA ABADI": "Jl. Merdeka No. 45"
+    };
+
     function formatIDR(val) {
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function handleCustChange() {
+        const name = document.getElementById('in_cust').value;
+        if(databaseCust[name]) {
+            document.getElementById('in_addr').value = databaseCust[name];
+        }
+        syncAll();
     }
 
     function syncAll() {
@@ -285,19 +322,16 @@
         const d = selectedDate.getDate();
         
         try {
-            // Logika Penomoran Sesuai Invoice
             const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'SPH');
             const nextNum = (count || 0) + 1;
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
             
-            // Logika Periode Otomatis
             let startDay, endDay;
             if (d <= 14) {
                 startDay = 1;
                 endDay = 14;
             } else {
                 startDay = 15;
-                // Ambil tanggal terakhir bulan tsb
                 endDay = new Date(y, m + 1, 0).getDate();
             }
             document.getElementById('in_prd').value = `${startDay} s/d ${endDay} ${monthsIndo[m]} ${y}`;
@@ -345,8 +379,20 @@
     }
 
     window.onload = () => {
+        // Load Datalist Customer
+        const listCust = document.getElementById('list_cust');
+        Object.keys(databaseCust).forEach(key => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            listCust.appendChild(opt);
+        });
+
         document.getElementById('in_tgl_raw').value = new Date().toISOString().split('T')[0];
         handleDateChange();
+        
+        // Defaults
+        document.getElementById('in_cust').value = "CV. SAMI JAYA";
+        document.getElementById('in_addr').value = databaseCust["CV. SAMI JAYA"];
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_dest').value = "Site Pangkalan Bun";
         document.getElementById('in_qty').value = "5.000 liter , 8000 liter , 10.000 Liter";
