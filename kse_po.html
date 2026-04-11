@@ -41,15 +41,7 @@
             color: #222;
         }
 
-        /* Update: Menghilangkan garis border-bottom pada header-section sesuai request */
-        .header-section { 
-            display: flex; 
-            align-items: flex-end; 
-            justify-content: space-between; 
-            margin-bottom: 50px; 
-            padding-bottom: 15px; 
-        }
-        
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 50px; padding-bottom: 15px; }
         .logo-img { height: 55px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1.1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 28px; color: var(--kse-primary); letter-spacing: 1px; }
@@ -84,7 +76,10 @@
             line-height: 1.5;
         }
 
-        .footer-kse { margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; padding-bottom: 5px; }
+        /* Footer Styling Updated for Alignment */
+        .footer-kse { margin-top: auto; border-top: 1px solid #ddd; padding-top: 15px; padding-bottom: 5px; }
+        .footer-grid { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 15px; }
+
         label.small { font-weight: 700; color: #444; margin-bottom: 4px; display: block; }
 
         @media print {
@@ -212,7 +207,7 @@
                             <tr>
                                 <td class="fw-bold">NOMOR PO<span class="lang-en">PO Number</span></td>
                                 <td>:</td>
-                                <td id="out_no" class="fw-bold text-end text-primary"></td>
+                                <td id="out_no" class="fw-bold text-end text-dark"></td>
                             </tr>
                         </table>
                     </div>
@@ -275,19 +270,19 @@
                     </div>
                 </div>
 
-                <div class="footer-kse d-flex justify-content-between align-items-end">
-                    <div class="d-flex align-items-center gap-3">
-                        <img id="qr_footer" width="75" height="75" style="border: 1px solid #eee; padding: 2px;">
-                        <div style="font-size: 9px; color: #555; line-height: 1.4;">
-                            <b style="color: #000;">KSE- DIGITAL VERIFIED</b><br>
-                            Scan QR untuk validasi keaslian dokumen.<br>
-                            <span id="qr_timestamp" style="font-size: 8px; color: #888;"></span>
+                <div class="footer-kse">
+                    <div class="footer-grid">
+                        <img id="qr_footer" width="65" height="65" style="border: 1px solid #eee; padding: 2px;">
+                        <div style="font-size: 9px; color: #555; line-height: 1.4; border-left: 1px solid #eee; padding-left: 10px;">
+                            <b style="color: #000;">KSE - DIGITAL VERIFIED SYSTEM</b><br>
+                            Dokumen ini sah dan diterbitkan secara elektronik.<br>
+                            <span id="qr_timestamp" style="font-size: 8px; color: #999;"></span>
                         </div>
-                    </div>
-                    <div class="text-end" style="font-size: 10px; line-height: 1.4;">
-                        <b style="color: var(--kse-primary); font-size: 11px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
-                        Mitra Penyalur dan Transportir BBM Industri<br>
-                        Jl. H.M. Rafi'i rt.24 Pangkalan Bun, Kalimantan Tengah | 0815-884-1410
+                        <div class="text-end" style="font-size: 9px; line-height: 1.5;">
+                            <b style="color: var(--kse-primary); font-size: 10px;">PT. KHATULISTIWA SINAR ENERGI</b><br>
+                            Mitra Penyalur dan Transportir BBM Industri<br>
+                            Jl. H.M. Rafi'i rt.24 Pangkalan Bun, Kalimantan Tengah | 0815-884-1410
+                        </div>
                     </div>
                 </div>
             </div>
@@ -340,7 +335,6 @@
         const d = new Date(tglVal);
         const m = d.getMonth();
         const y = d.getFullYear();
-        
         const fullNo = `${urut.toString().padStart(3, '0')}/PO-KSE/${monthRomawi[m]}/${y}`;
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
