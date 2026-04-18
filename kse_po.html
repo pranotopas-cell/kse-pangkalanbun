@@ -76,7 +76,6 @@
             line-height: 1.5;
         }
 
-        /* Footer Styling Updated for Alignment */
         .footer-kse { margin-top: auto; border-top: 1px solid #ddd; padding-top: 15px; padding-bottom: 5px; }
         .footer-grid { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 15px; }
 
@@ -425,8 +424,8 @@
                 margin: 0,
                 filename: `PO-${noPo}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
             };
 
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
@@ -457,7 +456,14 @@
 
     function downloadPDF() {
         const element = document.getElementById('main-doc');
-        const opt = { margin: 0, filename: `PO-${document.getElementById('in_no').value}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } };
+        const noPo = document.getElementById('in_no').value;
+        const opt = { 
+            margin: 0, 
+            filename: `PO-${noPo}.pdf`, 
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 }, 
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true } 
+        };
         html2pdf().set(opt).from(element).save();
     }
 
@@ -479,4 +485,4 @@
     };
 </script>
 </body>
-</html>
+</html> 
