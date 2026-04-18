@@ -37,7 +37,7 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden; /* Mengunci agar tidak tumpah ke halaman 2 */
             color: #222;
         }
 
@@ -411,6 +411,7 @@
         document.getElementById('qr_timestamp').innerText = `Generated: ${new Date().toLocaleString('id-ID')}`;
     }
 
+    // Fungsi Simpan dengan Optimasi Fit One Page
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
         const noPo = document.getElementById('in_no').value;
@@ -424,7 +425,12 @@
                 margin: 0,
                 filename: `PO-${noPo}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    letterRendering: true,
+                    scrollY: 0 
+                },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
             };
 
@@ -454,6 +460,7 @@
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & AUTO UPLOAD'; btn.disabled = false;
     }
 
+    // Fungsi Download dengan Optimasi Fit One Page
     function downloadPDF() {
         const element = document.getElementById('main-doc');
         const noPo = document.getElementById('in_no').value;
@@ -461,7 +468,12 @@
             margin: 0, 
             filename: `PO-${noPo}.pdf`, 
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 }, 
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true, 
+                letterRendering: true,
+                scrollY: 0 
+            }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true } 
         };
         html2pdf().set(opt).from(element).save();
@@ -485,4 +497,4 @@
     };
 </script>
 </body>
-</html> 
+</html>
