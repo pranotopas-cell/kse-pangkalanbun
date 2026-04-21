@@ -118,7 +118,7 @@
             <h6 class="fw-bold mb-4 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
             <div class="row g-3">
                 <div class="col-12">
-                    <label class="small text-primary">Nomor Urut PO (Otomatis/Manual)</label>
+                    <label class="small text-primary">Nomor Urut PO (Bisa Edit Manual)</label>
                     <div class="input-group input-group-sm">
                         <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
                         <span class="input-group-text">/PO-KSE/...</span>
@@ -326,42 +326,35 @@
         return temp;
     }
 
-    // --- PERBAIKAN LOGIKA PENOMORAN ---
+    // --- LOGIKA PENOMORAN BARU BERDASARKAN JENIS & BULAN BERJALAN ---
     async function syncAutoNumber() {
         try {
-            // Ambil tanggal dari input atau gunakan hari ini
-            const tglInput = document.getElementById('in_tgl_raw').value;
-            const refDate = tglInput ? new Date(tglInput) : new Date();
+            const tglVal = document.getElementById('in_tgl_raw').value;
+            const refDate = tglVal ? new Date(tglVal) : new Date();
             
-            const year = refDate.getFullYear();
-            const month = refDate.getMonth();
+            // Rentang bulan berjalan (Awal s/d Akhir Bulan)
+            const firstDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1).toISOString().split('T')[0];
+            const lastDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0).toISOString().split('T')[0];
 
-            // Hitung awal bulan referensi
-            const firstDay = new Date(year, month, 1).toISOString();
-            // Hitung akhir bulan referensi
-            const lastDay = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
-
-            // Filter berdasarkan JENIS (Purchase Order) DAN RENTANG BULAN TERSEBUT
+            // Hitung hanya data dengan jenis "PURCHASE ORDER" pada bulan yang dipilih
             const { count, error } = await _supabase
                 .from('eforms')
                 .select('*', { count: 'exact', head: true })
                 .eq('jenis', 'PURCHASE ORDER')
-                .gte('tanggal', firstDay.split('T')[0])
-                .lte('tanggal', lastDay.split('T')[0]);
+                .gte('tanggal', firstDay)
+                .lte('tanggal', lastDay);
 
             if (error) throw error;
 
-            // Set nomor urut ke panel input (bisa diedit manual)
+            // Jika ganti bulan dan database kosong, count + 1 akan jadi 1 (001)
             document.getElementById('in_no_urut').value = (count || 0) + 1;
-            
             formatFullNumber();
         } catch (err) { 
-            console.error("Gagal sinkronisasi nomor:", err); 
+            console.error("Gagal Sync Nomor:", err); 
         }
     }
 
     function formatFullNumber() {
-        // Ambil nilai dari input urut (memungkinkan user edit manual)
         const urut = document.getElementById('in_no_urut').value || "1";
         const tglVal = document.getElementById('in_tgl_raw').value;
         const d = tglVal ? new Date(tglVal) : new Date();
@@ -375,16 +368,6 @@
         
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
-        
-        updateView();
-    }
-    // --- AKHIR PERBAIKAN ---
-
-    function handleCustChange() {
-        const custName = document.getElementById('in_cust').value;
-        if (CUSTOMER_DATABASE[custName]) {
-            document.getElementById('in_addr').value = CUSTOMER_DATABASE[custName];
-        }
         updateView();
     }
 
@@ -394,16 +377,24 @@
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
         
-        // Saat tanggal berubah, cek ulang database untuk bulan baru tersebut
+        // RE-SYNC saat tanggal berubah (untuk cek apakah pindah bulan)
         syncAutoNumber();
+    }
+
+    function handleCustChange() {
+        const custName = document.getElementById('in_cust').value;
+        if (CUSTOMER_DATABASE[custName]) {
+            document.getElementById('in_addr').value = CUSTOMER_DATABASE[custName];
+        }
+        updateView();
     }
 
     function calculate() {
         const qty = parseFloat(document.getElementById('in_qty').value) || 0;
         const hargaNet = parseFloat(document.getElementById('in_perltr').value) || 0;
-        const p_ppn = parseFloat(document.getElementById('in_ppn_pct').value) || 0;
-        const p_pbbkb = parseFloat(document.getElementById('in_pbbkb_pct').value) || 0;
-        const p_pph = parseFloat(document.getElementById('in_pph_pct').value) || 0;
+        const p_ppn = parseFloat(document.getElementById('in_ppn_pct').value) || 11;
+        const p_pbbkb = parseFloat(document.getElementById('in_pbbkb_pct').value) || 7.5;
+        const p_pph = parseFloat(document.getElementById('in_pph_pct').value) || 0.3;
 
         const totalPajakPct = (p_ppn + p_pbbkb + p_pph) / 100;
         const hargaDasar = hargaNet / (1 + totalPajakPct);
@@ -491,7 +482,7 @@
             if (dbErr) throw dbErr;
 
             alert("Berhasil! PO & PDF telah tersimpan di Cloud.");
-            syncAutoNumber();
+            syncAutoNumber(); // Refresh nomor urut setelah simpan
         } catch (e) { alert("Error: " + e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & AUTO UPLOAD'; btn.disabled = false;
     }
