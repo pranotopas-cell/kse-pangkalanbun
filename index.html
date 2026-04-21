@@ -226,6 +226,7 @@
                                     <th class="p-4 border-b border-white/5">Nomor</th>
                                     <th class="p-4 border-b border-white/5">Tujuan</th>
                                     <th class="p-4 border-b border-white/5 text-right">Nominal</th>
+                                    <th class="p-4 border-b border-white/5 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="release-table-body" class="divide-y divide-white/5 text-slate-300"></tbody>
@@ -341,34 +342,33 @@
             const { data, error } = await q;
             const tbody = document.getElementById('release-table-body');
             
-            if (error) { tbody.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; return; }
+            if (error) { tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; return; }
             
             tbody.innerHTML = data?.length ? data.map(d => {
                 const tgl = new Date(d.created_at).toLocaleDateString('id-ID');
                 const nom = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(d.nominal || 0);
                 
-                // Ambil jenis dokumen secara dinamis dan bersihkan spasi
-                const jenisRaw = (d.jenis_dokumen || 'FORM').toUpperCase().trim();
+                // Ambil jenis dokumen dari Supabase (jenis_dokumen kolom)
+                const jenisStr = (d.jenis_dokumen || 'DOKUMEN').toUpperCase();
                 
                 // Logika Pembedaan Warna
-                let colorClass = "text-emerald-400"; // Default (Surat Jalan, dll)
-                if (jenisRaw.includes("PURCHASE ORDER") || jenisRaw.includes("PO")) {
-                    colorClass = "text-orange-500";
-                } else if (jenisRaw.includes("SPH") || jenisRaw.includes("PENAWARAN")) {
-                    colorClass = "text-cyan-400";
-                } else if (jenisRaw.includes("INVOICE")) {
-                    colorClass = "text-yellow-500";
-                }
+                let colorClass = "text-emerald-400"; // Default (SJ dll)
+                if (jenisStr.includes("PO") || jenisStr.includes("PURCHASE")) colorClass = "text-orange-500";
+                else if (jenisStr.includes("SPH") || jenisStr.includes("PENAWARAN")) colorClass = "text-cyan-400";
+                else if (jenisStr.includes("INVOICE")) colorClass = "text-yellow-400";
 
                 return `
                     <tr class="hover:bg-white/5 group border-b border-white/5">
                         <td class="p-4 text-slate-400 font-mono">${tgl}</td>
-                        <td class="p-4 uppercase font-black ${colorClass} tracking-tighter">${jenisRaw}</td>
+                        <td class="p-4 uppercase font-black ${colorClass} tracking-tighter">${jenisStr}</td>
                         <td class="p-4 font-black text-white tracking-wider">${d.nomor || d.doc_number || '-'}</td>
                         <td class="p-4 uppercase text-slate-300">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
-                        <td class="p-4 text-right font-black text-white group-hover:text-emerald-400 transition-all">${nom}</td>
+                        <td class="p-4 text-right font-black text-white">${nom}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="window.open('${d.file_url || d.url}', '_blank')" class="bg-white/5 border border-white/10 text-emerald-500 text-[9px] font-black px-3 py-1 rounded hover:bg-emerald-500 hover:text-white transition-all uppercase">View</button>
+                        </td>
                     </tr>`;
-            }).join('') : '<tr><td colspan="5" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
+            }).join('') : '<tr><td colspan="6" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
         }
 
         async function loadClientsFromSupabase() {
