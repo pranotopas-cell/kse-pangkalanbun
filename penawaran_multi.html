@@ -97,8 +97,7 @@
             </div>
 
             <h6 class="fw-bold small text-primary mb-2">PENGATURAN ITEM (6 LOKASI)</h6>
-            <div id="input-items-container">
-                </div>
+            <div id="input-items-container"></div>
 
             <div class="card p-2 mb-3 border-success">
                 <label class="small fw-bold text-success">KETENTUAN TAMBAHAN</label>
@@ -163,8 +162,7 @@
                             <th>SATUAN</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body-items">
-                        </tbody>
+                    <tbody id="table-body-items"></tbody>
                 </table>
                 <p style="font-size: 10px; font-style: italic; margin-top: 8px;">* Harga sudah termasuk PPN 11% dan Ongkos Angkut Transportir (OAT).</p>
 
@@ -247,9 +245,7 @@
     function setupMultiItems() {
         const inputContainer = document.getElementById('input-items-container');
         const tableBody = document.getElementById('table-body-items');
-        
         for(let i=1; i<=6; i++) {
-            // Sidebar Inputs
             inputContainer.innerHTML += `
                 <div class="item-row-input bg-light p-2 rounded">
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -264,8 +260,6 @@
                     <input type="number" id="in_price_${i}" class="form-control form-control-sm border-primary" placeholder="Harga Grand Total (Rp)" oninput="syncAll()">
                 </div>
             `;
-
-            // Table Rows
             tableBody.innerHTML += `
                 <tr id="tr_item_${i}" style="display:none;">
                     <td class="text-center">${i}</td>
@@ -288,14 +282,12 @@
             const dest = document.getElementById(`in_dest_${i}`).value;
             const price = parseFloat(document.getElementById(`in_price_${i}`).value) || 0;
             const row = document.getElementById(`tr_item_${i}`);
-
             if(!prod && !dest && price === 0) {
                 row.style.display = 'none';
             } else {
                 row.style.display = 'table-row';
                 const hrgDasar = price / 1.11;
                 const ppn = price - hrgDasar;
-
                 document.getElementById(`out_prod_${i}`).innerText = prod;
                 document.getElementById(`out_dest_${i}`).innerText = dest;
                 document.getElementById(`out_base_${i}`).innerText = formatIDR(hrgDasar);
@@ -303,7 +295,6 @@
                 document.getElementById(`out_total_${i}`).innerText = formatIDR(price);
             }
         }
-
         document.getElementById('out_no').innerText = document.getElementById('in_no').value;
         document.getElementById('out_prd').innerText = document.getElementById('in_prd').value;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
@@ -312,16 +303,13 @@
         document.getElementById('out_tol').innerText = document.getElementById('in_tol').value;
         document.getElementById('out_pay').innerText = document.getElementById('in_pay').value;
         document.getElementById('out_contact').innerText = document.getElementById('in_contact').value;
-
         const qrData = `KSE-SPH|NO:${document.getElementById('in_no').value}|CUST:${document.getElementById('in_cust').value}`;
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrData)}`;
     }
 
     function handleCustChange() {
         const name = document.getElementById('in_cust').value;
-        if(databaseCust[name]) {
-            document.getElementById('in_addr').value = databaseCust[name];
-        }
+        if(databaseCust[name]) { document.getElementById('in_addr').value = databaseCust[name]; }
         syncAll();
     }
 
@@ -350,27 +338,58 @@
 
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
-        btn.innerHTML = 'SAVING...'; btn.disabled = true;
+        const originalText = btn.innerHTML;
+        const noSurat = document.getElementById('in_no').value;
+        const custName = document.getElementById('in_cust').value;
+        
+        if(!noSurat || !custName) return alert("Nomor Surat dan Customer wajib diisi!");
+
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> PROSES...';
+        btn.disabled = true;
+
         try {
             const element = document.getElementById('main-doc');
-            const opt = { margin: 0, filename: `SPH.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' } };
+            const opt = { 
+                margin: 0, filename: `SPH.pdf`, image: { type: 'jpeg', quality: 0.98 }, 
+                html2canvas: { scale: 2, useCORS: true }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            };
+            
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
             const fileName = `penawaran/SPH_${Date.now()}.pdf`;
-            await _supabase.storage.from('documents').upload(fileName, pdfBlob);
+            
+            const { error: uploadError } = await _supabase.storage.from('documents').upload(fileName, pdfBlob);
+            if (uploadError) throw uploadError;
+
             const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(fileName);
             
-            await _supabase.from('eforms').insert([{
-                jenis: "SPH", nomor: document.getElementById('in_no').value, tanggal: document.getElementById('in_tgl_raw').value,
-                tujuan: document.getElementById('in_cust').value, pdf_url: urlData.publicUrl
+            const { error: insertError } = await _supabase.from('eforms').insert([{
+                jenis: "SPH",
+                nomor: noSurat,
+                tanggal: document.getElementById('in_tgl_raw').value,
+                tujuan: custName,
+                pdf_url: urlData.publicUrl,
+                created_at: new Date().toISOString()
             }]);
-            alert("Penawaran Berhasil Disimpan!");
-        } catch (e) { alert("Error: " + e.message); }
-        btn.innerHTML = 'SIMPAN & UPLOAD'; btn.disabled = false;
+
+            if (insertError) throw insertError;
+            alert("Berhasil! Data penawaran telah disimpan ke Cloud.");
+        } catch (e) {
+            alert("Gagal: " + e.message);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 
     function downloadPDF() {
         const element = document.getElementById('main-doc');
-        html2pdf().set({ margin: 0, filename: `SPH-${document.getElementById('in_no').value}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } }).from(element).save();
+        const noSurat = document.getElementById('in_no').value.replace(/\//g, '-');
+        html2pdf().set({ 
+            margin: 0, filename: `SPH-${noSurat}.pdf`, 
+            html2canvas: { scale: 2, useCORS: true }, 
+            jsPDF: { unit: 'mm', format: 'a4' } 
+        }).from(element).save();
     }
 
     window.onload = () => {
@@ -381,11 +400,8 @@
             opt.value = key;
             listCust.appendChild(opt);
         });
-
         document.getElementById('in_tgl_raw').value = new Date().toISOString().split('T')[0];
         handleDateChange();
-        
-        // Default Values
         document.getElementById('in_prod_1').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_qty').value = "5.000 , 8.000 , 10.000 Liter (Min. Order)";
         document.getElementById('in_tol').value = "0,3% (Tera Mobil Transportir/T2)";
