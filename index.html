@@ -247,7 +247,6 @@
 
         let currentUser = null; let isAdmin = false;
 
-        // VISIBILITY TOGGLE LOGIC
         function togglePasswordVisibility() {
             const passInput = document.getElementById('login-pass');
             const icon = document.getElementById('eye-icon');
@@ -341,17 +340,29 @@
             if(!isAdmin) q = q.eq('user_id', currentUser.id);
             const { data, error } = await q;
             const tbody = document.getElementById('release-table-body');
+            
             if (error) { tbody.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; return; }
+            
             tbody.innerHTML = data?.length ? data.map(d => {
                 const tgl = new Date(d.created_at).toLocaleDateString('id-ID');
                 const nom = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(d.nominal || 0);
+                
+                // Ambil jenis dokumen dari Supabase
+                const jenis = (d.jenis_dokumen || 'FORM').toUpperCase();
+                
+                // Logika pembedaan warna
+                let colorClass = "text-emerald-400"; // Default
+                if (jenis.includes("PO")) colorClass = "text-orange-500";
+                else if (jenis.includes("SPH") || jenis.includes("PENAWARAN")) colorClass = "text-cyan-400";
+                else if (jenis.includes("INVOICE")) colorClass = "text-yellow-500";
+
                 return `
-                    <tr class="hover:bg-white/5 group">
+                    <tr class="hover:bg-white/5 group border-b border-white/5">
                         <td class="p-4 text-slate-400 font-mono">${tgl}</td>
-                        <td class="p-4 uppercase font-bold text-emerald-400">${d.jenis_dokumen || 'FORM'}</td>
+                        <td class="p-4 uppercase font-black ${colorClass} tracking-tighter">${jenis}</td>
                         <td class="p-4 font-black text-white tracking-wider">${d.nomor || d.doc_number || '-'}</td>
-                        <td class="p-4 uppercase">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
-                        <td class="p-4 text-right font-black text-yellow-500 group-hover:text-white">${nom}</td>
+                        <td class="p-4 uppercase text-slate-300">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
+                        <td class="p-4 text-right font-black text-white group-hover:text-emerald-400 transition-all">${nom}</td>
                     </tr>`;
             }).join('') : '<tr><td colspan="5" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
         }
@@ -359,10 +370,13 @@
         async function loadClientsFromSupabase() {
             const { data } = await _supabase.from('profiles').select('id, email');
             const select = document.getElementById('select-penerima-auth');
-            if(data && select) data.forEach(item => {
-                const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email;
-                select.appendChild(opt);
-            });
+            if(data && select) {
+                select.innerHTML = '<option value="">-- Select Client --</option>';
+                data.forEach(item => {
+                    const opt = document.createElement('option'); opt.value = item.id; opt.textContent = item.email;
+                    select.appendChild(opt);
+                });
+            }
         }
 
         async function startUploadProcess() {
