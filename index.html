@@ -347,19 +347,23 @@
                 const tgl = new Date(d.created_at).toLocaleDateString('id-ID');
                 const nom = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(d.nominal || 0);
                 
-                // Ambil jenis dokumen dari Supabase
-                const jenis = (d.jenis_dokumen || 'FORM').toUpperCase();
+                // Ambil jenis dokumen secara dinamis dan bersihkan spasi
+                const jenisRaw = (d.jenis_dokumen || 'FORM').toUpperCase().trim();
                 
-                // Logika pembedaan warna
-                let colorClass = "text-emerald-400"; // Default
-                if (jenis.includes("PO")) colorClass = "text-orange-500";
-                else if (jenis.includes("SPH") || jenis.includes("PENAWARAN")) colorClass = "text-cyan-400";
-                else if (jenis.includes("INVOICE")) colorClass = "text-yellow-500";
+                // Logika Pembedaan Warna
+                let colorClass = "text-emerald-400"; // Default (Surat Jalan, dll)
+                if (jenisRaw.includes("PURCHASE ORDER") || jenisRaw.includes("PO")) {
+                    colorClass = "text-orange-500";
+                } else if (jenisRaw.includes("SPH") || jenisRaw.includes("PENAWARAN")) {
+                    colorClass = "text-cyan-400";
+                } else if (jenisRaw.includes("INVOICE")) {
+                    colorClass = "text-yellow-500";
+                }
 
                 return `
                     <tr class="hover:bg-white/5 group border-b border-white/5">
                         <td class="p-4 text-slate-400 font-mono">${tgl}</td>
-                        <td class="p-4 uppercase font-black ${colorClass} tracking-tighter">${jenis}</td>
+                        <td class="p-4 uppercase font-black ${colorClass} tracking-tighter">${jenisRaw}</td>
                         <td class="p-4 font-black text-white tracking-wider">${d.nomor || d.doc_number || '-'}</td>
                         <td class="p-4 uppercase text-slate-300">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
                         <td class="p-4 text-right font-black text-white group-hover:text-emerald-400 transition-all">${nom}</td>
