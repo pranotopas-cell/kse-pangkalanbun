@@ -118,7 +118,7 @@
             <h6 class="fw-bold mb-4 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
             <div class="row g-3">
                 <div class="col-12">
-                    <label class="small text-primary">Nomor Urut PO</label>
+                    <label class="small text-primary">Nomor Urut PO (Otomatis/Manual)</label>
                     <div class="input-group input-group-sm">
                         <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
                         <span class="input-group-text">/PO-KSE/...</span>
@@ -326,28 +326,42 @@
         return temp;
     }
 
-    // LOGIKA PENOMORAN DIPERBAIKI: Reset setiap bulan
+    // --- PERBAIKAN LOGIKA PENOMORAN ---
     async function syncAutoNumber() {
         try {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const firstDay = new Date(year, month, 1).toISOString();
+            // Ambil tanggal dari input atau gunakan hari ini
+            const tglInput = document.getElementById('in_tgl_raw').value;
+            const refDate = tglInput ? new Date(tglInput) : new Date();
+            
+            const year = refDate.getFullYear();
+            const month = refDate.getMonth();
 
+            // Hitung awal bulan referensi
+            const firstDay = new Date(year, month, 1).toISOString();
+            // Hitung akhir bulan referensi
+            const lastDay = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
+
+            // Filter berdasarkan JENIS (Purchase Order) DAN RENTANG BULAN TERSEBUT
             const { count, error } = await _supabase
                 .from('eforms')
                 .select('*', { count: 'exact', head: true })
                 .eq('jenis', 'PURCHASE ORDER')
-                .gte('created_at', firstDay);
+                .gte('tanggal', firstDay.split('T')[0])
+                .lte('tanggal', lastDay.split('T')[0]);
 
             if (error) throw error;
 
+            // Set nomor urut ke panel input (bisa diedit manual)
             document.getElementById('in_no_urut').value = (count || 0) + 1;
+            
             formatFullNumber();
-        } catch (err) { console.error("Sync Error:", err); }
+        } catch (err) { 
+            console.error("Gagal sinkronisasi nomor:", err); 
+        }
     }
 
     function formatFullNumber() {
+        // Ambil nilai dari input urut (memungkinkan user edit manual)
         const urut = document.getElementById('in_no_urut').value || "1";
         const tglVal = document.getElementById('in_tgl_raw').value;
         const d = tglVal ? new Date(tglVal) : new Date();
@@ -361,8 +375,10 @@
         
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
+        
         updateView();
     }
+    // --- AKHIR PERBAIKAN ---
 
     function handleCustChange() {
         const custName = document.getElementById('in_cust').value;
@@ -377,7 +393,9 @@
         if (!val) return;
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        formatFullNumber(); // Update nomor PO (romawi bulan) saat tanggal berubah
+        
+        // Saat tanggal berubah, cek ulang database untuk bulan baru tersebut
+        syncAutoNumber();
     }
 
     function calculate() {
@@ -448,12 +466,7 @@
                 margin: 0,
                 filename: `PO-${noPo}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    letterRendering: true,
-                    scrollY: 0 
-                },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
             };
 
@@ -487,15 +500,8 @@
         const element = document.getElementById('main-doc');
         const noPo = document.getElementById('in_no').value;
         const opt = { 
-            margin: 0, 
-            filename: `PO-${noPo}.pdf`, 
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { 
-                scale: 2, 
-                useCORS: true, 
-                letterRendering: true,
-                scrollY: 0 
-            }, 
+            margin: 0, filename: `PO-${noPo}.pdf`, image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true } 
         };
         html2pdf().set(opt).from(element).save();
