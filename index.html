@@ -226,6 +226,7 @@
                                     <th class="p-4 border-b border-white/5">Nomor</th>
                                     <th class="p-4 border-b border-white/5">Tujuan</th>
                                     <th class="p-4 border-b border-white/5 text-right">Nominal</th>
+                                    <th class="p-4 border-b border-white/5 text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="release-table-body" class="divide-y divide-white/5 text-slate-300"></tbody>
@@ -341,20 +342,23 @@
             const { data, error } = await q;
             const tbody = document.getElementById('release-table-body');
             
-            if (error) { tbody.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; return; }
+            if (error) { tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-400 font-black">DB_ACCESS_ERR</td></tr>'; return; }
             
             tbody.innerHTML = data?.length ? data.map(d => {
                 const tgl = new Date(d.created_at).toLocaleDateString('id-ID');
                 const nom = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(d.nominal || 0);
-                
-                // Ambil jenis dokumen dari Supabase
                 const jenis = (d.jenis_dokumen || 'FORM').toUpperCase();
                 
-                // Logika pembedaan warna
-                let colorClass = "text-emerald-400"; // Default
-                if (jenis.includes("PO")) colorClass = "text-orange-500";
+                // Logika pembedaan warna per jenis dokumen
+                let colorClass = "text-emerald-400"; 
+                if (jenis.includes("PO") || jenis.includes("PURCHASE")) colorClass = "text-orange-500";
                 else if (jenis.includes("SPH") || jenis.includes("PENAWARAN")) colorClass = "text-cyan-400";
                 else if (jenis.includes("INVOICE")) colorClass = "text-yellow-500";
+
+                // Tombol View mengambil data dari url_pdf
+                const viewBtn = d.url_pdf 
+                    ? `<button onclick="window.open('${d.url_pdf}', '_blank')" class="text-[9px] font-black text-white bg-emerald-600/20 border border-emerald-500/50 px-3 py-1.5 rounded hover:bg-emerald-500 transition-all uppercase">View</button>`
+                    : `<span class="text-[8px] text-slate-600 italic">No File</span>`;
 
                 return `
                     <tr class="hover:bg-white/5 group border-b border-white/5">
@@ -363,8 +367,9 @@
                         <td class="p-4 font-black text-white tracking-wider">${d.nomor || d.doc_number || '-'}</td>
                         <td class="p-4 uppercase text-slate-300">${d.tujuan || d.client_name || 'EXTERNAL'}</td>
                         <td class="p-4 text-right font-black text-white group-hover:text-emerald-400 transition-all">${nom}</td>
+                        <td class="p-4 text-right">${viewBtn}</td>
                     </tr>`;
-            }).join('') : '<tr><td colspan="5" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
+            }).join('') : '<tr><td colspan="6" class="p-10 text-center text-slate-600 font-black italic">NO_RECORDS_YET</td></tr>';
         }
 
         async function loadClientsFromSupabase() {
