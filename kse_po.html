@@ -118,7 +118,7 @@
             <h6 class="fw-bold mb-4 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> FORM INPUT PO</h6>
             <div class="row g-3">
                 <div class="col-12">
-                    <label class="small text-primary">Nomor Urut PO (Bisa Edit Manual)</label>
+                    <label class="small text-primary">Nomor Urut (Menyambung Terakhir)</label>
                     <div class="input-group input-group-sm">
                         <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
                         <span class="input-group-text">/PO-KSE/...</span>
@@ -326,28 +326,36 @@
         return temp;
     }
 
-    // --- LOGIKA PENOMORAN BARU BERDASARKAN JENIS & BULAN BERJALAN ---
+    // --- LOGIKA PENOMORAN SEKUENSIAL (MENYAMBUNG TERAKHIR) ---
     async function syncAutoNumber() {
         try {
             const tglVal = document.getElementById('in_tgl_raw').value;
             const refDate = tglVal ? new Date(tglVal) : new Date();
             
-            // Rentang bulan berjalan (Awal s/d Akhir Bulan)
             const firstDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1).toISOString().split('T')[0];
             const lastDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0).toISOString().split('T')[0];
 
-            // Hitung hanya data dengan jenis "PURCHASE ORDER" pada bulan yang dipilih
-            const { count, error } = await _supabase
+            // Cari data terakhir di bulan tersebut, urutkan berdasarkan nomor secara descending
+            const { data, error } = await _supabase
                 .from('eforms')
-                .select('*', { count: 'exact', head: true })
+                .select('nomor')
                 .eq('jenis', 'PURCHASE ORDER')
                 .gte('tanggal', firstDay)
-                .lte('tanggal', lastDay);
+                .lte('tanggal', lastDay)
+                .order('nomor', { ascending: false })
+                .limit(1);
 
             if (error) throw error;
 
-            // Jika ganti bulan dan database kosong, count + 1 akan jadi 1 (001)
-            document.getElementById('in_no_urut').value = (count || 0) + 1;
+            let nextNum = 1;
+            if (data && data.length > 0) {
+                // Ambil 3 digit awal dari nomor (contoh: 005/PO-KSE/...)
+                const lastFullNo = data[0].nomor;
+                const lastDigitStr = lastFullNo.split('/')[0]; 
+                nextNum = parseInt(lastDigitStr) + 1;
+            }
+
+            document.getElementById('in_no_urut').value = nextNum;
             formatFullNumber();
         } catch (err) { 
             console.error("Gagal Sync Nomor:", err); 
@@ -362,7 +370,6 @@
         const m = d.getMonth();
         const y = d.getFullYear();
         
-        // Format: 001/PO-KSE/IV/2026
         const noUrutPadded = urut.toString().padStart(3, '0');
         const fullNo = `${noUrutPadded}/PO-KSE/${monthRomawi[m]}/${y}`;
         
@@ -376,8 +383,6 @@
         if (!val) return;
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        
-        // RE-SYNC saat tanggal berubah (untuk cek apakah pindah bulan)
         syncAutoNumber();
     }
 
@@ -482,7 +487,7 @@
             if (dbErr) throw dbErr;
 
             alert("Berhasil! PO & PDF telah tersimpan di Cloud.");
-            syncAutoNumber(); // Refresh nomor urut setelah simpan
+            syncAutoNumber(); 
         } catch (e) { alert("Error: " + e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & AUTO UPLOAD'; btn.disabled = false;
     }
