@@ -61,7 +61,6 @@
         }
         .table-po td { border: 1px solid #000; padding: 12px 8px; vertical-align: middle; font-size: 11.5px; line-height: 1.4; }
         
-        /* Update Nama Barang agar satu baris */
         #out_barang { 
             white-space: nowrap; 
             overflow: hidden; 
@@ -327,21 +326,39 @@
         return temp;
     }
 
+    // LOGIKA PENOMORAN DIPERBAIKI: Reset setiap bulan
     async function syncAutoNumber() {
         try {
-            const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'PURCHASE ORDER');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const firstDay = new Date(year, month, 1).toISOString();
+
+            const { count, error } = await _supabase
+                .from('eforms')
+                .select('*', { count: 'exact', head: true })
+                .eq('jenis', 'PURCHASE ORDER')
+                .gte('created_at', firstDay);
+
+            if (error) throw error;
+
             document.getElementById('in_no_urut').value = (count || 0) + 1;
             formatFullNumber();
-        } catch (err) { console.error(err); }
+        } catch (err) { console.error("Sync Error:", err); }
     }
 
     function formatFullNumber() {
-        const urut = document.getElementById('in_no_urut').value || "001";
+        const urut = document.getElementById('in_no_urut').value || "1";
         const tglVal = document.getElementById('in_tgl_raw').value;
-        const d = new Date(tglVal);
+        const d = tglVal ? new Date(tglVal) : new Date();
+        
         const m = d.getMonth();
         const y = d.getFullYear();
-        const fullNo = `${urut.toString().padStart(3, '0')}/PO-KSE/${monthRomawi[m]}/${y}`;
+        
+        // Format: 001/PO-KSE/IV/2026
+        const noUrutPadded = urut.toString().padStart(3, '0');
+        const fullNo = `${noUrutPadded}/PO-KSE/${monthRomawi[m]}/${y}`;
+        
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
         updateView();
@@ -360,7 +377,7 @@
         if (!val) return;
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        formatFullNumber();
+        formatFullNumber(); // Update nomor PO (romawi bulan) saat tanggal berubah
     }
 
     function calculate() {
