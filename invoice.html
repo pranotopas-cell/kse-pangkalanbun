@@ -338,7 +338,7 @@
         const m = d.getMonth();
         const y = d.getFullYear();
         
-        const urut = document.getElementById('in_no_urut').value || "000";
+        const urut = document.getElementById('in_no_urut').value || "001";
         const fullNo = `${urut} / INV-KSE / ${monthRomawi[m]} / ${y}`;
         
         document.getElementById('in_no_preview').innerText = ` / INV-KSE / ${monthRomawi[m]} / ${y}`;
@@ -362,7 +362,6 @@
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // Logika Update Penjumlahan: Grand Total = Subtotal + PPN + Adjust
         const grandTotalFinal = roundKSE(sub + ppn + adj);
         
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
@@ -402,18 +401,31 @@
         try {
             const tglInput = document.getElementById('in_tgl_raw').value;
             const d = tglInput ? new Date(tglInput) : new Date();
+            
+            // Rentang waktu bulan yang dipilih
             const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
             const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59).toISOString();
 
-            const { count, error } = await _supabase
+            // Ambil nomor urut TERAKHIR dari database pada bulan tersebut
+            const { data, error } = await _supabase
                 .from('eforms')
-                .select('*', { count: 'exact', head: true })
+                .select('nomor')
+                .eq('jenis', 'INVOICE')
                 .gte('tanggal', firstDay)
-                .lte('tanggal', lastDay);
+                .lte('tanggal', lastDay)
+                .order('nomor', { ascending: false })
+                .limit(1);
 
             if (error) throw error;
 
-            const nextNum = (count || 0) + 1;
+            let nextNum = 1;
+            if (data && data.length > 0) {
+                // Ekstrak angka dari string "005 / INV-KSE / ..."
+                const lastNoString = data[0].nomor.split(' / ')[0];
+                const lastNoInt = parseInt(lastNoString);
+                nextNum = lastNoInt + 1;
+            }
+
             document.getElementById('in_no_urut').value = nextNum.toString().padStart(3, '0');
             syncAll();
         } catch (err) { 
@@ -455,7 +467,7 @@
             };
 
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-            const fileName = `invoices/INV_${Date.now()}_${noInv.replace(/\//g, '_')}.pdf`;
+            const fileName = `invoices/INV_${Date.now()}_${noInv.replace(/\//g, '_').replace(/ /g, '')}.pdf`;
             const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, pdfBlob, { contentType: 'application/pdf', upsert: true });
             if (upErr) throw upErr;
 
@@ -475,6 +487,7 @@
             if (dbErr) throw dbErr;
 
             alert("Berhasil! Data & PDF tersimpan di Cloud.");
+            initAutoNumber(); // Refresh nomor setelah simpan
         } catch (e) { alert("Error: " + e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA & AUTO UPLOAD'; btn.disabled = false;
     }
