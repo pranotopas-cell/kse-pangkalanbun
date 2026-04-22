@@ -341,28 +341,24 @@
         const y = selectedDate.getFullYear();
         const d = selectedDate.getDate();
 
-        // Format bulan & tahun untuk filter Supabase (YYYY-MM)
-        const currentMonthFilter = `${y}-${(m + 1).toString().padStart(2, '0')}`;
-
         try {
-            // Ambil data TERAKHIR pada bulan berjalan saja
+            // LOGIKA: Ambil data terakhir khusus untuk jenis SPH agar nomor menyambung
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
                 .eq('jenis', 'SPH')
-                .like('tanggal', `${currentMonthFilter}%`)
                 .order('id', { ascending: false })
                 .limit(1);
 
             let nextNum = 1;
 
             if (data && data.length > 0) {
-                // Ambil 3 digit pertama dari nomor surat (misal: "005/SPH-KSE/...")
-                const lastNoStr = data[0].nomor.split('/')[0];
-                nextNum = parseInt(lastNoStr) + 1;
-            } else {
-                // Tidak ada data di bulan ini, reset ke 1
-                nextNum = 1;
+                // Ekstrak 3 digit awal dari nomor (contoh: "005/SPH-KSE/...")
+                const parts = data[0].nomor.split('/');
+                const lastNumVal = parseInt(parts[0]);
+                if (!isNaN(lastNumVal)) {
+                    nextNum = lastNumVal + 1;
+                }
             }
 
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
@@ -374,7 +370,11 @@
             document.getElementById('in_prd').value = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
             syncAll();
             
-        } catch (e) { console.error("Error Autonumber:", e); }
+        } catch (e) { 
+            console.error("Gagal menarik nomor terakhir:", e);
+            // Default jika gagal konek ke Supabase
+            document.getElementById('in_no').value = `001/SPH-KSE/${monthRomawi[m]}/${y}`;
+        }
     }
 
     function handleDateChange() {
