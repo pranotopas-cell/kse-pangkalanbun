@@ -71,7 +71,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-3 input-sidebar">
-            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> PANEL DUAL PRICE</h6>
+            <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> PANEL PENAWARAN</h6>
             
             <div class="mb-2">
                 <label class="fw-bold small">Nomor Surat</label>
@@ -100,7 +100,9 @@
             </div>
 
             <div class="card p-2 mb-2 border-primary">
-                <label class="fw-bold small text-primary">HARGA PUBLISH PERTAMINA</label>
+                <label class="fw-bold small text-primary">KONFIGURASI HARGA</label>
+                <hr class="my-1">
+                <label class="small fw-bold">Harga Publish Pertamina (Rp)</label>
                 <input type="number" id="in_hrg_pub" class="form-control form-control-sm" value="21250" oninput="syncAll()">
             </div>
 
@@ -111,19 +113,23 @@
             </div>
 
             <div class="card p-2 mb-2 border-warning">
-                <label class="fw-bold small text-warning">HARGA TEMPO (B)</label>
+                <label class="fw-bold small text-warning">HARGA TEMPO 7 HARI (B)</label>
                 <label class="small">Diskon (%)</label>
                 <input type="number" id="in_disc_b" class="form-control form-control-sm" value="16.329" step="0.001" oninput="syncAll()">
             </div>
 
             <div class="card p-2 mb-3 border-secondary">
-                <label class="fw-bold small text-center">DETAIL INFO</label>
+                <label class="fw-bold small text-center">DETAIL ITEM & INFO</label>
                 <hr class="my-1">
                 <label class="small fw-bold">Nama Produk</label>
                 <input type="text" id="in_produk" class="form-control form-control-sm mb-1" oninput="syncAll()">
+                <label class="small fw-bold">Tujuan / Destinasi</label>
+                <input type="text" id="in_dest" class="form-control form-control-sm mb-1" oninput="syncAll()">
                 <label class="small fw-bold">Qty (Kuantitas)</label>
                 <input type="text" id="in_qty" class="form-control form-control-sm mb-1" oninput="syncAll()">
-                <label class="small fw-bold">Kontak</label>
+                <label class="small fw-bold">Toleransi</label>
+                <input type="text" id="in_tol" class="form-control form-control-sm mb-1" oninput="syncAll()">
+                <label class="small fw-bold">Kontak Person</label>
                 <input type="text" id="in_contact" class="form-control form-control-sm" oninput="syncAll()">
             </div>
         </div>
@@ -165,13 +171,14 @@
                     </div>
                 </div>
 
-                <p class="text-pengantar mt-3">Bersama ini kami menawarkan supply BBM untuk operasional perusahaan Bapak/Ibu, dengan rincian perbandingan harga sebagai berikut:</p>
+                <p class="text-pengantar mt-3">Bersama ini kami <strong>PT. Khatulistiwa Sinar Energi</strong> menawarkan supply BBM untuk operasional perusahaan Bapak/Ibu, dengan rincian sebagai berikut:</p>
 
-                <h6 class="fw-bold mb-1" style="font-size: 11px; color: var(--kse-primary);">Opsi A: Harga CASH / CBD:</h6>
+                <h6 class="fw-bold mb-1" style="font-size: 11px; color: var(--kse-primary);">Rincian Harga CASH / CBD:</h6>
                 <table class="table-main" style="margin-top: 0;">
                     <thead>
                         <tr>
-                            <th width="35%">PRODUK / PRODUCT</th>
+                            <th width="30%">PRODUK / PRODUCT</th>
+                            <th width="20%">DESTINASI / DESTINATION</th>
                             <th>DETAIL RINCIAN HARGA / PRICE DETAIL</th>
                             <th width="10%">SATUAN</th>
                         </tr>
@@ -179,23 +186,25 @@
                     <tbody>
                         <tr>
                             <td class="text-center fw-bold out_produk_val"></td>
+                            <td class="text-center out_dest_val"></td>
                             <td class="p-2">
-                                <div class="d-flex justify-content-between"><span>Harga Publish Pertamina</span><span>Rp <span class="out_h_pub">0</span></span></div>
-                                <div class="d-flex justify-content-between"><span>Diskon (<span id="out_pct_a">0</span>%)</span><span>Rp <span id="out_d_val_a">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>Harga Dasar Keekonomian</span><span>Rp <span class="out_h_pub">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>Diskon Publish (<span id="out_pct_a">0</span>%)</span><span>Rp <span id="out_d_val_a">0</span></span></div>
                                 <div class="d-flex justify-content-between border-top mt-1"><span>Harga Dasar</span><span>Rp <span id="out_h_dasar_a">0</span></span></div>
                                 <div class="d-flex justify-content-between"><span>PPN 11%</span><span>Rp <span id="out_ppn_a">0</span></span></div>
-                                <div class="d-flex justify-content-between border-top mt-1 harga-tebus"><span>Harga Akhir (Cash)</span><span>Rp <span id="out_total_a">0</span></span></div>
+                                <div class="d-flex justify-content-between border-top mt-1 harga-tebus"><span>Harga Tebus</span><span>Rp <span id="out_total_a">0</span></span></div>
                             </td>
                             <td class="text-center">Liter</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <h6 class="fw-bold mb-1 mt-3" style="font-size: 11px; color: #856404;">Opsi B: Harga TEMPO (7 HARI):</h6>
+                <h6 class="fw-bold mb-1 mt-3" style="font-size: 11px; color: var(--kse-primary);">Rincian Harga TEMPO (7 HARI):</h6>
                 <table class="table-main" style="margin-top: 0;">
                     <thead>
                         <tr>
-                            <th width="35%">PRODUK / PRODUCT</th>
+                            <th width="30%">PRODUK / PRODUCT</th>
+                            <th width="20%">DESTINASI / DESTINATION</th>
                             <th>DETAIL RINCIAN HARGA / PRICE DETAIL</th>
                             <th width="10%">SATUAN</th>
                         </tr>
@@ -203,38 +212,55 @@
                     <tbody>
                         <tr>
                             <td class="text-center fw-bold out_produk_val"></td>
+                            <td class="text-center out_dest_val"></td>
                             <td class="p-2">
-                                <div class="d-flex justify-content-between"><span>Harga Publish Pertamina</span><span>Rp <span class="out_h_pub">0</span></span></div>
-                                <div class="d-flex justify-content-between"><span>Diskon (<span id="out_pct_b">0</span>%)</span><span>Rp <span id="out_d_val_b">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>Harga Dasar Keekonomian</span><span>Rp <span class="out_h_pub">0</span></span></div>
+                                <div class="d-flex justify-content-between"><span>Diskon Publish (<span id="out_pct_b">0</span>%)</span><span>Rp <span id="out_d_val_b">0</span></span></div>
                                 <div class="d-flex justify-content-between border-top mt-1"><span>Harga Dasar</span><span>Rp <span id="out_h_dasar_b">0</span></span></div>
                                 <div class="d-flex justify-content-between"><span>PPN 11%</span><span>Rp <span id="out_ppn_b">0</span></span></div>
-                                <div class="d-flex justify-content-between border-top mt-1 harga-tebus"><span>Harga Akhir (Tempo)</span><span>Rp <span id="out_total_b">0</span></span></div>
+                                <div class="d-flex justify-content-between border-top mt-1 harga-tebus"><span>Harga Tebus</span><span>Rp <span id="out_total_b">0</span></span></div>
                             </td>
                             <td class="text-center">Liter</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <p style="font-size: 10px; font-style: italic; margin-top: 10px;">(*) Harga Sudah Termasuk PPN, PBBKB, dan OAT. Harga mengikuti periode Pertamina.</p>
+                <p style="font-size: 10px; font-style: italic; margin-top: 5px; margin-bottom: 5px;">(*) Harga Sudah Termasuk PPN, PBBKB, dan OAT. Harga tidak mengikat dan sewaktu-waktu bisa berubah sesuai periode harga Pertamina.</p>
 
                 <div class="mt-2 text-pengantar">
                     <table class="w-100">
-                        <tr><td width="30%">Kuantitas</td><td>: <span id="out_qty" class="fw-bold"></span></td></tr>
-                        <tr><td>Kontak Person</td><td>: <span id="out_contact"></span></td></tr>
+                        <tr>
+                            <td width="30%">Kuantitas / <span class="fst-italic text-muted">Quantity</span></td>
+                            <td>: <span id="out_qty" class="fw-bold"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Toleransi / <span class="fst-italic text-muted">Tolerance</span></td>
+                            <td>: <span id="out_tol"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Kontak Person / <span class="fst-italic text-muted">Contact</span></td>
+                            <td>: <span id="out_contact"></span></td>
+                        </tr>
                     </table>
                 </div>
 
                 <div class="signature-row mt-4 text-pengantar">
-                    <p class="mb-0">Hormat Kami,</p>
+                    <p class="mb-0">Hormat Kami / <span class="fst-italic">Best Regards,</span></p>
                     <p class="fw-bold mb-0">PT. KHATULISTIWA SINAR ENERGI</p>
                     <div style="height: 60px; margin: 5px 0;"><img src="ttd.png" style="height: 60px;" onerror="this.style.display='none'"></div>
-                    <p class="fw-bold text-decoration-underline mb-0 text-uppercase">SUPRANOTO</p>
+                    <p class="fw-bold text-decoration-underline mb-0 text-uppercase" style="font-size: 13px;">SUPRANOTO</p>
                     <p class="mb-0 small">Direktur</p>
                 </div>
 
                 <div class="footer-kse">
                     <div class="d-flex justify-content-between align-items-center">
-                        <img id="qr_footer" src="" width="55">
+                        <div class="d-flex align-items-center gap-2">
+                            <img id="qr_footer" src="" width="55">
+                            <div style="font-size: 7px; line-height: 1.2;">
+                                <strong style="color: var(--kse-primary);">KSE SYSTEM DOCS</strong><br>
+                                <span class="text-muted">Scan QR untuk validasi sistem.</span>
+                            </div>
+                        </div>
                         <div class="text-end" style="font-size: 8px;">
                             <b style="color: var(--kse-primary);">PT. KHATULISTIWA SINAR ENERGI</b><br>
                             Jl. H.M. Rafi'i RT.24 Pangkalan Bun, Kalimantan Tengah
@@ -247,13 +273,21 @@
 </div>
 
 <script>
-    // KONFIGURASI SUPABASE (Logika System Cloud)
     const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
-
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    const dbCustomer = {
+        "PT. KORINDO ARIA BIMA SARI": " Wisma Korindo Jl.  MT.Haryono Kav.62 Pancoran, \nPancoran - Kota Adm. DKI Jakarta 12780",
+    };
+
+    function handleCustomerSelect(val) {
+        if(dbCustomer[val]) {
+            document.getElementById('in_addr').value = dbCustomer[val];
+        }
+    }
 
     function formatIDR(val) {
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -262,14 +296,12 @@
     function syncAll() {
         const hPub = parseFloat(document.getElementById('in_hrg_pub').value) || 0;
         
-        // Perhitungan Opsi A
         const discPctA = parseFloat(document.getElementById('in_disc_a').value) || 0;
         const discValA = hPub * (discPctA / 100);
         const hDasarA = hPub - discValA;
         const ppnA = hDasarA * 0.11;
         const totalA = hDasarA + ppnA;
 
-        // Perhitungan Opsi B
         const discPctB = parseFloat(document.getElementById('in_disc_b').value) || 0;
         const discValB = hPub * (discPctB / 100);
         const hDasarB = hPub - discValB;
@@ -278,6 +310,7 @@
 
         document.querySelectorAll('.out_h_pub').forEach(el => el.innerText = formatIDR(hPub));
         document.querySelectorAll('.out_produk_val').forEach(el => el.innerText = document.getElementById('in_produk').value);
+        document.querySelectorAll('.out_dest_val').forEach(el => el.innerText = document.getElementById('in_dest').value);
 
         document.getElementById('out_pct_a').innerText = discPctA;
         document.getElementById('out_d_val_a').innerText = formatIDR(discValA);
@@ -295,34 +328,60 @@
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_qty').innerText = document.getElementById('in_qty').value;
+        document.getElementById('out_tol').innerText = document.getElementById('in_tol').value;
         document.getElementById('out_contact').innerText = document.getElementById('in_contact').value;
         document.getElementById('out_prd').innerText = document.getElementById('in_prd').value;
 
-        const qrData = `SPH|${document.getElementById('in_no').value}|${document.getElementById('in_cust').value}`;
-        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrData)}`;
+        const qrContent = `KSE-DOC|NO:${document.getElementById('in_no').value}|CUST:${document.getElementById('in_cust').value}`;
+        document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrContent)}`;
     }
 
     async function initAutoNumber(selectedDate = new Date()) {
         const m = selectedDate.getMonth();
         const y = selectedDate.getFullYear();
+        const d = selectedDate.getDate();
+
         try {
-            // Ambil nomor terakhir khusus jenis SPH dari Supabase
-            const { data } = await _supabase.from('eforms').select('nomor').eq('jenis', 'SPH').order('id', { ascending: false }).limit(1);
+            // LOGIKA: Ambil data terakhir khusus untuk jenis SPH agar nomor menyambung
+            const { data, error } = await _supabase
+                .from('eforms')
+                .select('nomor')
+                .eq('jenis', 'SPH')
+                .order('id', { ascending: false })
+                .limit(1);
+
             let nextNum = 1;
+
             if (data && data.length > 0) {
-                const lastNo = parseInt(data[0].nomor.split('/')[0]);
-                nextNum = lastNo + 1;
+                // Ekstrak 3 digit awal dari nomor (contoh: "005/SPH-KSE/...")
+                const parts = data[0].nomor.split('/');
+                const lastNumVal = parseInt(parts[0]);
+                if (!isNaN(lastNumVal)) {
+                    nextNum = lastNumVal + 1;
+                }
             }
+
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
+            
+            let sD, eD;
+            if (d <= 14) { sD = 1; eD = 14; } 
+            else { sD = 15; eD = new Date(y, m + 1, 0).getDate(); }
+            
+            document.getElementById('in_prd').value = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
             syncAll();
-        } catch (e) { console.error(e); }
+            
+        } catch (e) { 
+            console.error("Gagal menarik nomor terakhir:", e);
+            // Default jika gagal konek ke Supabase
+            document.getElementById('in_no').value = `001/SPH-KSE/${monthRomawi[m]}/${y}`;
+        }
     }
 
     function handleDateChange() {
         const val = document.getElementById('in_tgl_raw').value;
         if (!val) return;
         const d = new Date(val);
-        document.getElementById('out_tgl').innerText = `${d.getDate()} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
+        document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
         initAutoNumber(d);
     }
 
@@ -333,16 +392,23 @@
             const noSurat = document.getElementById('in_no').value;
             const element = document.getElementById('main-doc');
             
-            // Generate PDF Blob
-            const pdfBlob = await html2pdf().set({ margin: 0, html2canvas: { scale: 2 } }).from(element).output('blob');
-            const path = `penawaran/SPH_${Date.now()}.pdf`;
+            const opt = {
+                margin: 0,
+                filename: `SPH-${noSurat}.pdf`,
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+            const fileName = `SPH_${Date.now()}.pdf`;
+            const path = `penawaran/${fileName}`;
             
-            // Upload Storage
-            await _supabase.storage.from('documents').upload(path, pdfBlob);
+            const { error: uploadError } = await _supabase.storage.from('documents').upload(path, pdfBlob);
+            if (uploadError) throw uploadError;
+
             const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(path);
 
-            // Insert Database
-            await _supabase.from('eforms').insert([{
+            const { error: insertError } = await _supabase.from('eforms').insert([{
                 jenis: "SPH",
                 nomor: noSurat,
                 tanggal: document.getElementById('in_tgl_raw').value,
@@ -351,21 +417,32 @@
                 nominal: Math.round(parseFloat(document.getElementById('out_total_a').innerText.replace(/\./g,'').replace(',','.')))
             }]);
 
-            alert("Data & PDF Berhasil diunggah ke Cloud!");
-        } catch (e) { alert("Error: " + e.message); }
+            if (insertError) throw insertError;
+            alert("Berhasil disimpan ke Database & Cloud Storage!");
+        } catch (e) { 
+            console.error(e);
+            alert("Gagal: " + e.message); 
+        }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & UPLOAD'; btn.disabled = false;
     }
 
     function downloadPDF() {
         const element = document.getElementById('main-doc');
-        html2pdf().set({ margin:0, filename: `SPH-${document.getElementById('in_no').value}.pdf`, html2canvas: {scale:2} }).from(element).save();
+        html2pdf().set({ 
+            margin: 0, 
+            filename: `SPH-${document.getElementById('in_no').value}.pdf`, 
+            html2canvas: { scale: 2 }, 
+            jsPDF: { unit: 'mm', format: 'a4' } 
+        }).from(element).save();
     }
 
     window.onload = () => {
         document.getElementById('in_tgl_raw').value = new Date().toISOString().split('T')[0];
         handleDateChange();
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI";
-        document.getElementById('in_qty').value = "5.000 - 10.000 Liter";
+        document.getElementById('in_dest').value = " ";
+        document.getElementById('in_qty').value = "5.000 liter , 8.000 liter , 10.000 Liter";
+        document.getElementById('in_tol').value = "0,3% (Tera Mobil Transportir / T2)";
         document.getElementById('in_contact').value = "0815-884-1410";
         syncAll();
     };
