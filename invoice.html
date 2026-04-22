@@ -379,13 +379,10 @@
             "PT. FORTUNA LANCAR ADIMAKMUR": "Jl. Bypass Pandaan No.88 Karangjati Pandaan,\nKab.Pasuruan - Jawa Timur",
             "PT. BUMI RAYA NUSANTARA": "Jl. Kapten Mulyono No.55 RT 029 RW.008,\nMentawa Baru Hilir, Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah",
             "PT. BUMI AGRO PRIMA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu,\nMentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
-            "PT. INTI DAYA MANDIRI SERVITAMA": "Jl. kawitan I No.54 RT.017 RW.000 Sidorejo Arut Selatan, Kab.Kotawaringin Barat - Kalimantan Tengah 74111",
+            "PT. INTI DAYA MANDIRI SERVITAMA": "Jl. kawitan I No.54 RT.017 RW.000 Sidorejo Arut Selatan, Kab.Kotawarinign Barat - Kalimantan Tengah 74111",
             "PT. BORNEO TRENGGINAS MANDIRI": " JL.Sri Kuncoro III No.142 RT.003 RW.003 Kalibanteng Kulon, Semarang Barat Kota Semarang - Jawa Tengah 50145",
             "PT. GADING SAWIT KENCANA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu ,Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
             "PT. BORNEO ARMADA PERKASA": "Jl. A.Yani Km.40 RT.021 RW.007 Pandu Sanjaya, Pangkalan Bun, Kab.Kotawringin Barat - Kalimantan Tengah 74184",
-            "PT. JAYA ABADI": "Jl. Merdeka N. 45", 
-            "PT. JAYA ABADI": "Jl. Merdea No. 45", 
-            "PT. JAYA ABADI": "Jl. Merdeka No. 45", 
             "PT. JAYA ABADI": "Jl. Merdeka No. 45"
         };
         if (daftarAlamat[custValue]) {
@@ -394,14 +391,45 @@
         syncAll();
     }
 
+    // LOGIKA NOMOR URUT OTOMATIS: CEK TERAKHIR & RESET BULANAN
     async function initAutoNumber() {
         try {
-            const { count, error } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'INVOICE');
+            // Ambil data terakhir khusus jenis INVOICE urut berdasarkan ID terbaru
+            const { data, error } = await _supabase
+                .from('eforms')
+                .select('nomor, tanggal')
+                .eq('jenis', 'INVOICE')
+                .order('id', { ascending: false })
+                .limit(1);
+
             if (error) throw error;
-            const nextNum = (count || 0) + 1;
+
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1; // 1-12
+            const currentYear = now.getFullYear();
+            let nextNum = 1;
+
+            if (data && data.length > 0) {
+                const lastDate = new Date(data[0].tanggal);
+                const lastMonth = lastDate.getMonth() + 1;
+                const lastYear = lastDate.getFullYear();
+
+                // Jika bulan/tahun masih sama dengan data terakhir, lanjutkan nomornya
+                if (currentMonth === lastMonth && currentYear === lastYear) {
+                    const lastFullNo = data[0].nomor; // Format: "001 / INV-KSE / ..."
+                    const lastSequence = parseInt(lastFullNo.split('/')[0]);
+                    nextNum = lastSequence + 1;
+                } 
+                // Jika ganti bulan/tahun, nextNum tetap 1 (reset)
+            }
+
             document.getElementById('in_no_urut').value = nextNum.toString().padStart(3, '0');
             syncAll();
-        } catch (err) { console.error(err); }
+        } catch (err) { 
+            console.error("AutoNumber Error:", err); 
+            document.getElementById('in_no_urut').value = "001";
+            syncAll();
+        }
     }
 
     function handleDateChange() {
@@ -490,12 +518,10 @@
 
     window.onload = () => {
         const now = new Date();
-        // Set tanggal otomatis ke hari ini
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
-        initAutoNumber();
+        initAutoNumber(); // Menjalankan pengecekan nomor urut cloud
         
-        // Default barang dan nilai
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_qty_text').value = "5.000";
         document.getElementById('in_h_nett_text').value = "16.500";
