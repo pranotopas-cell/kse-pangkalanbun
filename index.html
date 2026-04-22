@@ -339,7 +339,17 @@
 
         async function loadReleaseDocs() {
             showSection('release');
-            let query = _supabase.from('eforms').select('*').order('created_at', { ascending: false });
+           // --- GANTI DENGAN KODE INI ---
+    const sekarang = new Date();
+    const awalBulan = new Date(sekarang.getFullYear(), sekarang.getMonth(), 1).toISOString();
+    const akhirBulan = new Date(sekarang.getFullYear(), sekarang.getMonth() + 1, 1).toISOString();
+
+    let query = _supabase.from('eforms')
+        .select('*')
+        .gte('created_at', awalBulan)
+        .lt('created_at', akhirBulan)
+        .order('created_at', { ascending: false });
+    // ----------------------------
             if(!isAdmin) query = query.eq('user_id', currentUser.id);
             
             const { data, error } = await query;
