@@ -340,30 +340,29 @@
         const m = selectedDate.getMonth();
         const y = selectedDate.getFullYear();
         const d = selectedDate.getDate();
-        
+
+        // Format bulan & tahun untuk filter Supabase (YYYY-MM)
+        const currentMonthFilter = `${y}-${(m + 1).toString().padStart(2, '0')}`;
+
         try {
-            // Ambil 1 data SPH terakhir untuk mengecek nomor dan bulan
+            // Ambil data TERAKHIR pada bulan berjalan saja
             const { data, error } = await _supabase
                 .from('eforms')
-                .select('nomor, tanggal')
+                .select('nomor')
                 .eq('jenis', 'SPH')
+                .like('tanggal', `${currentMonthFilter}%`)
                 .order('id', { ascending: false })
                 .limit(1);
 
             let nextNum = 1;
 
             if (data && data.length > 0) {
-                const lastEntry = data[0];
-                const lastDate = new Date(lastEntry.tanggal);
-                
-                // Jika bulan dan tahun masih sama dengan data terakhir, lanjutkan nomor
-                if (lastDate.getMonth() === m && lastDate.getFullYear() === y) {
-                    const lastNoStr = lastEntry.nomor.split('/')[0]; // Ambil bagian '001'
-                    nextNum = parseInt(lastNoStr) + 1;
-                } else {
-                    // Jika ganti bulan/tahun, reset ke 1
-                    nextNum = 1;
-                }
+                // Ambil 3 digit pertama dari nomor surat (misal: "005/SPH-KSE/...")
+                const lastNoStr = data[0].nomor.split('/')[0];
+                nextNum = parseInt(lastNoStr) + 1;
+            } else {
+                // Tidak ada data di bulan ini, reset ke 1
+                nextNum = 1;
             }
 
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
@@ -375,7 +374,7 @@
             document.getElementById('in_prd').value = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
             syncAll();
             
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error Autonumber:", e); }
     }
 
     function handleDateChange() {
