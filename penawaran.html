@@ -55,7 +55,7 @@
 <div class="control-nav shadow-sm d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2">
         <a href="index.html" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-house"></i> HOME</a>
-        <button class="btn btn-outline-secondary btn-sm" onclick="handleDateChange()"><i class="bi bi-arrow-clockwise"></i> REFRESH NO</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="syncAutoNumber()"><i class="bi bi-arrow-clockwise"></i> REFRESH NO</button>
     </div>
     <div class="d-flex gap-2">
         <button class="btn btn-dark btn-sm fw-bold" onclick="window.print()"><i class="bi bi-printer"></i> PRINT</button>
@@ -72,8 +72,11 @@
             <h6 class="fw-bold mb-3 text-success border-bottom pb-2"><i class="bi bi-pencil-square"></i> PANEL PENAWARAN</h6>
             
             <div class="mb-2">
-                <label class="fw-bold small">Nomor Surat</label>
-                <input type="text" id="in_no" class="form-control form-control-sm" oninput="syncAll()">
+                <label class="fw-bold small">Nomor Urut (Auto)</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
+                </div>
+                <input type="hidden" id="in_no">
             </div>
             
             <div class="mb-2">
@@ -89,8 +92,7 @@
             <div class="card p-2 mb-3 bg-light border-0">
                 <label class="fw-bold small">Tujuan Perusahaan</label>
                 <input type="text" list="list_cust" id="in_cust" class="form-control form-control-sm" oninput="handleCustChange()">
-                <datalist id="list_cust">
-                    </datalist>
+                <datalist id="list_cust"></datalist>
 
                 <label class="fw-bold small mt-1">Alamat / Lokasi</label>
                 <textarea id="in_addr" class="form-control form-control-sm" rows="3" oninput="syncAll()"></textarea>
@@ -252,7 +254,6 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    // DATA PERUSAHAAN
     const databaseCust = {
         "CV. SAMI JAYA": "Jl. HM Arsyad No.05 Sampit,\nKotawaringin Timur - Kalimantan Tengah",
         "PT. PELAYARAN JASA SAMUDRA SHIPPING": "Jl. Gatot Subroto No.15 Pangkalan Bun,\nKotawaringin Barat - Kalimantan Tengah",
@@ -280,6 +281,78 @@
 
     function formatIDR(val) {
         return parseFloat(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // --- LOGIKA PENOMORAN SEKUENSAL ---
+    async function syncAutoNumber() {
+        try {
+            const tglVal = document.getElementById('in_tgl_raw').value;
+            const refDate = tglVal ? new Date(tglVal) : new Date();
+            
+            // Cari rentang bulan saat ini untuk filter reset bulanan
+            const firstDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1).toISOString().split('T')[0];
+            const lastDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0).toISOString().split('T')[0];
+
+            // Cari data SPH terakhir di bulan tersebut
+            const { data, error } = await _supabase
+                .from('eforms')
+                .select('nomor')
+                .eq('jenis', 'SPH')
+                .gte('tanggal', firstDay)
+                .lte('tanggal', lastDay)
+                .order('nomor', { ascending: false })
+                .limit(1);
+
+            if (error) throw error;
+
+            let nextNum = 1;
+            if (data && data.length > 0) {
+                // Ambil 3 digit awal (XXX/SPH-KSE/...)
+                const lastFullNo = data[0].nomor;
+                const lastDigitStr = lastFullNo.split('/')[0]; 
+                nextNum = parseInt(lastDigitStr) + 1;
+            }
+
+            document.getElementById('in_no_urut').value = nextNum;
+            formatFullNumber();
+            updatePeriode(refDate);
+        } catch (err) { console.error("Gagal Sync:", err); }
+    }
+
+    function formatFullNumber() {
+        const urut = document.getElementById('in_no_urut').value || "1";
+        const tglVal = document.getElementById('in_tgl_raw').value;
+        const d = tglVal ? new Date(tglVal) : new Date();
+        
+        const m = d.getMonth();
+        const y = d.getFullYear();
+        const noPadded = urut.toString().padStart(3, '0');
+        const fullNo = `${noPadded}/SPH-KSE/${monthRomawi[m]}/${y}`;
+        
+        document.getElementById('in_no').value = fullNo;
+        syncAll();
+    }
+
+    function updatePeriode(d) {
+        const m = d.getMonth();
+        const y = d.getFullYear();
+        const date = d.getDate();
+        let startDay, endDay;
+
+        if (date <= 14) {
+            startDay = 1; endDay = 14;
+        } else {
+            startDay = 15; endDay = new Date(y, m + 1, 0).getDate();
+        }
+        document.getElementById('in_prd').value = `${startDay} s/d ${endDay} ${monthsIndo[m]} ${y}`;
+    }
+
+    function handleDateChange() {
+        const val = document.getElementById('in_tgl_raw').value;
+        if (!val) return;
+        const d = new Date(val);
+        document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
+        syncAutoNumber();
     }
 
     function handleCustChange() {
@@ -316,38 +389,6 @@
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrContent)}`;
     }
 
-    async function initAutoNumber(selectedDate = new Date()) {
-        const m = selectedDate.getMonth();
-        const y = selectedDate.getFullYear();
-        const d = selectedDate.getDate();
-        
-        try {
-            const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'SPH');
-            const nextNum = (count || 0) + 1;
-            document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
-            
-            let startDay, endDay;
-            if (d <= 14) {
-                startDay = 1;
-                endDay = 14;
-            } else {
-                startDay = 15;
-                endDay = new Date(y, m + 1, 0).getDate();
-            }
-            document.getElementById('in_prd').value = `${startDay} s/d ${endDay} ${monthsIndo[m]} ${y}`;
-            
-            syncAll();
-        } catch (e) { console.error(e); }
-    }
-
-    function handleDateChange() {
-        const val = document.getElementById('in_tgl_raw').value;
-        if (!val) return;
-        const d = new Date(val);
-        document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        initAutoNumber(d);
-    }
-
     async function saveToSupabase() {
         const btn = document.getElementById('btn-save-sb');
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> SAVING...'; btn.disabled = true;
@@ -358,7 +399,7 @@
                           html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
 
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-            const fileName = `penawaran/SPH_${Date.now()}.pdf`;
+            const fileName = `penawaran/SPH_${Date.now()}_${noSurat.replace(/\//g, '_')}.pdf`;
             await _supabase.storage.from('documents').upload(fileName, pdfBlob);
             const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(fileName);
 
@@ -368,6 +409,7 @@
                 nominal: Math.round(parseFloat(document.getElementById('in_total_input').value) || 0)
             }]);
             alert("Penawaran Berhasil Tersimpan!");
+            syncAutoNumber();
         } catch (e) { alert("Gagal: " + e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & UPLOAD'; btn.disabled = false;
     }
@@ -379,7 +421,6 @@
     }
 
     window.onload = () => {
-        // Load Datalist Customer
         const listCust = document.getElementById('list_cust');
         Object.keys(databaseCust).forEach(key => {
             const opt = document.createElement('option');
@@ -391,16 +432,13 @@
         handleDateChange();
         
         // Defaults
-        document.getElementById('in_cust').value = " ";
-        document.getElementById('in_addr').value = databaseCust[" "];
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI";
-        document.getElementById('in_dest').value = " ";
         document.getElementById('in_qty').value = "5.000 liter , 8000 liter , 10.000 Liter";
         document.getElementById('in_tol').value = "0,3% (Tera Mobil Transportir/T2)";
-        document.getElementById('in_total_input').value = " ";
         document.getElementById('in_pay').value = "CBD (Cash Before Delivery)";
         document.getElementById('in_contact').value = "0815-884-1410";
-        syncAll();
+        
+        syncAutoNumber();
     };
 </script>
 </body>
