@@ -296,14 +296,12 @@
     function syncAll() {
         const hPub = parseFloat(document.getElementById('in_hrg_pub').value) || 0;
         
-        // Perhitungan Harga A (Cash)
         const discPctA = parseFloat(document.getElementById('in_disc_a').value) || 0;
         const discValA = hPub * (discPctA / 100);
         const hDasarA = hPub - discValA;
         const ppnA = hDasarA * 0.11;
         const totalA = hDasarA + ppnA;
 
-        // Perhitungan Harga B (Tempo)
         const discPctB = parseFloat(document.getElementById('in_disc_b').value) || 0;
         const discValB = hPub * (discPctB / 100);
         const hDasarB = hPub - discValB;
@@ -342,23 +340,41 @@
         const m = selectedDate.getMonth();
         const y = selectedDate.getFullYear();
         const d = selectedDate.getDate();
+        
         try {
-            // SINKRONISASI: Mengambil jumlah baris dengan jenis 'SPH' agar nomor berurutan
-            const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'SPH');
-            const nextNum = (count || 0) + 1;
+            // Ambil 1 data SPH terakhir untuk mengecek nomor dan bulan
+            const { data, error } = await _supabase
+                .from('eforms')
+                .select('nomor, tanggal')
+                .eq('jenis', 'SPH')
+                .order('id', { ascending: false })
+                .limit(1);
+
+            let nextNum = 1;
+
+            if (data && data.length > 0) {
+                const lastEntry = data[0];
+                const lastDate = new Date(lastEntry.tanggal);
+                
+                // Jika bulan dan tahun masih sama dengan data terakhir, lanjutkan nomor
+                if (lastDate.getMonth() === m && lastDate.getFullYear() === y) {
+                    const lastNoStr = lastEntry.nomor.split('/')[0]; // Ambil bagian '001'
+                    nextNum = parseInt(lastNoStr) + 1;
+                } else {
+                    // Jika ganti bulan/tahun, reset ke 1
+                    nextNum = 1;
+                }
+            }
+
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
             
             let sD, eD;
-            if (d <= 14) {
-                sD = 1; eD = 14;
-            } else {
-                sD = 15; eD = new Date(y, m + 1, 0).getDate();
-            }
+            if (d <= 14) { sD = 1; eD = 14; } 
+            else { sD = 15; eD = new Date(y, m + 1, 0).getDate(); }
             
-            const prdString = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
-            document.getElementById('in_prd').value = prdString;
-            
+            document.getElementById('in_prd').value = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
             syncAll();
+            
         } catch (e) { console.error(e); }
     }
 
@@ -377,7 +393,6 @@
             const noSurat = document.getElementById('in_no').value;
             const element = document.getElementById('main-doc');
             
-            // Konfigurasi PDF untuk Upload
             const opt = {
                 margin: 0,
                 filename: `SPH-${noSurat}.pdf`,
@@ -389,14 +404,11 @@
             const fileName = `SPH_${Date.now()}.pdf`;
             const path = `penawaran/${fileName}`;
             
-            // 1. Upload File ke Storage
             const { error: uploadError } = await _supabase.storage.from('documents').upload(path, pdfBlob);
             if (uploadError) throw uploadError;
 
-            // 2. Dapatkan URL Public
             const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(path);
 
-            // 3. Simpan Metadata ke Tabel eforms (Sesuai Logika Database)
             const { error: insertError } = await _supabase.from('eforms').insert([{
                 jenis: "SPH",
                 nomor: noSurat,
@@ -407,7 +419,6 @@
             }]);
 
             if (insertError) throw insertError;
-
             alert("Berhasil disimpan ke Database & Cloud Storage!");
         } catch (e) { 
             console.error(e);
