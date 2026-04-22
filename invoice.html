@@ -246,7 +246,7 @@
                         <p class="mb-0" style="font-size:12px;">1. Cash / Tunai</p>
                         <p class="mb-0" style="font-size:12px;">2. Transfer Bank Central Asia (BCA)</p>
                         <p class="mb-0 ms-3" style="font-size:12px;">Account Name : <b>PT KHATULISTIWA SINAR ENERGI</b></p>
-                        <p class="mb-0 ms-3" style="font-size:12px;">Account Number (BCA) : <b>010.551.9988</b></p>
+                        <p class="mb-0 ms-3" style="font-size:12px;">Account Number: <b>010-551-9988 </b></p>
                     </div>
                 </div>
 
@@ -350,14 +350,21 @@
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value + " Ltr";
-        document.getElementById('out_h_nett_val').innerText = formatIDR(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.') || 0);
-        const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(',', '.')) || 0;
+        
+        const hNettVal = parseFloat(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.')) || 0;
+        document.getElementById('out_h_nett_val').innerText = formatIDR(hNettVal);
+        
+        const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(/\./g, '').replace(',', '.')) || 0;
         document.getElementById('out_h_tax_val').innerText = formatIDR(dppUnitVal);
+        
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const dppLain = parseFloat(document.getElementById('in_dpp_lain').value) || 0;
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
+        
+        // Logika Update Penjumlahan: Grand Total = Subtotal + PPN + Adjust
         const grandTotalFinal = roundKSE(sub + ppn + adj);
+        
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
         document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
         document.getElementById('out_dpp_val').innerText = formatIDR(dppLain);
@@ -379,7 +386,7 @@
             "PT. FORTUNA LANCAR ADIMAKMUR": "Jl. Bypass Pandaan No.88 Karangjati Pandaan,\nKab.Pasuruan - Jawa Timur",
             "PT. BUMI RAYA NUSANTARA": "Jl. Kapten Mulyono No.55 RT 029 RW.008,\nMentawa Baru Hilir, Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah",
             "PT. BUMI AGRO PRIMA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu,\nMentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
-            "PT. INTI DAYA MANDIRI SERVITAMA": "Jl. kawitan I No.54 RT.017 RW.000 Sidorejo Arut Selatan, Kab.Kotawarinign Barat - Kalimantan Tengah 74111",
+            "PT. INTI DAYA MANDIRI SERVITAMA": "Jl. kawitan I No.54 RT.017 RW.000 Sidorejo Arut Selatan, Kab.Kotawaringin Barat - Kalimantan Tengah 74111",
             "PT. BORNEO TRENGGINAS MANDIRI": " JL.Sri Kuncoro III No.142 RT.003 RW.003 Kalibanteng Kulon, Semarang Barat Kota Semarang - Jawa Tengah 50145",
             "PT. GADING SAWIT KENCANA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu ,Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
             "PT. BORNEO ARMADA PERKASA": "Jl. A.Yani Km.40 RT.021 RW.007 Pandu Sanjaya, Pangkalan Bun, Kab.Kotawringin Barat - Kalimantan Tengah 74184",
@@ -391,38 +398,22 @@
         syncAll();
     }
 
-    // LOGIKA NOMOR URUT OTOMATIS: CEK TERAKHIR & RESET BULANAN
     async function initAutoNumber() {
         try {
-            // Ambil data terakhir khusus jenis INVOICE urut berdasarkan ID terbaru
-            const { data, error } = await _supabase
+            const tglInput = document.getElementById('in_tgl_raw').value;
+            const d = tglInput ? new Date(tglInput) : new Date();
+            const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
+            const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+            const { count, error } = await _supabase
                 .from('eforms')
-                .select('nomor, tanggal')
-                .eq('jenis', 'INVOICE')
-                .order('id', { ascending: false })
-                .limit(1);
+                .select('*', { count: 'exact', head: true })
+                .gte('tanggal', firstDay)
+                .lte('tanggal', lastDay);
 
             if (error) throw error;
 
-            const now = new Date();
-            const currentMonth = now.getMonth() + 1; // 1-12
-            const currentYear = now.getFullYear();
-            let nextNum = 1;
-
-            if (data && data.length > 0) {
-                const lastDate = new Date(data[0].tanggal);
-                const lastMonth = lastDate.getMonth() + 1;
-                const lastYear = lastDate.getFullYear();
-
-                // Jika bulan/tahun masih sama dengan data terakhir, lanjutkan nomornya
-                if (currentMonth === lastMonth && currentYear === lastYear) {
-                    const lastFullNo = data[0].nomor; // Format: "001 / INV-KSE / ..."
-                    const lastSequence = parseInt(lastFullNo.split('/')[0]);
-                    nextNum = lastSequence + 1;
-                } 
-                // Jika ganti bulan/tahun, nextNum tetap 1 (reset)
-            }
-
+            const nextNum = (count || 0) + 1;
             document.getElementById('in_no_urut').value = nextNum.toString().padStart(3, '0');
             syncAll();
         } catch (err) { 
@@ -437,7 +428,7 @@
         if (!val) return;
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate()} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        syncAll();
+        initAutoNumber();
     }
 
     function updateQRCode(grandTotal) {
@@ -520,11 +511,9 @@
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
-        initAutoNumber(); // Menjalankan pengecekan nomor urut cloud
-        
-        document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
-        document.getElementById('in_qty_text').value = "5.000";
-        document.getElementById('in_h_nett_text').value = "16.500";
+        document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI";
+        document.getElementById('in_qty_text').value = "";
+        document.getElementById('in_h_nett_text').value = "";
         calculateFromBasic();
     };
 </script>
