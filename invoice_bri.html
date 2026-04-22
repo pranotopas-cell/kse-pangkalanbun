@@ -350,8 +350,11 @@
         document.getElementById('out_po_tgl').innerText = document.getElementById('in_po_tgl').value;
         document.getElementById('out_produk').innerText = document.getElementById('in_produk').value;
         document.getElementById('out_qty_val').innerText = document.getElementById('in_qty_text').value + " Ltr";
-        document.getElementById('out_h_nett_val').innerText = formatIDR(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.') || 0);
-        const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(',', '.')) || 0;
+        
+        const hNettVal = parseFloat(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.')) || 0;
+        document.getElementById('out_h_nett_val').innerText = formatIDR(hNettVal);
+        
+        const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(/\./g, '').replace(',', '.')) || 0;
         document.getElementById('out_h_tax_val').innerText = formatIDR(dppUnitVal);
         
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
@@ -359,7 +362,7 @@
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
         
-        // HITUNGAN UPDATE: Grand Total mencakup Subtotal + PPN + Penyesuaian (DPP Lain hanyalah info pendukung)
+        // Logika Update Penjumlahan: Grand Total = Subtotal + PPN + Adjust
         const grandTotalFinal = roundKSE(sub + ppn + adj);
         
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
