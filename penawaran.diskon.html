@@ -279,7 +279,6 @@
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    // Daftar Alamat Perusahaan Otomatis
     const dbCustomer = {
         "PT. KORINDO ARIA BIMA SARI": " Wisma Korindo Jl.  MT.Haryono Kav.62 Pancoran, \nPancoran - Kota Adm. DKI Jakarta 12780",
     };
@@ -344,18 +343,16 @@
         const y = selectedDate.getFullYear();
         const d = selectedDate.getDate();
         try {
+            // SINKRONISASI: Mengambil jumlah baris dengan jenis 'SPH' agar nomor berurutan
             const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'SPH');
             const nextNum = (count || 0) + 1;
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
             
-            // Logika Periode Otomatis (1-14 dan 15-akhir)
             let sD, eD;
             if (d <= 14) {
-                sD = 1;
-                eD = 14;
+                sD = 1; eD = 14;
             } else {
-                sD = 15;
-                eD = new Date(y, m + 1, 0).getDate(); // Mendapatkan tanggal terakhir bulan ini
+                sD = 15; eD = new Date(y, m + 1, 0).getDate();
             }
             
             const prdString = `${sD} s/d ${eD} ${monthsIndo[m]} ${y}`;
@@ -379,24 +376,54 @@
         try {
             const noSurat = document.getElementById('in_no').value;
             const element = document.getElementById('main-doc');
-            const pdfBlob = await html2pdf().set({ margin:0, filename:`SPH-${noSurat}.pdf`, html2canvas:{scale:2, useCORS:true}, jsPDF:{unit:'mm', format:'a4'}}).from(element).output('blob');
-            const path = `penawaran/SPH_${Date.now()}.pdf`;
-            await _supabase.storage.from('documents').upload(path, pdfBlob);
+            
+            // Konfigurasi PDF untuk Upload
+            const opt = {
+                margin: 0,
+                filename: `SPH-${noSurat}.pdf`,
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+            const fileName = `SPH_${Date.now()}.pdf`;
+            const path = `penawaran/${fileName}`;
+            
+            // 1. Upload File ke Storage
+            const { error: uploadError } = await _supabase.storage.from('documents').upload(path, pdfBlob);
+            if (uploadError) throw uploadError;
+
+            // 2. Dapatkan URL Public
             const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(path);
 
-            await _supabase.from('eforms').insert([{
-                jenis: "SPH", nomor: noSurat, tanggal: document.getElementById('in_tgl_raw').value,
-                tujuan: document.getElementById('in_cust').value, pdf_url: urlData.publicUrl,
+            // 3. Simpan Metadata ke Tabel eforms (Sesuai Logika Database)
+            const { error: insertError } = await _supabase.from('eforms').insert([{
+                jenis: "SPH",
+                nomor: noSurat,
+                tanggal: document.getElementById('in_tgl_raw').value,
+                tujuan: document.getElementById('in_cust').value,
+                pdf_url: urlData.publicUrl,
                 nominal: Math.round(parseFloat(document.getElementById('out_total_a').innerText.replace(/\./g,'').replace(',','.')))
             }]);
+
+            if (insertError) throw insertError;
+
             alert("Berhasil disimpan ke Database & Cloud Storage!");
-        } catch (e) { alert("Gagal: " + e.message); }
+        } catch (e) { 
+            console.error(e);
+            alert("Gagal: " + e.message); 
+        }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN & UPLOAD'; btn.disabled = false;
     }
 
     function downloadPDF() {
         const element = document.getElementById('main-doc');
-        html2pdf().set({ margin: 0, filename: `SPH-${document.getElementById('in_no').value}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } }).from(element).save();
+        html2pdf().set({ 
+            margin: 0, 
+            filename: `SPH-${document.getElementById('in_no').value}.pdf`, 
+            html2canvas: { scale: 2 }, 
+            jsPDF: { unit: 'mm', format: 'a4' } 
+        }).from(element).save();
     }
 
     window.onload = () => {
