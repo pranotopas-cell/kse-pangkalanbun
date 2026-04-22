@@ -353,11 +353,15 @@
         document.getElementById('out_h_nett_val').innerText = formatIDR(document.getElementById('in_h_nett_text').value.replace(/\./g, '').replace(',', '.') || 0);
         const dppUnitVal = parseFloat(document.getElementById('in_h_tax_text').value.replace(',', '.')) || 0;
         document.getElementById('out_h_tax_val').innerText = formatIDR(dppUnitVal);
+        
         const sub = parseFloat(document.getElementById('in_subtotal').value) || 0;
         const dppLain = parseFloat(document.getElementById('in_dpp_lain').value) || 0;
         const ppn = parseFloat(document.getElementById('in_ppn').value) || 0;
         const adj = parseFloat(document.getElementById('in_adjust').value) || 0;
+        
+        // HITUNGAN UPDATE: Grand Total mencakup Subtotal + PPN + Penyesuaian (DPP Lain hanyalah info pendukung)
         const grandTotalFinal = roundKSE(sub + ppn + adj);
+        
         document.getElementById('out_subtotal_top').innerText = formatIDR(sub);
         document.getElementById('out_subtotal_display').innerText = formatIDR(sub);
         document.getElementById('out_dpp_val').innerText = formatIDR(dppLain);
@@ -391,17 +395,13 @@
         syncAll();
     }
 
-    // UPDATE: AUTO NUMBER RESET PER BULAN DARI SUPABASE
     async function initAutoNumber() {
         try {
             const tglInput = document.getElementById('in_tgl_raw').value;
             const d = tglInput ? new Date(tglInput) : new Date();
-            
-            // Tentukan awal dan akhir bulan dari tanggal yang dipilih
             const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
             const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59).toISOString();
 
-            // Ambil jumlah record pada bulan tersebut tanpa filter jenis
             const { count, error } = await _supabase
                 .from('eforms')
                 .select('*', { count: 'exact', head: true })
@@ -425,7 +425,6 @@
         if (!val) return;
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate()} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        // Re-init nomor urut jika tanggal berubah bulan
         initAutoNumber();
     }
 
@@ -509,8 +508,6 @@
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
-        
-        // Default barang dan nilai
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI (HSD)";
         document.getElementById('in_qty_text').value = "5.000";
         document.getElementById('in_h_nett_text').value = "16.500";
