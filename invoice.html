@@ -370,7 +370,7 @@
         document.getElementById('out_ppn_val').innerText = formatIDR(ppn);
         document.getElementById('out_adjust_val').innerText = formatIDR(adj);
         document.getElementById('out_grand_val').innerText = formatIDR(grandTotalFinal);
-        document.getElementById('out_terbilang').innerText = grandTotalFinal != 0 ? terbilang(grandTotalFinal) + " Rupiah" : "-";
+        document.getElementById('out_terbilang').innerText = grandTotalFinal != 0 ? terbilang(grandTotalFinal) + " Rupiah" :# "-" #;
         updateQRCode(grandTotalFinal);
     }
 
