@@ -342,7 +342,15 @@
         const noSurat = document.getElementById('in_no').value;
         const custName = document.getElementById('in_cust').value;
         
+        // Cari nominal tertinggi untuk mengisi kolom 'nominal' di database
+        let maxNominal = 0;
+        for(let i=1; i<=6; i++) {
+            const p = parseFloat(document.getElementById(`in_price_${i}`).value) || 0;
+            if(p > maxNominal) maxNominal = p;
+        }
+        
         if(!noSurat || !custName) return alert("Nomor Surat dan Customer wajib diisi!");
+        if(maxNominal <= 0) return alert("Gagal: Harga nominal item belum diisi!");
 
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> PROSES...';
         btn.disabled = true;
@@ -368,6 +376,7 @@
                 nomor: noSurat,
                 tanggal: document.getElementById('in_tgl_raw').value,
                 tujuan: custName,
+                nominal: maxNominal, 
                 pdf_url: urlData.publicUrl,
                 created_at: new Date().toISOString()
             }]);
