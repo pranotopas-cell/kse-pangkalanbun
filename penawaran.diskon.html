@@ -336,7 +336,6 @@
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrContent)}`;
     }
 
-    // LOGIKA AUTO NUMBER: MENYAMBUNG DAN RESET BULANAN
     async function initAutoNumber(selectedDate = new Date()) {
         const m = selectedDate.getMonth();
         const y = selectedDate.getFullYear();
@@ -344,7 +343,7 @@
         const currentRomawi = monthRomawi[m];
 
         try {
-            // Ambil data terakhir khusus SPH dari database
+            // Logika baru: Ambil nomor urut terakhir khusus SPH
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
@@ -355,20 +354,21 @@
             let nextNum = 1;
 
             if (data && data.length > 0) {
-                const lastNo = data[0].nomor; // Format: "001/SPH-KSE/IV/2026"
+                const lastNo = data[0].nomor; // Contoh: "005/SPH-KSE/IV/2026"
                 const parts = lastNo.split('/');
-                const lastRomawi = parts[2]; // Index ke-2 adalah Bulan Romawi
+                const lastRomawi = parts[2];
 
-                // CEK: Jika bulan romawi terakhir sama dengan bulan romawi saat ini
+                // Jika bulan romawi sama, sambung nomor. Jika beda (ganti bulan), reset ke 1.
                 if (lastRomawi === currentRomawi) {
-                    nextNum = parseInt(parts[0]) + 1; // Sambung nomor
+                    nextNum = parseInt(parts[0]) + 1;
                 } else {
-                    nextNum = 1; // Reset ke 001 karena ganti bulan
+                    nextNum = 1;
                 }
             }
 
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${currentRomawi}/${y}`;
             
+            // Logika Periode (1-14 atau 15-akhir bulan)
             let sD, eD;
             if (d <= 14) { sD = 1; eD = 14; } 
             else { sD = 15; eD = new Date(y, m + 1, 0).getDate(); }
@@ -377,7 +377,7 @@
             syncAll();
             
         } catch (e) { 
-            console.error("Gagal menarik nomor terakhir:", e);
+            console.error("Gagal menarik nomor:", e);
             document.getElementById('in_no').value = `001/SPH-KSE/${currentRomawi}/${y}`;
         }
     }
@@ -425,7 +425,7 @@
             if (insertError) throw insertError;
             alert("Berhasil disimpan ke Database & Cloud Storage!");
             
-            // Refresh nomor setelah berhasil simpan
+            // Refresh nomor setelah simpan untuk dokumen berikutnya
             initAutoNumber(new Date(document.getElementById('in_tgl_raw').value));
             
         } catch (e) { 
