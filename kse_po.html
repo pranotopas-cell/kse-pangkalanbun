@@ -326,16 +326,13 @@
         return temp;
     }
 
-    // --- LOGIKA PENOMORAN SEKUENSIAL (MENYAMBUNG TERAKHIR) ---
     async function syncAutoNumber() {
         try {
             const tglVal = document.getElementById('in_tgl_raw').value;
             const refDate = tglVal ? new Date(tglVal) : new Date();
-            
             const firstDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1).toISOString().split('T')[0];
             const lastDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0).toISOString().split('T')[0];
 
-            // Cari data terakhir di bulan tersebut, urutkan berdasarkan nomor secara descending
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
@@ -349,7 +346,6 @@
 
             let nextNum = 1;
             if (data && data.length > 0) {
-                // Ambil 3 digit awal dari nomor (contoh: 005/PO-KSE/...)
                 const lastFullNo = data[0].nomor;
                 const lastDigitStr = lastFullNo.split('/')[0]; 
                 nextNum = parseInt(lastDigitStr) + 1;
@@ -357,22 +353,17 @@
 
             document.getElementById('in_no_urut').value = nextNum;
             formatFullNumber();
-        } catch (err) { 
-            console.error("Gagal Sync Nomor:", err); 
-        }
+        } catch (err) { console.error("Gagal Sync Nomor:", err); }
     }
 
     function formatFullNumber() {
         const urut = document.getElementById('in_no_urut').value || "1";
         const tglVal = document.getElementById('in_tgl_raw').value;
         const d = tglVal ? new Date(tglVal) : new Date();
-        
         const m = d.getMonth();
         const y = d.getFullYear();
-        
         const noUrutPadded = urut.toString().padStart(3, '0');
         const fullNo = `${noUrutPadded}/PO-KSE/${monthRomawi[m]}/${y}`;
-        
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
         updateView();
@@ -397,9 +388,16 @@
     function calculate() {
         const qty = parseFloat(document.getElementById('in_qty').value) || 0;
         const hargaNet = parseFloat(document.getElementById('in_perltr').value) || 0;
-        const p_ppn = parseFloat(document.getElementById('in_ppn_pct').value) || 11;
-        const p_pbbkb = parseFloat(document.getElementById('in_pbbkb_pct').value) || 7.5;
-        const p_pph = parseFloat(document.getElementById('in_pph_pct').value) || 0.3;
+        
+        // Ambil nilai mentah (string)
+        const raw_ppn = document.getElementById('in_ppn_pct').value;
+        const raw_pbbkb = document.getElementById('in_pbbkb_pct').value;
+        const raw_pph = document.getElementById('in_pph_pct').value;
+
+        // Konversi ke angka, jika kosong/invalid jadikan 0
+        const p_ppn = parseFloat(raw_ppn) || 0;
+        const p_pbbkb = parseFloat(raw_pbbkb) || 0;
+        const p_pph = parseFloat(raw_pph) || 0;
 
         const totalPajakPct = (p_ppn + p_pbbkb + p_pph) / 100;
         const hargaDasar = hargaNet / (1 + totalPajakPct);
@@ -411,15 +409,19 @@
 
         const f = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
         
-        document.getElementById('th_ppn').innerText = `PPN ${p_ppn}%`;
-        document.getElementById('th_pbbkb').innerText = `PBBKB ${p_pbbkb}%`;
-        document.getElementById('th_pph').innerText = `PPH ${p_pph}%`;
+        // Update Label Header
+        document.getElementById('th_ppn').innerText = p_ppn > 0 ? `PPN ${p_ppn}%` : "PPN";
+        document.getElementById('th_pbbkb').innerText = p_pbbkb > 0 ? `PBBKB ${p_pbbkb}%` : "PBBKB";
+        document.getElementById('th_pph').innerText = p_pph > 0 ? `PPH ${p_pph}%` : "PPH";
 
         document.getElementById('out_qty').innerText = qty.toLocaleString('id-ID');
         document.getElementById('out_harga').innerText = hargaDasar.toLocaleString('id-ID', f);
-        document.getElementById('out_ppn').innerText = v_ppn.toLocaleString('id-ID', f);
-        document.getElementById('out_pbbkb').innerText = v_pbbkb.toLocaleString('id-ID', f);
-        document.getElementById('out_pph').innerText = v_pph.toLocaleString('id-ID', f);
+        
+        // Logika Tampilan: Jika input kosong atau nol, jangan tampilkan angka di tabel
+        document.getElementById('out_ppn').innerText = (raw_ppn && p_ppn > 0) ? v_ppn.toLocaleString('id-ID', f) : "";
+        document.getElementById('out_pbbkb').innerText = (raw_pbbkb && p_pbbkb > 0) ? v_pbbkb.toLocaleString('id-ID', f) : "";
+        document.getElementById('out_pph').innerText = (raw_pph && p_pph > 0) ? v_pph.toLocaleString('id-ID', f) : "";
+
         document.getElementById('out_perltr').innerText = hargaNet.toLocaleString('id-ID', f);
         
         const gTotalVal = Math.round(total);
@@ -433,13 +435,11 @@
     function updateView() {
         const noPo = document.getElementById('in_no').value;
         const gTotal = document.getElementById('out_grandtotal').innerText;
-
         document.getElementById('out_no').innerText = noPo;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
         document.getElementById('out_pay').innerText = document.getElementById('in_pay').value;
-
         updateQRCode(noPo, gTotal);
     }
 
@@ -455,25 +455,19 @@
         if(!noPo || noPo.includes('undefined')) return alert("Nomor PO tidak valid!");
 
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> UPLOADING...'; btn.disabled = true;
-        
         try {
             const element = document.getElementById('main-doc');
             const opt = {
-                margin: 0,
-                filename: `PO-${noPo}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
+                margin: 0, filename: `PO-${noPo}.pdf`, image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
             };
-
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
             const fileName = `pos/PO_${Date.now()}_${noPo.replace(/\//g, '_')}.pdf`;
-            
             const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, pdfBlob, { contentType: 'application/pdf', upsert: true });
             if (upErr) throw upErr;
 
             const { data: urlData } = _supabase.storage.from('documents').getPublicUrl(fileName);
-            
             const payload = {
                 jenis: "PURCHASE ORDER",
                 nomor: noPo,
@@ -507,15 +501,12 @@
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
-        
         document.getElementById('in_cust').value = "";
         handleCustChange(); 
-
         document.getElementById('in_barang').value = "BBM SOLAR INDUSTRI";
         document.getElementById('in_perltr').value = 0;
         document.getElementById('in_qty').value = 0;
         document.getElementById('in_pay').value = "Cash On Delivery (COD)";
-        
         syncAutoNumber();
         calculate();
     };
