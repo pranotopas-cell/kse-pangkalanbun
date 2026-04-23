@@ -273,9 +273,11 @@
 </div>
 
 <script>
+    // Konfigurasi Supabase
     const SB_URL = "https://yqdtgcjpfhiskywhowhu.supabase.co"; 
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHRnY2pwZmhpc2t5d2hvd2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MDY0MTIsImV4cCI6MjA4NzA4MjQxMn0.Mlw3e8C4xKHcJPSMRkcsRXL5udtR9SeWk2GmqM1NyYc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
+    
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -296,34 +298,40 @@
     function syncAll() {
         const hPub = parseFloat(document.getElementById('in_hrg_pub').value) || 0;
         
+        // Perhitungan Harga A
         const discPctA = parseFloat(document.getElementById('in_disc_a').value) || 0;
         const discValA = hPub * (discPctA / 100);
         const hDasarA = hPub - discValA;
         const ppnA = hDasarA * 0.11;
         const totalA = hDasarA + ppnA;
 
+        // Perhitungan Harga B
         const discPctB = parseFloat(document.getElementById('in_disc_b').value) || 0;
         const discValB = hPub * (discPctB / 100);
         const hDasarB = hPub - discValB;
         const ppnB = hDasarB * 0.11;
         const totalB = hDasarB + ppnB;
 
+        // Update Output Tabel
         document.querySelectorAll('.out_h_pub').forEach(el => el.innerText = formatIDR(hPub));
         document.querySelectorAll('.out_produk_val').forEach(el => el.innerText = document.getElementById('in_produk').value);
         document.querySelectorAll('.out_dest_val').forEach(el => el.innerText = document.getElementById('in_dest').value);
 
+        // UI A
         document.getElementById('out_pct_a').innerText = discPctA;
         document.getElementById('out_d_val_a').innerText = formatIDR(discValA);
         document.getElementById('out_h_dasar_a').innerText = formatIDR(hDasarA);
         document.getElementById('out_ppn_a').innerText = formatIDR(ppnA);
         document.getElementById('out_total_a').innerText = formatIDR(totalA);
 
+        // UI B
         document.getElementById('out_pct_b').innerText = discPctB;
         document.getElementById('out_d_val_b').innerText = formatIDR(discValB);
         document.getElementById('out_h_dasar_b').innerText = formatIDR(hDasarB);
         document.getElementById('out_ppn_b').innerText = formatIDR(ppnB);
         document.getElementById('out_total_b').innerText = formatIDR(totalB);
 
+        // Meta Data
         document.getElementById('out_no').innerText = document.getElementById('in_no').value;
         document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
@@ -332,10 +340,12 @@
         document.getElementById('out_contact').innerText = document.getElementById('in_contact').value;
         document.getElementById('out_prd').innerText = document.getElementById('in_prd').value;
 
+        // QR Update
         const qrContent = `KSE-DOC|NO:${document.getElementById('in_no').value}|CUST:${document.getElementById('in_cust').value}`;
         document.getElementById('qr_footer').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrContent)}`;
     }
 
+    // LOGIKA AUTO NUMBER: MENYAMBUNG DAN RESET BULANAN
     async function initAutoNumber(selectedDate = new Date()) {
         const m = selectedDate.getMonth();
         const y = selectedDate.getFullYear();
@@ -343,32 +353,33 @@
         const currentRomawi = monthRomawi[m];
 
         try {
-            // Logika baru: Ambil nomor urut terakhir khusus SPH
+            // Ambil data terakhir khusus SPH dari database
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
                 .eq('jenis', 'SPH')
-                .order('id', { ascending: false })
+                .order('created_at', { ascending: false })
                 .limit(1);
 
             let nextNum = 1;
 
             if (data && data.length > 0) {
-                const lastNo = data[0].nomor; // Contoh: "005/SPH-KSE/IV/2026"
+                const lastNo = data[0].nomor; // Format: "001/SPH-KSE/IV/2026"
                 const parts = lastNo.split('/');
-                const lastRomawi = parts[2];
+                const lastRomawi = parts[2]; 
 
-                // Jika bulan romawi sama, sambung nomor. Jika beda (ganti bulan), reset ke 1.
+                // CEK: Jika bulan romawi terakhir sama dengan bulan romawi saat ini
                 if (lastRomawi === currentRomawi) {
-                    nextNum = parseInt(parts[0]) + 1;
+                    const lastNumeric = parseInt(parts[0]);
+                    nextNum = isNaN(lastNumeric) ? 1 : lastNumeric + 1;
                 } else {
-                    nextNum = 1;
+                    nextNum = 1; // Reset ke 001 karena ganti bulan
                 }
             }
 
             document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${currentRomawi}/${y}`;
             
-            // Logika Periode (1-14 atau 15-akhir bulan)
+            // Setting Periode Harga (1-14 atau 15-akhir)
             let sD, eD;
             if (d <= 14) { sD = 1; eD = 14; } 
             else { sD = 15; eD = new Date(y, m + 1, 0).getDate(); }
@@ -377,7 +388,7 @@
             syncAll();
             
         } catch (e) { 
-            console.error("Gagal menarik nomor:", e);
+            console.error("Gagal menarik nomor terakhir:", e);
             document.getElementById('in_no').value = `001/SPH-KSE/${currentRomawi}/${y}`;
         }
     }
@@ -425,7 +436,7 @@
             if (insertError) throw insertError;
             alert("Berhasil disimpan ke Database & Cloud Storage!");
             
-            // Refresh nomor setelah simpan untuk dokumen berikutnya
+            // Refresh nomor untuk input selanjutnya
             initAutoNumber(new Date(document.getElementById('in_tgl_raw').value));
             
         } catch (e) { 
@@ -446,8 +457,11 @@
     }
 
     window.onload = () => {
+        // Init Tanggal Hari Ini
         document.getElementById('in_tgl_raw').value = new Date().toISOString().split('T')[0];
         handleDateChange();
+        
+        // Default Value
         document.getElementById('in_produk').value = "BBM SOLAR INDUSTRI";
         document.getElementById('in_dest').value = " ";
         document.getElementById('in_qty').value = "5.000 liter , 8.000 liter , 10.000 Liter";
