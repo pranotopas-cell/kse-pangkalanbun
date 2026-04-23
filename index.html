@@ -338,8 +338,8 @@
         }
 
         async function loadReleaseDocs() {
-            showSection('release');
-           // --- GANTI DENGAN KODE INI ---
+    showSection('release');
+    
     const sekarang = new Date();
     const awalBulan = new Date(sekarang.getFullYear(), sekarang.getMonth(), 1).toISOString();
     const akhirBulan = new Date(sekarang.getFullYear(), sekarang.getMonth() + 1, 1).toISOString();
@@ -349,28 +349,42 @@
         .gte('created_at', awalBulan)
         .lt('created_at', akhirBulan)
         .order('created_at', { ascending: false });
-    // ----------------------------
-            if(!isAdmin) query = query.eq('user_id', currentUser.id);
-            
-            const { data, error } = await query;
-            const tbody = document.getElementById('release-table-body');
-            
-            if (error) { console.error(error); return; }
 
-            tbody.innerHTML = data?.length ? data.map(d => {
-                const nominal = d.grand_total || d.nominal || 0;
-                const jenis = (d.jenis || '').toUpperCase();
-                
-                // Logika pembeda warna nomor dokumen
-                let noColorClass = "text-white";
-                if (jenis.includes("PENAWARAN") || jenis.includes("SPH")) {
-                    noColorClass = "text-cyan-400"; // Warna SPH
-                } else if (jenis.includes("PURCHASE ORDER") || jenis.includes("PO")) {
-                    noColorClass = "text-orange-400"; // Warna PO
-                } else if (jenis.includes("INVOICE")) {
-                    noColorClass = "text-emerald-400"; // Warna Invoice
-                }
+    if(!isAdmin) query = query.eq('user_id', currentUser.id);
+    
+    const { data, error } = await query;
+    const tbody = document.getElementById('release-table-body');
+    
+    if (error) { console.error(error); return; }
 
+    tbody.innerHTML = data?.length ? data.map(d => {
+        const nominal = d.grand_total || d.nominal || 0;
+        const jenis = (d.jenis || '').toUpperCase();
+        
+        // 1. Tentukan warna berdasarkan jenis (Variable ini sekarang untuk satu baris)
+        let rowColorClass = "text-white";
+        if (jenis.includes("PENAWARAN") || jenis.includes("SPH")) {
+            rowColorClass = "text-cyan-400"; 
+        } else if (jenis.includes("PURCHASE ORDER") || jenis.includes("PO")) {
+            rowColorClass = "text-orange-400"; 
+        } else if (jenis.includes("INVOICE")) {
+            rowColorClass = "text-emerald-400"; 
+        }
+
+        // 2. Terapkan rowColorClass di tag <tr>
+        return `
+        <tr class="hover:bg-white/5 transition-colors border-b border-white/5 ${rowColorClass}">
+            <td class="p-4 font-bold opacity-60">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
+            <td class="p-4 uppercase font-black">${d.jenis || 'FORM'}</td>
+            <td class="p-4 font-black">${d.nomor || d.no_invoice || '-'}</td>
+            <td class="p-4 uppercase font-bold">${d.tujuan || d.customer_name || '-'}</td>
+            <td class="p-4 text-right font-black italic">Rp ${parseFloat(nominal).toLocaleString('id-ID')}</td>
+            <td class="p-4 text-center">
+                <button onclick="window.open('${d.pdf_url}', '_blank')" class="bg-white/10 hover:bg-white hover:text-black px-4 py-1.5 rounded-lg text-[9px] font-black transition-all">VIEW</button>
+            </td>
+        </tr>`
+    }).join('') : '<tr><td colspan="6" class="p-20 text-center text-slate-500 font-black italic tracking-widest">NO TRANSACTION</td></tr>';
+}
                 return `
                 <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                     <td class="p-4 font-bold text-slate-500">${new Date(d.created_at).toLocaleDateString('id-ID')}</td>
