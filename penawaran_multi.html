@@ -313,19 +313,51 @@
         syncAll();
     }
 
+    // LOGIKA AUTO NUMBER MENYAMBUNG & RESET BULANAN
     async function initAutoNumber(selectedDate = new Date()) {
         const m = selectedDate.getMonth();
         const y = selectedDate.getFullYear();
         const d = selectedDate.getDate();
+        const currentRomawi = monthRomawi[m];
+
         try {
-            const { count } = await _supabase.from('eforms').select('*', { count: 'exact', head: true }).eq('jenis', 'SPH');
-            const nextNum = (count || 0) + 1;
-            document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${monthRomawi[m]}/${y}`;
+            // Ambil nomor terakhir (ID terbesar) dari database untuk jenis SPH
+            const { data, error } = await _supabase
+                .from('eforms')
+                .select('nomor')
+                .eq('jenis', 'SPH')
+                .order('created_at', { ascending: false })
+                .limit(1);
+
+            let nextNum = 1;
+
+            if (data && data.length > 0) {
+                const lastNo = data[0].nomor; // format: "001/SPH-KSE/IV/2026"
+                const parts = lastNo.split('/');
+                const lastRomawi = parts[2];
+
+                // Jika bulan romawi terakhir sama dengan bulan romawi saat ini, maka +1
+                if (lastRomawi === currentRomawi) {
+                    nextNum = parseInt(parts[0]) + 1;
+                } else {
+                    // Jika ganti bulan, reset ke 1
+                    nextNum = 1;
+                }
+            }
+
+            document.getElementById('in_no').value = `${nextNum.toString().padStart(3, '0')}/SPH-KSE/${currentRomawi}/${y}`;
+            
+            // Set Periode 1-14 atau 15-akhir
             let startDay = d <= 14 ? 1 : 15;
             let endDay = d <= 14 ? 14 : new Date(y, m + 1, 0).getDate();
             document.getElementById('in_prd').value = `${startDay} s/d ${endDay} ${monthsIndo[m]} ${y}`;
+            
             syncAll();
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error(e); 
+            // Fallback jika database gagal/kosong
+            document.getElementById('in_no').value = `001/SPH-KSE/${currentRomawi}/${y}`;
+        }
     }
 
     function handleDateChange() {
@@ -342,7 +374,6 @@
         const noSurat = document.getElementById('in_no').value;
         const custName = document.getElementById('in_cust').value;
         
-        // Cari nominal tertinggi untuk mengisi kolom 'nominal' di database
         let maxNominal = 0;
         for(let i=1; i<=6; i++) {
             const p = parseFloat(document.getElementById(`in_price_${i}`).value) || 0;
@@ -383,6 +414,10 @@
 
             if (insertError) throw insertError;
             alert("Berhasil! Data penawaran telah disimpan ke Cloud.");
+            
+            // Refresh nomor setelah simpan berhasil
+            initAutoNumber(new Date(document.getElementById('in_tgl_raw').value));
+            
         } catch (e) {
             alert("Gagal: " + e.message);
         } finally {
