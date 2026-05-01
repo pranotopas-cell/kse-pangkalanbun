@@ -61,12 +61,6 @@
         }
         .table-po td { border: 1px solid #000; padding: 12px 8px; vertical-align: middle; font-size: 11.5px; line-height: 1.4; }
         
-        #out_barang { 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: clip; 
-        }
-
         .table-clean td { border: none !important; padding: 4px 0; vertical-align: top; font-size: 12px; }
         .lang-en { font-style: italic; font-size: 9.5px; color: #777; display: block; margin-top: 2px; font-weight: 400; }
 
@@ -297,6 +291,7 @@
 </div>
 
 <script>
+    // --- KONFIGURASI ---
     const CUSTOMER_DATABASE = {
         "PT. SINARINDO SUKSES SELALU": "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun,\nKotawaringin Barat - Kalimantan Tengah.\nUp : Bpk.Riky",
         "PT. TELADAN MAKMUR JAYA": "Jl.Hksn no.23 Alalak Utara ,Banjarmasin - Kalimantan Selatan. \nUp: Ibu amel",
@@ -311,6 +306,8 @@
 
     const monthRomawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const monthsIndo = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
+
+    // --- FUNGSI LOGIKA ---
 
     function terbilang(angka) {
         angka = Math.floor(Math.abs(angka));
@@ -328,16 +325,17 @@
         return temp;
     }
 
-async function syncAutoNumber() {
+    async function syncAutoNumber() {
         try {
             const tglVal = document.getElementById('in_tgl_raw').value;
             const refDate = tglVal ? new Date(tglVal) : new Date();
             
-            // Tentukan rentang awal dan akhir bulan dari tanggal yang dipilih
-            const firstDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1).toISOString().split('T')[0];
-            const lastDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0).toISOString().split('T')[0];
+            const year = refDate.getFullYear();
+            const month = refDate.getMonth();
+            
+            const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
+            const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
-            // Ambil nomor terakhir khusus untuk bulan dan tahun tersebut
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
@@ -351,12 +349,10 @@ async function syncAutoNumber() {
 
             let nextNum = 1;
             if (data && data.length > 0) {
-                // Jika ditemukan data di bulan yang sama, ambil nomor urutnya dan tambah 1
                 const lastFullNo = data[0].nomor;
                 const lastDigitStr = lastFullNo.split('/')[0]; 
                 nextNum = parseInt(lastDigitStr) + 1;
             } else {
-                // Jika tidak ada data di bulan tersebut (bulan baru), reset ke 1
                 nextNum = 1;
             }
 
@@ -364,7 +360,6 @@ async function syncAutoNumber() {
             formatFullNumber();
         } catch (err) { 
             console.error("Gagal Sync Nomor:", err); 
-            // Fallback jika error, tetap jalankan format nomor dengan angka yang ada
             formatFullNumber();
         }
     }
@@ -375,8 +370,10 @@ async function syncAutoNumber() {
         const d = tglVal ? new Date(tglVal) : new Date();
         const m = d.getMonth();
         const y = d.getFullYear();
+        
         const noUrutPadded = urut.toString().padStart(3, '0');
         const fullNo = `${noUrutPadded}/PO-KSE/${monthRomawi[m]}/${y}`;
+        
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
         updateView();
@@ -385,6 +382,7 @@ async function syncAutoNumber() {
     function handleDateChange() {
         const val = document.getElementById('in_tgl_raw').value;
         if (!val) return;
+        
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
         syncAutoNumber();
@@ -402,15 +400,9 @@ async function syncAutoNumber() {
         const qty = parseFloat(document.getElementById('in_qty').value) || 0;
         const hargaNet = parseFloat(document.getElementById('in_perltr').value) || 0;
         
-        // Ambil nilai mentah (string)
-        const raw_ppn = document.getElementById('in_ppn_pct').value;
-        const raw_pbbkb = document.getElementById('in_pbbkb_pct').value;
-        const raw_pph = document.getElementById('in_pph_pct').value;
-
-        // Konversi ke angka, jika kosong/invalid jadikan 0
-        const p_ppn = parseFloat(raw_ppn) || 0;
-        const p_pbbkb = parseFloat(raw_pbbkb) || 0;
-        const p_pph = parseFloat(raw_pph) || 0;
+        const p_ppn = parseFloat(document.getElementById('in_ppn_pct').value) || 0;
+        const p_pbbkb = parseFloat(document.getElementById('in_pbbkb_pct').value) || 0;
+        const p_pph = parseFloat(document.getElementById('in_pph_pct').value) || 0;
 
         const totalPajakPct = (p_ppn + p_pbbkb + p_pph) / 100;
         const hargaDasar = hargaNet / (1 + totalPajakPct);
@@ -422,19 +414,15 @@ async function syncAutoNumber() {
 
         const f = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
         
-        // Update Label Header
         document.getElementById('th_ppn').innerText = p_ppn > 0 ? `PPN ${p_ppn}%` : "PPN";
         document.getElementById('th_pbbkb').innerText = p_pbbkb > 0 ? `PBBKB ${p_pbbkb}%` : "PBBKB";
         document.getElementById('th_pph').innerText = p_pph > 0 ? `PPH ${p_pph}%` : "PPH";
 
         document.getElementById('out_qty').innerText = qty.toLocaleString('id-ID');
         document.getElementById('out_harga').innerText = hargaDasar.toLocaleString('id-ID', f);
-        
-        // Logika Tampilan: Jika input kosong atau nol, jangan tampilkan angka di tabel
-        document.getElementById('out_ppn').innerText = (raw_ppn && p_ppn > 0) ? v_ppn.toLocaleString('id-ID', f) : "";
-        document.getElementById('out_pbbkb').innerText = (raw_pbbkb && p_pbbkb > 0) ? v_pbbkb.toLocaleString('id-ID', f) : "";
-        document.getElementById('out_pph').innerText = (raw_pph && p_pph > 0) ? v_pph.toLocaleString('id-ID', f) : "";
-
+        document.getElementById('out_ppn').innerText = p_ppn > 0 ? v_ppn.toLocaleString('id-ID', f) : "";
+        document.getElementById('out_pbbkb').innerText = p_pbbkb > 0 ? v_pbbkb.toLocaleString('id-ID', f) : "";
+        document.getElementById('out_pph').innerText = p_pph > 0 ? v_pph.toLocaleString('id-ID', f) : "";
         document.getElementById('out_perltr').innerText = hargaNet.toLocaleString('id-ID', f);
         
         const gTotalVal = Math.round(total);
@@ -477,6 +465,7 @@ async function syncAutoNumber() {
             };
             const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
             const fileName = `pos/PO_${Date.now()}_${noPo.replace(/\//g, '_')}.pdf`;
+            
             const { error: upErr } = await _supabase.storage.from('documents').upload(fileName, pdfBlob, { contentType: 'application/pdf', upsert: true });
             if (upErr) throw upErr;
 
@@ -514,14 +503,7 @@ async function syncAutoNumber() {
         const now = new Date();
         document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
         handleDateChange();
-        document.getElementById('in_cust').value = "";
-        handleCustChange(); 
-        document.getElementById('in_barang').value = "";
-        document.getElementById('in_perltr').value = 0;
-        document.getElementById('in_qty').value = 0;
-        document.getElementById('in_pay').value = "";
         syncAutoNumber();
-        calculate();
     };
 </script>
 </body>
