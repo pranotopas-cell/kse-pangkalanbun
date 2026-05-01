@@ -328,13 +328,16 @@
         return temp;
     }
 
-    async function syncAutoNumber() {
+async function syncAutoNumber() {
         try {
             const tglVal = document.getElementById('in_tgl_raw').value;
             const refDate = tglVal ? new Date(tglVal) : new Date();
+            
+            // Tentukan rentang awal dan akhir bulan dari tanggal yang dipilih
             const firstDay = new Date(refDate.getFullYear(), refDate.getMonth(), 1).toISOString().split('T')[0];
             const lastDay = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 0).toISOString().split('T')[0];
 
+            // Ambil nomor terakhir khusus untuk bulan dan tahun tersebut
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
@@ -348,14 +351,22 @@
 
             let nextNum = 1;
             if (data && data.length > 0) {
+                // Jika ditemukan data di bulan yang sama, ambil nomor urutnya dan tambah 1
                 const lastFullNo = data[0].nomor;
                 const lastDigitStr = lastFullNo.split('/')[0]; 
                 nextNum = parseInt(lastDigitStr) + 1;
+            } else {
+                // Jika tidak ada data di bulan tersebut (bulan baru), reset ke 1
+                nextNum = 1;
             }
 
             document.getElementById('in_no_urut').value = nextNum;
             formatFullNumber();
-        } catch (err) { console.error("Gagal Sync Nomor:", err); }
+        } catch (err) { 
+            console.error("Gagal Sync Nomor:", err); 
+            // Fallback jika error, tetap jalankan format nomor dengan angka yang ada
+            formatFullNumber();
+        }
     }
 
     function formatFullNumber() {
