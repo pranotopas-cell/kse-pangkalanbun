@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE - Purchase Order System Cloud</title>
+    <title>KSE - Purchase Order </title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -31,7 +31,7 @@
             width: 210mm; 
             height: 296mm; 
             margin: 0 auto; 
-            padding: 10mm 15mm 10mm 15mm ; 
+            padding: 10mm 15mm 10mm 15mm; 
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1); 
             box-sizing: border-box;
@@ -41,7 +41,7 @@
             color: #222;
         }
 
-        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 50px; padding-bottom: 15px; }
+        .header-section { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; padding-bottom: 15px; }
         .logo-img { height: 55px; width: auto; object-fit: contain; }
         .doc-identity { text-align: right; line-height: 1.1; }
         .doc-identity h2 { font-weight: 800; margin: 0; font-size: 28px; color: var(--kse-primary); letter-spacing: 1px; }
@@ -61,8 +61,8 @@
         }
         .table-po td { border: 1px solid #000; padding: 12px 8px; vertical-align: middle; font-size: 11.5px; line-height: 1.4; }
         
-        .table-clean td { border: none !important; padding: 4px 0; vertical-align: top; font-size: 12px; }
-        .lang-en { font-style: italic; font-size: 9.5px; color: #777; display: block; margin-top: 2px; font-weight: 400; }
+        .table-clean td { border: none !important; padding: 2px 0; vertical-align: middle; font-size: 11px; white-space: nowrap; }
+        .lang-en { font-style: italic; font-size: 9px; color: #777; display: inline-block; margin-left: 4px; font-weight: 400; }
 
         .terbilang-box { 
             border: 1.5px solid #000; 
@@ -144,7 +144,7 @@
                     <input list="list_barang" id="in_barang" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_barang">
                         <option value="BBM SOLAR INDUSTRI">
-                        <option value="BIO SOLAR ( B40 )">
+                        <option value="BIO SOLAR ( B50 )">
                     </datalist>
                 </div>
                 <div class="col-6">
@@ -170,13 +170,21 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="small">Sistem Pembayaran</label>
+                    <label class="small">Term of Payment</label>
                     <input list="list_pay" id="in_pay" class="form-control form-control-sm" oninput="updateView()">
                     <datalist id="list_pay">
                         <option value="Cash Before Delivery (CBD)">
                         <option value="Cash On Delivery (COD)">
                         <option value="Tempo 7 Hari">
                     </datalist>
+                </div>
+
+                <div class="col-12">
+                    <label class="small">term of Delivery</label>
+                    <select id="in_delivery" class="form-select form-select-sm" onchange="updateView()">
+                        <option value="Franco">Franco (Sampai Lokasi Pembeli)</option>
+                        <option value="Locco">Locco (Ambil di Pool/Gudang Penjual)</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -198,16 +206,16 @@
                         <p id="out_addr" class="mb-0 mt-1" style="white-space: pre-line; line-height: 1.5; font-size: 12px;"></p>
                     </div>
                     <div class="col-5">
-                        <table class="table table-sm table-clean mb-0">
+                        <table class="table table-sm table-clean mb-0" style="width: 100%;">
                             <tr>
-                                <td width="45%">TANGGAL<span class="lang-en">Date</span></td>
-                                <td width="5%">:</td>
-                                <td id="out_tgl" class="fw-bold text-end"></td>
+                                <td style="width: 38%;">TANGGAL<span class="lang-en">Date</span></td>
+                                <td style="width: 5%; text-align: center;">:</td>
+                                <td id="out_tgl" class="fw-bold text-end" style="width: 57%;"></td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">NOMOR PO<span class="lang-en">PO Number</span></td>
-                                <td>:</td>
-                                <td id="out_no" class="fw-bold text-end text-dark"></td>
+                                <td class="fw-bold">NOMOR PO<span class="lang-en">PO No.</span></td>
+                                <td style="text-align: center;">:</td>
+                                <td id="out_no" class="fw-bold text-end" style="width: 57%; color: var(--kse-primary);"></td>
                             </tr>
                         </table>
                     </div>
@@ -254,8 +262,9 @@
                 </div>
 
                 <div class="mt-2" style="font-size: 12px; line-height: 1.6;">
-                    <p class="mb-1">Sistem pembayaran : <b id="out_pay" class=""></b></p>
-                    <p>Demikian kami sampaikan, mohon di bantu untuk prosesnya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+                    <p class="mb-1">Term of Payment : <b id="out_pay" class=""></b></p>
+                    <p class="mb-1">Term of Delivery : <b id="out_delivery" class=""></b></p>
+                    <p class="mt-2">Demikian kami sampaikan, mohon di bantu untuk prosesnya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
                 </div>
 
                 <div class="row mt-4">
@@ -296,7 +305,7 @@
         "PT. SINARINDO SUKSES SELALU": "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun,\nKotawaringin Barat - Kalimantan Tengah.\nUp : Bpk.Riky",
         "PT. TELADAN MAKMUR JAYA": "Jl.Hksn no.23 Alalak Utara ,Banjarmasin - Kalimantan Selatan. \nUp: Ibu amel",
         "PT. OCEAN INDONESIA ENERGY": "Jl. Alalak Utara RT.016 Kel.Alalak Utara , \nBanjarmasin - Kalimantan Selatan.\nUp.Ibu Yuliana",
-        "PT. INDO DHARMA ENERGI": "Jl. Natai arahan , Pangkalan Bun - Kalimantan Tengah.\nUp.Bpk.Cipto",
+        "PT. INDO DHARMA ENERGI": "Jl. Natai arahan , Pangkalan Bun - Kalimantan Tengah.\nUp.Ibu Nurhamida",
         "PT. GLOBAL BORNEO ENERGI": "Jl. Hasan Basri Komp.Ruko Kayu Tangi  ,\nBanjarmasin - Kalimantan Selatan.\nUp.Bpk.Abd.Muthalib"
     };
 
@@ -325,11 +334,6 @@
         return temp;
     }
 
-    /**
-     * Sinkronisasi nomor otomatis dengan database.
-     * Logika: Mencari nomor terakhir di bulan dan tahun yang dipilih.
-     * Jika bulan berganti (data bulan tsb kosong), otomatis kembali ke 1.
-     */
     async function syncAutoNumber() {
         try {
             const tglVal = document.getElementById('in_tgl_raw').value;
@@ -338,11 +342,9 @@
             const year = refDate.getFullYear();
             const month = refDate.getMonth();
             
-            // Tentukan rentang tanggal awal dan akhir bulan yang dipilih
             const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
             const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
-            // Ambil data terakhir khusus di bulan tersebut
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
@@ -355,13 +357,11 @@
             if (error) throw error;
 
             let nextNum = 1;
-            // Jika ada data di bulan tersebut, teruskan nomornya
             if (data && data.length > 0) {
                 const lastFullNo = data[0].nomor;
                 const lastDigitStr = lastFullNo.split('/')[0]; 
                 nextNum = parseInt(lastDigitStr) + 1;
             } else {
-                // Jika tidak ada data di bulan tersebut (Bulan baru), reset ke 1
                 nextNum = 1;
             }
 
@@ -395,7 +395,6 @@
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
         
-        // PENTING: Saat tanggal diubah (mungkin ganti bulan), cek database lagi
         syncAutoNumber();
     }
 
@@ -452,6 +451,7 @@
         document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
         document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
         document.getElementById('out_pay').innerText = document.getElementById('in_pay').value;
+        document.getElementById('out_delivery').innerText = document.getElementById('in_delivery').value;
         updateQRCode(noPo, gTotal);
     }
 
@@ -519,4 +519,3 @@
 </script>
 </body>
 </html>
-```[cite: 1]
