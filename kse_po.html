@@ -115,7 +115,7 @@
                     <label class="small text-primary">Nomor Urut</label>
                     <div class="input-group input-group-sm">
                         <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
-                        <span class="input-group-text">/PO-KSE/...</span>
+                        <span class="input-group-text">/PO-BBM/KSE/...</span>
                     </div>
                     <input type="hidden" id="in_no">
                 </div>
@@ -381,7 +381,7 @@
         const y = d.getFullYear();
         
         const noUrutPadded = urut.toString().padStart(3, '0');
-        const fullNo = `${noUrutPadded}/PO-KSE/${monthRomawi[m]}/${y}`;
+        const fullNo = `${noUrutPadded}/PO-BBM/KSE/${monthRomawi[m]}/${y}`;
         
         document.getElementById('in_no').value = fullNo;
         document.getElementById('out_no').innerText = fullNo;
