@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KSE - Invoice System Cloud Single Page</title>
+    <title>KSE - INVOICE BCA</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -40,8 +40,9 @@
         .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 8px; border: 1px solid #000; text-align: center; text-transform: uppercase; font-size: 11px; }
         .table-main td { border: 1px solid #000; padding: 8px; vertical-align: middle; }
         
-        .meta-table td { border: none !important; padding: 2px 0; font-size: 12px; }
-        .lang-en { font-style: italic; font-size: 9px; color: #666; display: block; margin-top: -1px; }
+        /* Modifikasi ukuran dan ketebalan teks meta invoice */
+        .meta-table td { border: none !important; padding: 2px 0; font-size: 11px; font-weight: bold; }
+        .lang-en { font-style: italic; font-size: 8px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
         
         .terbilang-box { border: 1.5px solid #000; border-top: none; padding: 10px; font-style: italic; background: #fafafa; margin-bottom: 15px; font-size: 12px; font-weight: bold; }
         
@@ -179,9 +180,9 @@
                     </div>
                     <div class="col-5">
                         <table class="w-100 meta-table">
-                            <tr><td width="40%">TANGGAL<span class="lang-en">Date</span></td><td width="5%">:</td><td id="out_tgl" style="font-weight:bold;"></td></tr>
-                            <tr><td>NOMOR INVOICE<span class="lang-en">Invoice Number</span></td><td>:</td><td id="out_no" style="font-weight:bold;"></td></tr>
-                            <tr><td>NPWP<span class="lang-en">Tax ID Number</span></td><td>:</td><td class="fw-bold">1000000007734310</td></tr>
+                            <tr><td width="40%">TANGGAL<span class="lang-en">Date</span></td><td width="5%">:</td><td id="out_tgl"></td></tr>
+                            <tr><td>NOMOR INVOICE<span class="lang-en">Invoice Number</span></td><td>:</td><td id="out_no"></td></tr>
+                            <tr><td>NPWP<span class="lang-en">Tax ID Number</span></td><td>:</td><td>1000000007734310</td></tr>
                             <tr><td>TANGGAL PO<span class="lang-en">PO Date</span></td><td>:</td><td id="out_po_tgl"></td></tr>
                             <tr><td>NOMOR PO<span class="lang-en">PO Number</span></td><td>:</td><td id="out_po_no"></td></tr>
                         </table>
@@ -244,9 +245,9 @@
                     <div class="col-8">
                         <p class="mb-1 text-decoration-underline fw-bold">Pembayaran / <span class="text-muted">Payment:</span></p>
                         <p class="mb-0" style="font-size:12px;">1. Cash / Tunai</p>
-                        <p class="mb-0" style="font-size:12px;">2. Transfer Bank Central Asia (BCA)</p>
-                        <p class="mb-0 ms-3" style="font-size:12px;">Account Name : <b>PT KHATULISTIWA SINAR ENERGI</b></p>
-                        <p class="mb-0 ms-3" style="font-size:12px;">Account Number: <b>010-551-9988 </b></p>
+                        <p class="mb-0" style="font-size:12px;">2. Transfer Bank Central Asia ( BCA )</p>
+                        <p class="mb-0 ms-3" style="font-size:12px;">Account Name   : <b>PT. KHATULISTIWA SINAR ENERGI</b></p>
+                        <p class="mb-0 ms-3" style="font-size:12px;">Account Number : <b>010-551-9988</b></p>
                     </div>
                 </div>
 
@@ -370,7 +371,7 @@
         document.getElementById('out_ppn_val').innerText = formatIDR(ppn);
         document.getElementById('out_adjust_val').innerText = formatIDR(adj);
         document.getElementById('out_grand_val').innerText = formatIDR(grandTotalFinal);
-        document.getElementById('out_terbilang').innerText = grandTotalFinal != 0 ? "# " + terbilang(grandTotalFinal) + " Rupiah #" : "-" ;
+        document.getElementById('out_terbilang').innerText = grandTotalFinal != 0 ?"# " + terbilang(grandTotalFinal) + " Rupiah #" : "-";
         updateQRCode(grandTotalFinal);
     }
 
@@ -390,14 +391,9 @@
             "PT. GADING SAWIT KENCANA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu ,Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
             "PT. BORNEO ARMADA PERKASA": "Jl. A.Yani Km.40 RT.021 RW.007 Pandu Sanjaya, Pangkalan Bun, Kab.Kotawringin Barat - Kalimantan Tengah 74184",
             "PT. GERBANG PERKASA PRATAMA": "Raya Darmo Permai 3/26  Kel.Tanjungsari Kec.Sukomanunggal, Kota Surabaya – Jawa Timur 60187 ",
-            "PT. BORNEO TRENGGINAS MANDIRI": " JL.Sri Kuncoro III No.142 RT.003 RW.003 Kalibanteng Kulon, Semarang Barat Kota Semarang - Jawa Tengah 50145",
-            "PT. GADING SAWIT KENCANA": "Jl. Rangkas 3 No.138 RT.014 RW.005 Mentawa Baru Hulu ,Mentawa Baru Ketapang, Kab.Kotawaringin Timur - Kalimantan Tengah 74322",
-            "PT. BORNEO ARMADA PERKASA": "Jl. A.Yani Km.40 RT.021 RW.007 Pandu Sanjaya, Pangkalan Bun, Kab.Kotawringin Barat - Kalimantan Tengah 74184",
-            "PT. GERBANG PERKASA PRATAMA": "Raya Darmo Permai 3/26  Kel.Tanjungsari Kec.Sukomanunggal, Kota Surabaya – Jawa Timur 60187 ",
             "PT. NEW WAHYU BAROKAH": "Jl. A.Yani Km.38 RT.030 RW.008 Pandu Sanjaya, Pangkalan Lada, Kab.Kotawringin Barat - Kalimantan Tengah 74184",
             "PT. TRIDEA SENADA": "JL.Gatot Subroto No.14 Kota Tinggi,Pekan Baru Kota,Kota Pekan Baru - Riau 28112",
             "PT. QSD INDONESIA": "JL.Rancabolang No.106 RT.001 RW.004,Sekajati Buahbatu KOta Bandung - Jawa Barat 40268"
-         
         };
         if (daftarAlamat[custValue]) {
             addrField.value = daftarAlamat[custValue];
@@ -410,11 +406,9 @@
             const tglInput = document.getElementById('in_tgl_raw').value;
             const d = tglInput ? new Date(tglInput) : new Date();
             
-            // Rentang waktu bulan yang dipilih
             const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
             const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59).toISOString();
 
-            // Ambil nomor urut TERAKHIR dari database pada bulan tersebut
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
@@ -428,7 +422,6 @@
 
             let nextNum = 1;
             if (data && data.length > 0) {
-                // Ekstrak angka dari string "005 / INV-KSE / ..."
                 const lastNoString = data[0].nomor.split(' / ')[0];
                 const lastNoInt = parseInt(lastNoString);
                 nextNum = lastNoInt + 1;
@@ -495,7 +488,7 @@
             if (dbErr) throw dbErr;
 
             alert("Berhasil! Data & PDF tersimpan di Cloud.");
-            initAutoNumber(); // Refresh nomor setelah simpan
+            initAutoNumber(); 
         } catch (e) { alert("Error: " + e.message); }
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> SIMPAN DATA & AUTO UPLOAD'; btn.disabled = false;
     }
