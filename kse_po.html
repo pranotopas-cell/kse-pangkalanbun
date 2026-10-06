@@ -335,43 +335,51 @@
     }
 
     async function syncAutoNumber() {
-        try {
-            const tglVal = document.getElementById('in_tgl_raw').value;
-            const refDate = tglVal ? new Date(tglVal) : new Date();
-            
-            const year = refDate.getFullYear();
-            const month = refDate.getMonth();
-            
-            const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
-            const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
+    try {
+        const tglVal = document.getElementById('in_tgl_raw').value;
+        const refDate = tglVal ? new Date(tglVal) : new Date();
+        
+        const year = refDate.getFullYear();
+        const month = refDate.getMonth();
+        
+        const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
+        const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
-            const { data, error } = await _supabase
-                .from('eforms')
-                .select('nomor')
-                .eq('jenis', 'PURCHASE ORDER')
-                .gte('tanggal', firstDay)
-                .lte('tanggal', lastDay)
-                .order('nomor', { ascending: false })
-                .limit(1);
+        // Ambil SEMUA nomor PO bulan ini (tanpa limit 1 agar bisa dihitung angka resminya)
+        const { data, error } = await _supabase
+            .from('eforms')
+            .select('nomor')
+            .eq('jenis', 'PURCHASE ORDER')
+            .gte('tanggal', firstDay)
+            .lte('tanggal', lastDay);
 
-            if (error) throw error;
+        if (error) throw error;
 
-            let nextNum = 1;
-            if (data && data.length > 0) {
-                const lastFullNo = data[0].nomor;
-                const lastDigitStr = lastFullNo.split('/')[0]; 
-                nextNum = parseInt(lastDigitStr) + 1;
-            } else {
-                nextNum = 1;
-            }
+        let maxNum = 0;
 
-            document.getElementById('in_no_urut').value = nextNum;
-            formatFullNumber();
-        } catch (err) { 
-            console.error("Gagal Sync Nomor:", err); 
-            formatFullNumber();
+        if (data && data.length > 0) {
+            // Ekstrak angka urut dari setiap PO bulan ini dan cari nilai tertinggi (Max)
+            data.forEach(item => {
+                if (item.nomor) {
+                    const parts = item.nomor.split('/');
+                    const num = parseInt(parts[0], 10);
+                    if (!isNaN(num) && num > maxNum) {
+                        maxNum = num;
+                    }
+                }
+            });
         }
+
+        // Nomor berikutnya adalah nomor tertinggi + 1
+        const nextNum = maxNum + 1;
+
+        document.getElementById('in_no_urut').value = nextNum;
+        formatFullNumber();
+    } catch (err) { 
+        console.error("Gagal Sync Nomor:", err); 
+        formatFullNumber();
     }
+}
 
     function formatFullNumber() {
         const urut = document.getElementById('in_no_urut').value || "1";
