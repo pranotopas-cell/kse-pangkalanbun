@@ -40,7 +40,6 @@
         .table-main th { background-color: var(--kse-primary) !important; color: white !important; padding: 8px; border: 1px solid #000; text-align: center; text-transform: uppercase; font-size: 11px; }
         .table-main td { border: 1px solid #000; padding: 8px; vertical-align: middle; }
         
-        /* Modifikasi ukuran dan ketebalan teks meta invoice */
         .meta-table td { border: none !important; padding: 2px 0; font-size: 11px; font-weight: bold; }
         .lang-en { font-style: italic; font-size: 8px; color: #666; display: block; margin-top: -1px; font-weight: normal; }
         
@@ -159,8 +158,8 @@
                 <input type="number" id="in_adjust" class="form-control form-control-sm" value="0" step="0.01" oninput="syncAll()">
             </div>
             <datalist id="list_barang">
+                <option value="BIO SOLAR B50)">
                 <option value="BBM SOLAR INDUSTRI ">
-                <option value="BIO SOLAR B40)">
                 <option value="BIO SOLAR (PETRO 4)">
             </datalist>
         </div>
@@ -406,26 +405,36 @@
             const tglInput = document.getElementById('in_tgl_raw').value;
             const d = tglInput ? new Date(tglInput) : new Date();
             
-            const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
-            const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59).toISOString();
+            const year = d.getFullYear();
+            const monthStr = String(d.getMonth() + 1).padStart(2, '0'); 
+            
+            const startDate = `${year}-${monthStr}-01`;
+            const lastDayNum = new Date(year, d.getMonth() + 1, 0).getDate();
+            const endDate = `${year}-${monthStr}-${String(lastDayNum).padStart(2, '0')}`;
 
             const { data, error } = await _supabase
                 .from('eforms')
                 .select('nomor')
                 .eq('jenis', 'INVOICE')
-                .gte('tanggal', firstDay)
-                .lte('tanggal', lastDay)
-                .order('nomor', { ascending: false })
-                .limit(1);
+                .gte('tanggal', startDate)
+                .lte('tanggal', endDate);
 
             if (error) throw error;
 
-            let nextNum = 1;
+            let maxNum = 0;
             if (data && data.length > 0) {
-                const lastNoString = data[0].nomor.split(' / ')[0];
-                const lastNoInt = parseInt(lastNoString);
-                nextNum = lastNoInt + 1;
+                data.forEach(row => {
+                    if (row.nomor) {
+                        const parts = row.nomor.split(' / ');
+                        const num = parseInt(parts[0], 10);
+                        if (!isNaN(num) && num > maxNum) {
+                            maxNum = num;
+                        }
+                    }
+                });
             }
+
+            const nextNum = maxNum + 1;
 
             document.getElementById('in_no_urut').value = nextNum.toString().padStart(3, '0');
             syncAll();
@@ -442,6 +451,7 @@
         const d = new Date(val);
         document.getElementById('out_tgl').innerText = `${d.getDate()} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
         initAutoNumber();
+        syncAll();
     }
 
     function updateQRCode(grandTotal) {
