@@ -114,25 +114,23 @@
                 <div class="col-12">
                     <label class="small text-primary">Nomor Urut</label>
                     <div class="input-group input-group-sm">
-                        <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" oninput="formatFullNumber()">
+                        <input type="number" id="in_no_urut" class="form-control fw-bold border-primary" value="1" oninput="formatFullNumber()">
                         <span class="input-group-text">/PO-BBM/KSE/...</span>
                     </div>
                     <input type="hidden" id="in_no">
                 </div>
                 <div class="col-12">
                     <label class="small">Tanggal PO</label>
-                    <input type="date" id="in_tgl_raw" class="form-control form-control-sm" oninput="handleDateChange()">
+                    <input type="date" id="in_tgl_raw" class="form-control form-control-sm" onchange="handleDateChange()" oninput="handleDateChange()">
                 </div>
                 <div class="col-12">
                     <label class="small">Supplier</label>
-                    <select id="in_cust" class="form-select form-select-sm" onchange="handleCustChange()">
-                        <option value="">-- Pilih Customer --</option>
-                        <option value="PT. SINARINDO SUKSES SELALU">PT. SINARINDO SUKSES SELALU</option>
-                        <option value="PT. TELADAN MAKMUR JAYA">PT. TELADAN MAKMUR JAYA</option>
-                        <option value="PT. OCEAN INDONESIA ENERGY">PT. OCEAN INDONESIA ENERGY</option>
-                        <option value="PT. INDO DHARMA ENERGI">PT. INDO DHARMA ENERGI</option>
-                        <option value="PT. GLOBAL BORNEO ENERGI">PT. GLOBAL BORNEO ENERGI</option>
-                    </select>
+                    <input list="list_cust" id="in_cust" class="form-control form-control-sm" placeholder="Pilih atau ketik nama supplier..." oninput="handleCustChange()">
+                    <datalist id="list_cust">
+                        <option value="PT. TELADAN MAKMUR JAYA">
+                        <option value="PT. OCEAN INDONESIA ENERGY">
+                        <option value="PT. GLOBAL BORNEO ENERGI">
+                    </datalist>
                 </div>
                 <div class="col-12">
                     <label class="small">Alamat </label>
@@ -141,7 +139,7 @@
                 <hr class="my-2">
                 <div class="col-12">
                     <label class="small">Nama Barang</label>
-                    <input list="list_barang" id="in_barang" class="form-control form-control-sm" oninput="updateView()">
+                    <input list="list_barang" id="in_barang" class="form-control form-control-sm" value="BBM SOLAR INDUSTRI" oninput="updateView()">
                     <datalist id="list_barang">
                         <option value="BBM SOLAR INDUSTRI">
                         <option value="BIO SOLAR ( B50 )">
@@ -149,11 +147,11 @@
                 </div>
                 <div class="col-6">
                     <label class="small text-success">Harga Beli</label>
-                    <input type="number" id="in_perltr" class="form-control form-control-sm border-success" oninput="calculate()">
+                    <input type="number" id="in_perltr" class="form-control form-control-sm border-success" value="" oninput="calculate()">
                 </div>
                 <div class="col-6">
                     <label class="small">Qty (Ltr)</label>
-                    <input type="number" id="in_qty" class="form-control form-control-sm" oninput="calculate()">
+                    <input type="number" id="in_qty" class="form-control form-control-sm" value="" oninput="calculate()">
                 </div>
                 
                 <div class="col-4">
@@ -171,7 +169,7 @@
 
                 <div class="col-12">
                     <label class="small">Term of Payment</label>
-                    <input list="list_pay" id="in_pay" class="form-control form-control-sm" oninput="updateView()">
+                    <input list="list_pay" id="in_pay" class="form-control form-control-sm" value="Cash Before Delivery (CBD)" oninput="updateView()">
                     <datalist id="list_pay">
                         <option value="Cash Before Delivery (CBD)">
                         <option value="Cash On Delivery (COD)">
@@ -180,7 +178,7 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="small">term of Delivery</label>
+                    <label class="small">Term of Delivery</label>
                     <select id="in_delivery" class="form-select form-select-sm" onchange="updateView()">
                         <option value="Locco">Locco (Ambil di Pool/Gudang Penjual)</option>
                         <option value="Franco">Franco (Sampai Lokasi Pembeli)</option>
@@ -202,8 +200,8 @@
                 <div class="row mb-4">
                     <div class="col-7">
                         <p class="mb-2" style="font-size: 12px;">Kepada yang kami hormati,</p>
-                        <h6 class="fw-bold mb-1 text-uppercase" id="out_cust" style="font-size: 16px; color: var(--kse-primary); letter-spacing: 0.5px;"></h6>
-                        <p id="out_addr" class="mb-0 mt-1" style="white-space: pre-line; line-height: 1.5; font-size: 12px;"></p>
+                        <h6 class="fw-bold mb-1 text-uppercase" id="out_cust" style="font-size: 16px; color: var(--kse-primary); letter-spacing: 0.5px;">-</h6>
+                        <p id="out_addr" class="mb-0 mt-1" style="white-space: pre-line; line-height: 1.5; font-size: 12px;">-</p>
                     </div>
                     <div class="col-5">
                         <table class="table table-sm table-clean mb-0" style="width: 100%;">
@@ -242,12 +240,12 @@
                     <tbody>
                         <tr>
                             <td class="fw-bold text-uppercase" id="out_barang" style="font-size: 10.5px; height: 60px;"></td>
-                            <td class="text-center" id="out_qty"></td>
-                            <td class="text-center" id="out_harga"></td>
-                            <td class="text-center" id="out_ppn"></td>
-                            <td class="text-center" id="out_pbbkb"></td>
-                            <td class="text-center" id="out_pph"></td>
-                            <td class="text-center fw-bold" id="out_perltr"></td>
+                            <td class="text-center" id="out_qty">0</td>
+                            <td class="text-center" id="out_harga">0,00</td>
+                            <td class="text-center" id="out_ppn">0,00</td>
+                            <td class="text-center" id="out_pbbkb">0,00</td>
+                            <td class="text-center" id="out_pph">0,00</td>
+                            <td class="text-center fw-bold" id="out_perltr">0,00</td>
                             <td class="text-end fw-bold"> <span id="out_total">0,00</span></td>
                         </tr>
                         <tr class="fw-bold" style="background-color: #f2f2f2; font-size: 15px;">
@@ -258,7 +256,7 @@
                 </table>
 
                 <div class="terbilang-box">
-                    Terbilang: # <span id="out_terbilang"></span> RUPIAH #
+                    Terbilang: # <span id="out_terbilang">NOL</span> RUPIAH #
                 </div>
 
                 <div class="mt-2" style="font-size: 12px; line-height: 1.6;">
@@ -302,10 +300,8 @@
 <script>
     // --- KONFIGURASI ---
     const CUSTOMER_DATABASE = {
-        "PT. SINARINDO SUKSES SELALU": "Jl. Ahmad Yani Km.2,2, No.02, Pangkalan Bun,\nKotawaringin Barat - Kalimantan Tengah.\nUp : Bpk.Riky",
         "PT. TELADAN MAKMUR JAYA": "Jl.Hksn no.23 Alalak Utara ,Banjarmasin - Kalimantan Selatan. \nUp: Ibu amel",
         "PT. OCEAN INDONESIA ENERGY": "Jl. Alalak Utara RT.016 Kel.Alalak Utara , \nBanjarmasin - Kalimantan Selatan.\nUp.Ibu Yuliana",
-        "PT. INDO DHARMA ENERGI": "Jl. Natai arahan , Pangkalan Bun - Kalimantan Tengah.\nUp.Ibu Nurhamida",
         "PT. GLOBAL BORNEO ENERGI": "Jl. Hasan Basri Komp.Ruko Kayu Tangi  ,\nBanjarmasin - Kalimantan Selatan.\nUp.Bpk.Abd.Muthalib"
     };
 
@@ -335,58 +331,67 @@
     }
 
     async function syncAutoNumber() {
-    try {
-        const tglVal = document.getElementById('in_tgl_raw').value;
-        const refDate = tglVal ? new Date(tglVal) : new Date();
-        
-        const year = refDate.getFullYear();
-        const month = refDate.getMonth();
-        
-        const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
-        const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
+        try {
+            const tglVal = document.getElementById('in_tgl_raw').value;
+            let m, y;
+            if (tglVal) {
+                const parts = tglVal.split('-');
+                y = parseInt(parts[0], 10);
+                m = parseInt(parts[1], 10) - 1;
+            } else {
+                const d = new Date();
+                m = d.getMonth();
+                y = d.getFullYear();
+            }
+            const romawiBulan = monthRomawi[m];
 
-        // Ambil SEMUA nomor PO bulan ini (tanpa limit 1 agar bisa dihitung angka resminya)
-        const { data, error } = await _supabase
-            .from('eforms')
-            .select('nomor')
-            .eq('jenis', 'PURCHASE ORDER')
-            .gte('tanggal', firstDay)
-            .lte('tanggal', lastDay);
+            const { data, error } = await _supabase
+                .from('eforms')
+                .select('nomor')
+                .eq('jenis', 'PURCHASE ORDER');
 
-        if (error) throw error;
+            if (error) throw error;
 
-        let maxNum = 0;
+            let maxNum = 0;
 
-        if (data && data.length > 0) {
-            // Ekstrak angka urut dari setiap PO bulan ini dan cari nilai tertinggi (Max)
-            data.forEach(item => {
-                if (item.nomor) {
-                    const parts = item.nomor.split('/');
-                    const num = parseInt(parts[0], 10);
-                    if (!isNaN(num) && num > maxNum) {
-                        maxNum = num;
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    if (item.nomor) {
+                        const pattern = new RegExp(`^(\\d+)\\/PO-BBM\\/KSE\\/${romawiBulan}\\/${y}$`);
+                        const match = item.nomor.match(pattern);
+                        if (match) {
+                            const num = parseInt(match[1], 10);
+                            if (!isNaN(num) && num > maxNum) {
+                                maxNum = num;
+                            }
+                        }
                     }
-                }
-            });
+                });
+            }
+
+            const nextNum = maxNum + 1;
+            document.getElementById('in_no_urut').value = nextNum;
+            formatFullNumber();
+        } catch (err) { 
+            console.error("Gagal Sync Nomor:", err); 
+            formatFullNumber();
         }
-
-        // Nomor berikutnya adalah nomor tertinggi + 1
-        const nextNum = maxNum + 1;
-
-        document.getElementById('in_no_urut').value = nextNum;
-        formatFullNumber();
-    } catch (err) { 
-        console.error("Gagal Sync Nomor:", err); 
-        formatFullNumber();
     }
-}
 
     function formatFullNumber() {
         const urut = document.getElementById('in_no_urut').value || "1";
         const tglVal = document.getElementById('in_tgl_raw').value;
-        const d = tglVal ? new Date(tglVal) : new Date();
-        const m = d.getMonth();
-        const y = d.getFullYear();
+        
+        let m, y;
+        if (tglVal) {
+            const parts = tglVal.split('-');
+            y = parseInt(parts[0], 10);
+            m = parseInt(parts[1], 10) - 1;
+        } else {
+            const d = new Date();
+            m = d.getMonth();
+            y = d.getFullYear();
+        }
         
         const noUrutPadded = urut.toString().padStart(3, '0');
         const fullNo = `${noUrutPadded}/PO-BBM/KSE/${monthRomawi[m]}/${y}`;
@@ -400,9 +405,12 @@
         const val = document.getElementById('in_tgl_raw').value;
         if (!val) return;
         
-        const d = new Date(val);
-        document.getElementById('out_tgl').innerText = `${d.getDate().toString().padStart(2, '0')} ${monthsIndo[d.getMonth()]} ${d.getFullYear()}`;
-        
+        const parts = val.split('-');
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const d = parseInt(parts[2], 10);
+
+        document.getElementById('out_tgl').innerText = `${d.toString().padStart(2, '0')} ${monthsIndo[m]} ${y}`;
         syncAutoNumber();
     }
 
@@ -423,7 +431,7 @@
         const p_pph = parseFloat(document.getElementById('in_pph_pct').value) || 0;
 
         const totalPajakPct = (p_ppn + p_pbbkb + p_pph) / 100;
-        const hargaDasar = hargaNet / (1 + totalPajakPct);
+        const hargaDasar = totalPajakPct > 0 ? (hargaNet / (1 + totalPajakPct)) : hargaNet;
         
         const v_ppn = hargaDasar * (p_ppn / 100);
         const v_pbbkb = hargaDasar * (p_pbbkb / 100);
@@ -438,28 +446,28 @@
 
         document.getElementById('out_qty').innerText = qty.toLocaleString('id-ID');
         document.getElementById('out_harga').innerText = hargaDasar.toLocaleString('id-ID', f);
-        document.getElementById('out_ppn').innerText = p_ppn > 0 ? v_ppn.toLocaleString('id-ID', f) : "";
-        document.getElementById('out_pbbkb').innerText = p_pbbkb > 0 ? v_pbbkb.toLocaleString('id-ID', f) : "";
-        document.getElementById('out_pph').innerText = p_pph > 0 ? v_pph.toLocaleString('id-ID', f) : "";
+        document.getElementById('out_ppn').innerText = p_ppn > 0 ? v_ppn.toLocaleString('id-ID', f) : "0,00";
+        document.getElementById('out_pbbkb').innerText = p_pbbkb > 0 ? v_pbbkb.toLocaleString('id-ID', f) : "0,00";
+        document.getElementById('out_pph').innerText = p_pph > 0 ? v_pph.toLocaleString('id-ID', f) : "0,00";
         document.getElementById('out_perltr').innerText = hargaNet.toLocaleString('id-ID', f);
         
         const gTotalVal = Math.round(total);
         document.getElementById('out_total').innerText = gTotalVal.toLocaleString('id-ID', f);
         document.getElementById('out_grandtotal').innerText = gTotalVal.toLocaleString('id-ID', f);
-        document.getElementById('out_terbilang').innerText = terbilang(gTotalVal).toUpperCase();
+        document.getElementById('out_terbilang').innerText = (terbilang(gTotalVal) || "NOL").trim().toUpperCase();
         
         updateView();
     }
 
     function updateView() {
-        const noPo = document.getElementById('in_no').value;
+        const noPo = document.getElementById('in_no').value || "-";
         const gTotal = document.getElementById('out_grandtotal').innerText;
         document.getElementById('out_no').innerText = noPo;
-        document.getElementById('out_cust').innerText = document.getElementById('in_cust').value;
-        document.getElementById('out_addr').innerText = document.getElementById('in_addr').value;
-        document.getElementById('out_barang').innerText = document.getElementById('in_barang').value;
-        document.getElementById('out_pay').innerText = document.getElementById('in_pay').value;
-        document.getElementById('out_delivery').innerText = document.getElementById('in_delivery').value;
+        document.getElementById('out_cust').innerText = document.getElementById('in_cust').value || "-";
+        document.getElementById('out_addr').innerText = document.getElementById('in_addr').value || "-";
+        document.getElementById('out_barang').innerText = document.getElementById('in_barang').value || "-";
+        document.getElementById('out_pay').innerText = document.getElementById('in_pay').value || "-";
+        document.getElementById('out_delivery').innerText = document.getElementById('in_delivery').value || "-";
         updateQRCode(noPo, gTotal);
     }
 
@@ -520,9 +528,13 @@
 
     window.onload = () => {
         const now = new Date();
-        document.getElementById('in_tgl_raw').value = now.toISOString().split('T')[0];
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        
+        document.getElementById('in_tgl_raw').value = `${yyyy}-${mm}-${dd}`;
         handleDateChange();
-        syncAutoNumber();
+        calculate();
     };
 </script>
 </body>
